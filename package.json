@@ -3,7 +3,8 @@
   "version": "1.0.0",
   "private": true,
   "scripts": {
-    "sync": "cap sync"
+    "sync": "cap sync",
+    "capacitor:sync:after": "node setup.js"
   },
   "dependencies": {
     "@capacitor/core": "^7.0.0",
