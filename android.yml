@@ -1,0 +1,30 @@
+name: Build Android APK
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  apk:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 21
+      - run: mkdir -p www && cp index.html manifest.webmanifest sw.js icon-192.png icon-512.png www/
+      - run: npm install
+      - run: npx cap add android
+      - run: npx cap sync android
+      - run: chmod +x android/gradlew && cd android && ./gradlew assembleDebug
+      - run: cp android/app/build/outputs/apk/debug/app-debug.apk editor.apk
+      - uses: softprops/action-gh-release@v2
+        with:
+          tag_name: latest
+          name: Editor (latest APK)
+          files: editor.apk
