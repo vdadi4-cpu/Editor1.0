@@ -1,8 +1,94 @@
-// Runs after "cap sync": uses one fixed signing key so every APK can update the previous one,
-// and gives each build a higher version number.
+// Runs after "cap sync": fixed signing key, rising version number, and a native "Save to..." file picker.
 const fs=require('fs'),os=require('os'),path=require('path');
 const KS='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';
 const d=path.join(os.homedir(),'.android');fs.mkdirSync(d,{recursive:true});
 fs.writeFileSync(path.join(d,'debug.keystore'),Buffer.from(KS,'base64'));
 const g='android/app/build.gradle';
 if(fs.existsSync(g)){let s=fs.readFileSync(g,'utf8');s=s.replace(/versionCode\s+\d+/,'versionCode '+Math.floor(Date.now()/60000));fs.writeFileSync(g,s);console.log('versionCode updated')}
+const appId=JSON.parse(fs.readFileSync('capacitor.config.json','utf8')).appId;
+const dir=path.join('android/app/src/main/java',...appId.split('.'));
+if(fs.existsSync(dir)&&!fs.existsSync('no-native.txt')){
+fs.writeFileSync(path.join(dir,'SaveFilePlugin.java'),`package ${appId};
+import android.app.Activity;
+import android.content.Intent;
+import android.net.Uri;
+import android.util.Base64;
+import androidx.activity.result.ActivityResult;
+import com.getcapacitor.JSObject;
+import com.getcapacitor.Plugin;
+import com.getcapacitor.PluginCall;
+import com.getcapacitor.PluginMethod;
+import com.getcapacitor.annotation.ActivityCallback;
+import com.getcapacitor.annotation.CapacitorPlugin;
+import java.io.OutputStream;
+
+@CapacitorPlugin(name = "SaveFile")
+public class SaveFilePlugin extends Plugin {
+  private OutputStream os;
+
+  @PluginMethod
+  public void pick(PluginCall call) {
+    Intent i = new Intent(Intent.ACTION_CREATE_DOCUMENT);
+    i.addCategory(Intent.CATEGORY_OPENABLE);
+    i.setType(call.getString("mime", "video/mp4"));
+    i.putExtra(Intent.EXTRA_TITLE, call.getString("name", "editor.mp4"));
+    startActivityForResult(call, i, "picked");
+  }
+
+  @ActivityCallback
+  private void picked(PluginCall call, ActivityResult result) {
+    if (call == null) return;
+    if (result.getResultCode() != Activity.RESULT_OK || result.getData() == null || result.getData().getData() == null) {
+      call.reject("cancelled");
+      return;
+    }
+    try {
+      Uri u = result.getData().getData();
+      os = getContext().getContentResolver().openOutputStream(u, "w");
+      JSObject o = new JSObject();
+      o.put("uri", u.toString());
+      call.resolve(o);
+    } catch (Exception e) {
+      call.reject(String.valueOf(e.getMessage()));
+    }
+  }
+
+  @PluginMethod
+  public void write(PluginCall call) {
+    try {
+      byte[] b = Base64.decode(call.getString("data", ""), Base64.DEFAULT);
+      os.write(b);
+      call.resolve();
+    } catch (Exception e) {
+      call.reject(String.valueOf(e.getMessage()));
+    }
+  }
+
+  @PluginMethod
+  public void close(PluginCall call) {
+    try {
+      if (os != null) {
+        os.flush();
+        os.close();
+        os = null;
+      }
+      call.resolve();
+    } catch (Exception e) {
+      call.reject(String.valueOf(e.getMessage()));
+    }
+  }
+}
+`);
+fs.writeFileSync(path.join(dir,'MainActivity.java'),`package ${appId};
+import android.os.Bundle;
+import com.getcapacitor.BridgeActivity;
+
+public class MainActivity extends BridgeActivity {
+  @Override
+  public void onCreate(Bundle savedInstanceState) {
+    registerPlugin(SaveFilePlugin.class);
+    super.onCreate(savedInstanceState);
+  }
+}
+`);
+console.log('SaveFile plugin written');}
