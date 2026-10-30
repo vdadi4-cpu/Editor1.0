@@ -92,3 +92,14 @@ public class MainActivity extends BridgeActivity {
 }
 `);
 console.log('SaveFile plugin written');}
+
+// Keep login and settings across reinstalls (Android Auto Backup), allow microphone for voice-over
+try{if(!fs.existsSync('no-native.txt')){const mp='android/app/src/main/AndroidManifest.xml';if(fs.existsSync(mp)){let m=fs.readFileSync(mp,'utf8');
+['android.permission.RECORD_AUDIO','android.permission.MODIFY_AUDIO_SETTINGS'].forEach(p=>{if(!m.includes(p))m=m.replace('<application','<uses-permission android:name="'+p+'" />\n    <application')});
+m=m.replace(/\s+android:fullBackupContent="[^"]*"/,'').replace(/\s+android:dataExtractionRules="[^"]*"/,'');
+m=m.replace('<application','<application android:fullBackupContent="@xml/backup_rules" android:dataExtractionRules="@xml/data_extraction_rules"');
+if(!/android:allowBackup=/.test(m))m=m.replace('<application','<application android:allowBackup="true"');
+fs.writeFileSync(mp,m);const xd='android/app/src/main/res/xml';fs.mkdirSync(xd,{recursive:true});
+fs.writeFileSync(xd+'/backup_rules.xml','<?xml version="1.0" encoding="utf-8"?>\n<full-backup-content><include domain="sharedpref" path="."/></full-backup-content>\n');
+fs.writeFileSync(xd+'/data_extraction_rules.xml','<?xml version="1.0" encoding="utf-8"?>\n<data-extraction-rules><cloud-backup><include domain="sharedpref" path="."/></cloud-backup><device-transfer><include domain="sharedpref" path="."/><include domain="file" path="."/><include domain="database" path="."/></device-transfer></data-extraction-rules>\n');
+console.log('backup rules and microphone permission written')}}}catch(e){console.log('manifest patch skipped:',e.message)}
