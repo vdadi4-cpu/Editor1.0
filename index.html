@@ -152,8 +152,8 @@ header{grid-column:1/-1;grid-row:1}#stage{grid-column:1;grid-row:2;min-height:0;
 @media (max-height:560px){body{overflow:auto}}
 #sg{position:absolute;top:0;bottom:0;width:2px;background:#ffd60a;display:none;z-index:6;pointer-events:none}#sg::after{content:attr(data-l);position:absolute;top:2px;left:4px;font-size:10px;font-weight:700;background:#ffd60a;color:#000;padding:1px 5px;border-radius:6px;white-space:nowrap}
 #fsc input[type=range]{flex:1;min-width:0}#fst{font-size:12px;white-space:nowrap}
-.fxb{touch-action:none}#tlh{min-width:58px}</style></head><body>
-<header><div style="display:flex;align-items:center;gap:8px"><button id="mn" aria-label="Menu">☰</button><h1>Editor</h1><span class="mu" style="margin:0;font-size:11px">v13</span></div><div style="display:flex;gap:6px"><button id="un">Undo</button><button class="ac" id="ex">Export</button></div></header>
+.fxb{touch-action:none}#tlh{min-width:58px}.hd{width:min(20px,26%)!important}.mus *,.ov *,.tx *,.fxb *,.sfxb *{touch-action:none}</style></head><body>
+<header><div style="display:flex;align-items:center;gap:8px"><button id="mn" aria-label="Menu">☰</button><h1>Editor</h1><span class="mu" style="margin:0;font-size:11px">v14</span></div><div style="display:flex;gap:6px"><button id="un">Undo</button><button class="ac" id="ex">Export</button></div></header>
 <div id="stage"><canvas id="cv"></canvas><div id="fsc"><button id="fsp" class="ac">Play</button><span id="fst"></span><button id="fsx">Exit</button></div>
 <div id="empty"><div style="font-size:18px;font-weight:700">Start a new project</div><div class="mu">Pick one or more videos from your device.</div><button class="ac" id="ad0">Add videos</button></div></div>
 <div class="row"><button id="pl" class="ac" style="min-width:74px">Play</button><button id="pv">Preview</button><div id="tm">00:00.0 / 00:00.0</div><button id="zo">−</button><button id="zi">+</button></div>
@@ -211,7 +211,7 @@ function mask(m,W,H,s){const r=Math.min(W,H)*s/2,X=W/2,Y=H/2,P=cx;P.beginPath();
 if(m=='circle')P.arc(X,Y,r,0,7);else if(m=='ellipse')P.ellipse(X,Y,W*s/2,H*s/2,0,0,7);else if(m=='box')P.rect(X-r,Y-r*.7,r*2,r*1.4);else if(m=='line')P.rect(-W,Y-4*H,3*W,4*H);else if(m=='mirror')P.rect(-W,Y-r*.5,3*W,r);
 else if(m=='heart'){P.moveTo(X,Y+r*.9);P.bezierCurveTo(X-r*1.6,Y-r*.2,X-r*.7,Y-r*1.2,X,Y-r*.4);P.bezierCurveTo(X+r*.7,Y-r*1.2,X+r*1.6,Y-r*.2,X,Y+r*.9)}
 else if(m=='star'){for(let i=0;i<10;i++){const a=-Math.PI/2+i*Math.PI/5,q=i%2?r*.45:r;P[i?'lineTo':'moveTo'](X+q*Math.cos(a),Y+q*Math.sin(a))}P.closePath()}}
-const VER='v13',LS=makeLS(),uid=()=>Math.random().toString(36).slice(2,9)+Date.now().toString(36);
+const VER='v14',LS=makeLS(),uid=()=>Math.random().toString(36).slice(2,9)+Date.now().toString(36);
 let me=null,pid=null,pname='Untitled',pst='pending',saveT,mus=null,progUntil=0,ESon=false,ES=720,EF=30,EFm='mp4',scrN='',pfI,lm='in',lk='email',an,mg,duck=1;
 const RES=[['480p',480],['720p HD',720],['1080p FHD',1080],['2K',1440],['4K',2160]],OWN=()=>me||'guest';
 const SW=['#ffffff','#0b0f19','#ff5c7a','#ff8a5c','#ffc857','#ffe66d','#b8f55b','#3ddc97','#2ee6a6','#22d3ee','#4da3ff','#6c7bff','#8b5cf6','#c084fc','#f472b6','#fb7185','#f97316','#eab308','#84cc16','#14b8a6','#0ea5e9','#6366f1','#a3a3a3','#525252'];
@@ -829,7 +829,7 @@ $('#tl').addEventListener('pointerdown',e=>{const hd=e.target.closest('.hd'),b=h
 if(k=='o'){selO=i;tmode='ov';kfT=false}else if(k=='t'){selT=i;kfT=true}else if(k=='m'){selM=i;mus=mtr[i];tmode='mus';kfT=false}else if(k=='s'){selS=i;tmode='sfx';kfT=false}else if(k=='v'){selV=i;tmode='vfx';kfT=false}else{sel=i;tmode='main';kfT=false}
 const s0={in:o.in,out:o.out,dur:o.dur,st:o.st,s:o.s,e:o.e,src:o.src||o.dur};try{(hd||b).setPointerCapture(e.pointerId)}catch(_){}
 if(hd){dk={mode:'trim',side:hd.dataset.s,b,k,o,x0:e.clientX,s0,mv:0,d:0}}
-else if(k!='c'){dk={mode:'move',b,k,o,x0:e.clientX,s0:k=='t'?o.s:o.st,d:k=='t'?o.e-o.s:0,mv:0};clearTimeout(lpT);if(k!='s')lpT=setTimeout(()=>{if(dk&&!dk.mv){const r=b.getBoundingClientRect();showCtx(k,i,r.left+r.width/2,r.top);dk=null}},520)}});
+else if(k!='c'){dk={mode:'move',b,k,o,x0:e.clientX,s0:k=='t'?o.s:o.st,d:k=='t'?o.e-o.s:0,mv:0};clearTimeout(lpT);if(k!='s')lpT=setTimeout(()=>{if(dk&&!dk.mv){dk.lp=1;try{navigator.vibrate&&navigator.vibrate(18)}catch(_){}}},520)}});
 function trimBy(q,dx){const o=q.o,L=q.side=='l',s=q.s0;
 if(q.k=='t'){if(L)o.s=Math.max(0,Math.min(s.e-.2,s.s+dx));else o.e=Math.max(o.s+.2,s.e+dx);return}
 if(q.k=='m'){if(L){const d=Math.max(-s.in,Math.min(s.dur-.2,dx));o.in=s.in+d;o.dur=s.dur-d;o.st=Math.max(0,s.st+d)}else o.dur=Math.max(.2,Math.min(s.src-s.in,s.dur+dx));return}
@@ -837,7 +837,7 @@ const sp=o.sp||1;if(L){const d=Math.max(-s.in/sp,Math.min((s.out-s.in)/sp-.2,dx)
 $('#tl').addEventListener('pointermove',e=>{if(!dk)return;const dx=(e.clientX-dk.x0)/PPS;if(!dk.mv&&Math.abs(dx*PPS)<6)return;if(!dk.mv){snap();dk.mv=1;clearTimeout(lpT)}const o=dk.o;
 if(dk.mode=='trim'){trimBy(dk,dx);const b=dk.b;if(dk.k=='c')b.style.width=len(o)*PPS+'px';else{const st=dk.k=='t'?o.s:o.st,w=dk.k=='t'?o.e-o.s:(dk.k=='m'||dk.k=='v')?o.dur:len(o);b.style.left=(PAD+st*PPS)+'px';b.style.width=Math.max(24,w*PPS)+'px'}}
 else{laneDrag(e,dk);const ns=snapT(Math.max(0,dk.s0+dx),dk);if(dk.k=='t'){o.s=ns;o.e=ns+dk.d}else o.st=ns;dk.b.style.left=(PAD+ns*PPS)+'px'}});
-const endBk=()=>{clearTimeout(lpT);if(dk&&dk.mv){if(dk.mode=='trim'&&dk.side=='l'&&dk.d)shiftKf(dk.o,-dk.d);ui();panel();seek(t)}else if(dk){ui();panel()}dk=null};
+const endBk=()=>{clearTimeout(lpT);if(dk&&dk.lp&&!dk.mv){const r=dk.b.getBoundingClientRect(),kk=dk.k,ii=+dk.b.dataset.i;dk=null;showCtx(kk,ii,r.left+r.width/2,r.top);return}if(dk&&dk.mv){if(dk.mode=='trim'&&dk.side=='l'&&dk.d)shiftKf(dk.o,-dk.d);ui();panel();seek(t)}else if(dk){ui();panel()}dk=null};
 $('#tl').addEventListener('pointerup',endBk);$('#tl').addEventListener('pointercancel',endBk);
 // ---- visibility / mute ----
 function tgl(){const o=tObj(),x=texts[selT],k=kfT&&x?'Text “'+x.txt.split('\n')[0]+'”':tmode=='ov'&&ovs[selO]?'Overlay · '+ovs[selO].name:tmode=='mus'&&mtr[selM]?'Music · '+mtr[selM].name:tmode=='sfx'&&sfx[selS]?'Sound · '+sfx[selS].name:clips[sel]?'Main video · '+clips[sel].name:'';
@@ -847,7 +847,7 @@ function LAYP(){const row=(on,l,a,o,au3)=>`<div class="lyr"><button class="${on?
 texts.forEach((x,i)=>h+=row(kfT&&selT==i,'T · '+x.txt.split('\n')[0].slice(0,22),'t'+i,x));ovs.forEach((o,i)=>h+=row(tmode=='ov'&&selO==i&&!kfT,'Layer '+((o.lane||0)+1)+' · '+o.name,'o'+i,o));clips.forEach((c,i)=>h+=row(tmode=='main'&&sel==i&&!kfT,'Main · '+c.name+' ('+len(c).toFixed(1)+'s)','m'+i,c));
 mtr.forEach((m,i)=>h+=row(tmode=='mus'&&selM==i,'♪ '+m.name,'u'+i,m,1));sfx.forEach((s,i)=>h+=row(tmode=='sfx'&&selS==i,'SFX · '+s.name,'s'+i,s,1));return h+'</div>'+(h.length<60?'<p class="mu">Nothing here yet.</p>':'')}
 function pickLayer(s){const k=s[0],i=+s.slice(1);kfT=false;if(k=='t'){selT=i;kfT=true}else if(k=='o'){selO=i;tmode='ov'}else if(k=='m'){sel=i;tmode='main'}else if(k=='u'){selM=i;mus=mtr[i];tmode='mus'}else if(k=='s'){selS=i;tmode='sfx'}ui();panel()}
-$('#pn').addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;const g=a=>{const k=a[0],i=+a.slice(1);return k=='t'?texts[i]:k=='o'?ovs[i]:k=='m'?clips[i]:k=='u'?mtr[i]:sfx[i]};if(b.dataset.eye){snap();const o=g(b.dataset.eye);o.hid=!o.hid;ui();panel()}else if(b.dataset.spk){snap();const o=g(b.dataset.spk);o.mut=!o.mut;ui();panel()}});
+$('#pn').addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;const g=a=>{const k=a[0],i=+a.slice(1);return k=='t'?texts[i]:k=='o'?ovs[i]:k=='m'?clips[i]:k=='u'?mtr[i]:k=='v'?fxl[i]:sfx[i]};if(b.dataset.eye){snap();const o=g(b.dataset.eye);o.hid=!o.hid;ui();panel()}else if(b.dataset.spk){snap();const o=g(b.dataset.spk);o.mut=!o.mut;ui();panel()}});
 // ---- colour sphere picker ----
 let CCX='#00ff00',CPK=null,PKS={};
 const sph=c=>c,SPH=(id,col,get,set)=>{PKS[id]={get,set};return`<button class="sph" data-pk="${id}" aria-label="Choose colour" style="background:${sph(col)}"></button>`};
@@ -1740,6 +1740,25 @@ $('#pn').addEventListener('click',e=>{const b=e.target.closest('button');if(!b)r
 {const _d=doLogin;doLogin=async function(){const was=lm;await _d.apply(this,arguments);if(me){LS.setItem('ed_last',me);if(was=='up')recoveryUI()}}}
 function recoveryUI(){scr('<div class="pg"><h1 style="font-size:26px">Account created</h1><p class="mu">Reinstalling the app erases what is stored on the phone. Save a small recovery file now: tap Save, then pick Downloads or Google Drive. After a reinstall, tap “Restore from a backup file” on the login screen and choose it, and your login comes back.</p><button class="ac" id="rcsv">Save recovery file</button><button id="rcsk">Skip for now</button><p class="mu" id="bkst"></p></div>')}
 $('#sc').addEventListener('click',async e=>{const b=e.target.closest('button');if(!b)return;if(b.id=='rcsk')closeS();else if(b.id=='rcsv'){const st=$('#bkst');try{const bl=await buildBackup(false);await saveTo(bl,'editor-account-'+new Date().toISOString().slice(0,10)+'.edbk',URL.createObjectURL(bl),st);setTimeout(closeS,900)}catch(x){st.textContent='Couldn’t save: '+(x&&x.message||x)}}});
+
+// ===== v14: playback watchdog, waveform without stalls, snapping and long-press fixes =====
+let WD={t:-1,at:0,l:0,msg:0,rl:0};
+async function relinkClip(c){if(!c||!c.mid)return false;try{const b=await idb('media','readonly',s=>s.get(c.mid));if(!b)return false;const u=URL.createObjectURL(b);clips.forEach(k=>{if(k.mid===c.mid)k.url=u});v.dataset.u='';const p=at(t);load(p.i,p.l,playing);return true}catch(_){return false}}
+{const _t0=tick0;tick0=function(n){const now=n||performance.now(),dt=WD.l?Math.min(.1,(now-WD.l)/1000):0;WD.l=now;const tm=t;_t0(n);
+if(!playing||exporting||XBUSY){WD.at=0;WD.stall=0;WD.vt=v.currentTime;return}
+if(WD.stall){if(Math.abs(v.currentTime-WD.vt)>.03)WD.stall=0;else{t=Math.min(projEnd(),tm+dt);const p=at(t);if(p.i!==pi&&clips[p.i])load(p.i,p.l,true)}}
+WD.vt=v.currentTime;
+if(!WD.at||Math.abs(t-WD.t)>.0005){WD.t=t;WD.at=now;return}
+const stuck=now-WD.at;if(stuck<700)return;WD.stall=1;
+const c=clips[pi],why='video '+(v.error?'error '+v.error.code:'state '+v.readyState)+(v.paused?', paused':'')+(v.seeking?', seeking':'');window.__wd=why;
+if(now-WD.msg>7000){WD.msg=now;try{toast('Preview was stuck ('+why+'). Recovering…')}catch(_){}}
+if(c&&isV(c)&&!c.rev){if(v.paused&&v.readyState>=2&&!v.seeking){v.play().catch(()=>{v.muted=true;v.play().catch(()=>{})})}
+if((v.error||v.readyState<2)&&stuck>1500&&now-WD.rl>4000){WD.rl=now;relinkClip(c).then(ok=>{if(!ok){v.dataset.u='';const p=at(t);load(p.i,p.l,true)}})}}
+t=Math.min(projEnd(),t+dt);WD.t=t}}
+// the music waveform no longer blocks the screen: it waits, works in small pieces and skips giant files
+async function wfLoad(url){if(WFC.has(url))return;WFC.set(url,'l');const Y=()=>new Promise(r=>setTimeout(r,0));try{await new Promise(r=>setTimeout(r,500));WAC=WAC||new(window.AudioContext||window.webkitAudioContext)();const ab=await(await fetch(url)).arrayBuffer();if(ab.byteLength>60e6){WFC.set(url,'x');return}await Y();const b=await WAC.decodeAudioData(ab);await Y();const d=b.getChannelData(0),n=Math.ceil(b.duration*20),pk=new Float32Array(n),sp=Math.max(1,Math.floor(b.sampleRate/20));for(let i=0;i<n;i++){let m=0;const s0=i*sp,e0=Math.min(d.length,s0+sp);for(let k=s0;k<e0;k+=24){const x=Math.abs(d[k]);if(x>m)m=x}pk[i]=m;if(i%500==499)await Y()}let mx=0;pk.forEach(x=>{if(x>mx)mx=x});if(mx>0)for(let i=0;i<n;i++)pk[i]/=mx;WFC.set(url,pk);WFS.clear();renderTL()}catch(e){WFC.set(url,'x')}}
+// dragging next to a split piece no longer sticks to the spot it came from
+{const _c=cands;cands=function(q){const C=_c(q);if(q&&q.mode=='move'&&typeof q.s0=='number'){const a=q.s0,L=q.k=='t'?q.d:(q.k=='m'||q.k=='v')?q.o.dur:q.k=='s'?0:len(q.o);return C.filter(c=>c.l=='Playhead'||(Math.abs(c.t-a)>.03&&Math.abs(c.t-(a+L))>.03))}return C}}
 
 ui();panel();tick();boot();if('serviceWorker' in navigator&&location.protocol.startsWith('http'))navigator.serviceWorker.register('sw.js').catch(()=>{});
 </script></body></html>
