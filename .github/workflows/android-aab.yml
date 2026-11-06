@@ -1,0 +1,76 @@
+name: Build Play Store AAB
+# Run this by hand: Actions tab -> "Build Play Store AAB" -> Run workflow.
+# It builds with Capacitor 8 (Android 16 / API 36), which Google Play now requires.
+# Your normal APK workflow is not touched.
+on:
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  aab:
+    runs-on: ubuntu-latest
+    env:
+      UPLOAD_KEY_PASSWORD: ${{ secrets.UPLOAD_KEY_PASSWORD }}
+      GH_TOKEN: ${{ github.token }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 21
+      - name: Check the upload key password secret
+        run: |
+          if [ -z "$UPLOAD_KEY_PASSWORD" ] || [ ${#UPLOAD_KEY_PASSWORD} -lt 12 ]; then
+            echo "::error::Add a repository secret named UPLOAD_KEY_PASSWORD (at least 12 characters). See play-store-guide.md, step 1."
+            exit 1
+          fi
+      - name: Prepare web files for Android 16 edge-to-edge
+        run: |
+          mkdir -p www
+          cp index.html manifest.webmanifest sw.js icon-192.png icon-512.png www/
+          sed -i 's/env(safe-area-inset-top,0px)/var(--safe-area-inset-top,env(safe-area-inset-top,0px))/g; s/env(safe-area-inset-bottom,0px)/var(--safe-area-inset-bottom,env(safe-area-inset-bottom,0px))/g' www/index.html
+      - name: Use Capacitor 8 for this build only
+        run: |
+          node -e "const fs=require('fs');const p=JSON.parse(fs.readFileSync('package.json','utf8'));for(const k of ['dependencies','devDependencies'])for(const n in p[k]||{})if(n.startsWith('@capacitor/'))p[k][n]='^8.0.0';fs.writeFileSync('package.json',JSON.stringify(p,null,2))"
+          npm install
+          npx cap add android
+          npx cap sync android
+      - name: Make sure the app targets Android 16 (API 36)
+        run: |
+          cat android/variables.gradle
+          grep -q "targetSdkVersion = 36" android/variables.gradle || { echo "::error::The app does not target API 36"; exit 1; }
+      - name: Get or create the upload key
+        run: |
+          if gh release download upload-key -p upload-keystore.p12 -D . 2>/dev/null; then
+            echo "Using the saved upload key"
+          else
+            keytool -genkeypair -storetype PKCS12 -keystore upload-keystore.p12 -alias upload -keyalg RSA -keysize 2048 -validity 10000 -storepass "$UPLOAD_KEY_PASSWORD" -keypass "$UPLOAD_KEY_PASSWORD" -dname "CN=Editor, O=Editor, C=IN"
+            gh release create upload-key upload-keystore.p12 --title "Upload key (password protected, keep a copy)" --notes "Created automatically. Do not delete. The password is your UPLOAD_KEY_PASSWORD secret."
+          fi
+          cp upload-keystore.p12 android/app/upload-keystore.p12
+      - name: Sign the release build
+        run: |
+          node - <<'JS'
+          const fs=require('fs'),f='android/app/build.gradle';let g=fs.readFileSync(f,'utf8');
+          if(!/buildTypes\s*\{\s*release\s*\{/.test(g)||!/\nandroid\s*\{/.test(g)){console.error('::error::Unexpected build.gradle layout');process.exit(1)}
+          g=g.replace(/\nandroid\s*\{/,m=>m+"\n    lint { checkReleaseBuilds = false }\n    signingConfigs {\n        release {\n            storeFile file('upload-keystore.p12')\n            storeType 'PKCS12'\n            storePassword System.getenv('UPLOAD_KEY_PASSWORD')\n            keyAlias 'upload'\n            keyPassword System.getenv('UPLOAD_KEY_PASSWORD')\n        }\n    }");
+          g=g.replace(/buildTypes\s*\{\s*release\s*\{/,m=>m+"\n            signingConfig signingConfigs.release");
+          fs.writeFileSync(f,g);console.log('signing added');
+          JS
+      - name: Build the AAB
+        run: |
+          chmod +x android/gradlew
+          cd android && ./gradlew bundleRelease --no-daemon
+      - run: cp android/app/build/outputs/bundle/release/app-release.aab editor.aab
+      - uses: actions/upload-artifact@v4
+        with:
+          name: editor-aab
+          path: editor.aab
+      - uses: softprops/action-gh-release@v2
+        with:
+          tag_name: latest-aab
+          name: Editor (latest AAB for Google Play)
+          files: editor.aab
