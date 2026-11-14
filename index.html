@@ -177,8 +177,19 @@ body.pnbig #pn{height:33vh}body.pnbig #tw{height:84px}body.pnbig #acts,body.pnai
 
 body.pnbig #tl{height:84px!important}
 .tbg button{border:2px solid transparent}.tbg button.on{border-color:var(--ac)}
-#cr .cl.on{touch-action:none;cursor:grab}#cr .cl{transition:none}.rstrow{display:flex;gap:6px;justify-content:flex-end;flex-wrap:wrap;margin:0 0 6px}.rstrow button{background:var(--pn2);border:0;border-radius:10px;padding:6px 11px;color:var(--mu)}.rstrow button.on{color:var(--ac);font-weight:700}</style></head><body>
-<header><div style="display:flex;align-items:center;gap:8px"><button id="mn" aria-label="Menu">☰</button><h1>Editor</h1><span class="mu" style="margin:0;font-size:11px">v18</span></div><div style="display:flex;gap:6px"><button id="un">Undo</button><button class="ac" id="ex">Export</button></div></header>
+#cr .cl.on{touch-action:none;cursor:grab}#cr .cl{transition:none}.rstrow{display:flex;gap:6px;justify-content:flex-end;flex-wrap:wrap;margin:0 0 6px}.rstrow button{background:var(--pn2);border:0;border-radius:10px;padding:6px 11px;color:var(--mu)}.rstrow button.on{color:var(--ac);font-weight:700}
+.kfrow{position:relative;height:44px;margin:6px 2px 10px;background:var(--pn2);border-radius:12px;overflow:hidden}
+.kfrow .kln{position:absolute;left:4%;right:4%;top:50%;height:2px;background:rgba(128,128,128,.4)}
+.kfrow .kph{position:absolute;top:4px;bottom:4px;width:2px;background:var(--ac);border-radius:1px;transform:translateX(-1px)}
+.kfrow .kfd{position:absolute;top:50%;width:16px;height:16px;min-width:0!important;min-height:0!important;padding:0!important;margin:0!important;transform:translate(-50%,-50%) rotate(45deg);background:#fff;border:2px solid var(--ac);border-radius:3px}
+.kfrow .kfd.on{background:var(--ac)}
+.kfact{display:flex;gap:6px;overflow-x:auto;padding:2px 2px 8px;scrollbar-width:none}.kfact::-webkit-scrollbar{display:none}
+.kfact button{flex:0 0 auto;display:flex;flex-direction:column;align-items:center;gap:2px;min-width:58px;padding:8px 6px;border-radius:12px}
+.kfact button i{font-style:normal;font-size:17px;line-height:1}.kfact button span{font-size:11px}
+.kfact.kfp button{background:transparent;opacity:.9}
+.kd{font-size:13px;text-shadow:0 0 2px #000}
+</style></head><body>
+<header><div style="display:flex;align-items:center;gap:8px"><button id="mn" aria-label="Menu">☰</button><h1>Editor</h1><span class="mu" style="margin:0;font-size:11px">v19</span></div><div style="display:flex;gap:6px"><button id="un">Undo</button><button class="ac" id="ex">Export</button></div></header>
 <div id="stage"><canvas id="cv"></canvas><div id="fsc"><button id="fsp" class="ac">Play</button><span id="fst"></span><button id="fsx">Exit</button></div>
 <div id="empty"><div style="font-size:18px;font-weight:700">Start a new project</div><div class="mu">Pick one or more videos from your device.</div><button class="ac" id="ad0">Add videos</button></div></div>
 <div class="row"><button id="pl" class="ac" style="min-width:74px">Play</button><button id="pv">Preview</button><div id="tm">00:00.0 / 00:00.0</div><button id="zo">−</button><button id="zi">+</button></div>
@@ -236,7 +247,7 @@ function mask(m,W,H,s){const r=Math.min(W,H)*s/2,X=W/2,Y=H/2,P=cx;P.beginPath();
 if(m=='circle')P.arc(X,Y,r,0,7);else if(m=='ellipse')P.ellipse(X,Y,W*s/2,H*s/2,0,0,7);else if(m=='box')P.rect(X-r,Y-r*.7,r*2,r*1.4);else if(m=='line')P.rect(-W,Y-4*H,3*W,4*H);else if(m=='mirror')P.rect(-W,Y-r*.5,3*W,r);
 else if(m=='heart'){P.moveTo(X,Y+r*.9);P.bezierCurveTo(X-r*1.6,Y-r*.2,X-r*.7,Y-r*1.2,X,Y-r*.4);P.bezierCurveTo(X+r*.7,Y-r*1.2,X+r*1.6,Y-r*.2,X,Y+r*.9)}
 else if(m=='star'){for(let i=0;i<10;i++){const a=-Math.PI/2+i*Math.PI/5,q=i%2?r*.45:r;P[i?'lineTo':'moveTo'](X+q*Math.cos(a),Y+q*Math.sin(a))}P.closePath()}}
-const VER='v18',LS=makeLS(),uid=()=>Math.random().toString(36).slice(2,9)+Date.now().toString(36);
+const VER='v19',LS=makeLS(),uid=()=>Math.random().toString(36).slice(2,9)+Date.now().toString(36);
 let me=null,pid=null,pname='Untitled',pst='pending',saveT,mus=null,progUntil=0,ESon=false,ES=720,EF=30,EFm='mp4',scrN='',pfI,lm='in',lk='email',an,mg,duck=1;
 const RES=[['480p',480],['720p HD',720],['1080p FHD',1080],['2K',1440],['4K',2160]],OWN=()=>me||'guest';
 const SW=['#ffffff','#0b0f19','#ff5c7a','#ff8a5c','#ffc857','#ffe66d','#b8f55b','#3ddc97','#2ee6a6','#22d3ee','#4da3ff','#6c7bff','#8b5cf6','#c084fc','#f472b6','#fb7185','#f97316','#eab308','#84cc16','#14b8a6','#0ea5e9','#6366f1','#a3a3a3','#525252'];
@@ -805,7 +816,7 @@ function splitObj(c,l){const a=cl(c),b=cl(c),K=c.kf||[],m=kv(c,l);if(c.txt!==und
 if(K.length){const pe=(K.filter(k=>k.t<=l).slice(-1)[0]||{}).e||'io';a.kf=[...K.filter(k=>k.t<l-.02).map(cl),{...m,t:l,e:'lin'}];b.kf=[{...m,t:0,e:pe},...K.filter(k=>k.t>l+.02).map(k=>({...cl(k),t:k.t-l}))]}else{a.kf=[];b.kf=[]}return[a,b]}
 function shiftKf(o,d){if(o.kf&&o.kf.length)o.kf=o.kf.map(k=>({...k,t:k.t+d})).filter(k=>k.t>=-1e-6)}
 function insertMain(k){if(!clips.length){clips.push(k);sel=0;return}const p=at(t),c=clips[p.i],L=len(c);let i;if(t>=total()-.001)i=clips.length;else if(p.l<=.1)i=p.i;else if(p.l>=L-.1)i=p.i+1;else{const[a,b]=splitObj(c,p.l);clips.splice(p.i,1,a,b);i=p.i+1}clips.splice(i,0,k);sel=i}
-const toMain=o=>{const n=D({...cl(o)});delete n.st;n.sc=1;n.px=0;n.py=0;n.lane=0;n.tr={type:'none',d:.6};return n};
+const toMain=o=>{const n=D({...cl(o),kf:[]});delete n.st;n.sc=1;n.px=0;n.py=0;n.lane=0;n.tr={type:'none',d:.6};return n};
 const toLayer=(o,lane)=>{const n=D({...cl(o)});n.st=t;if(o.st===undefined){n.sc=.5;n.py=-.2}n.lane=lane;n.tr={type:'none',d:.6};n.kf=n.kf||[];return n};
 function addColor(col){snap();insertMain(D({url:null,name:'Colour',dur:60,in:0,out:2,sp:1,vol:1,col,f:{b:100,c:100,s:100,x:''}}));tmode='main';kfT=false;tab='trim';chg()}
 function tObj(){if(kfT&&texts[selT])return texts[selT];if(tmode=='ov'&&ovs[selO])return ovs[selO];if(tmode=='mus'&&mtr[selM])return mtr[selM];if(tmode=='sfx'&&sfx[selS])return sfx[selS];return tmode=='main'?clips[sel]:null}
@@ -1308,13 +1319,13 @@ function BGP(){const b=PBG||{type:'none'},sp2=(id,f)=>SPH(id,b[f]||'#000000',()=
 if(b.type=='color')h+=`<div class="rw"><span>Colour</span>${sp2('bgc1','c1')}</div>`+SWR2();if(b.type=='grad')h+=TG(BGG.map((g,i)=>TILE(`data-bgg="${i}"`,'bgg|'+i,'')).join(''))+`<div class="rw"><span>Colours</span>${sp2('bgc1','c1')}${sp2('bgc2','c2')}</div><div class="chips">${[['0','Down'],['1','Across'],['2','Diagonal']].map(([k,l])=>`<button data-bgd="${k}" class="${(b.dir||0)==k?'on':''}">${l}</button>`).join('')}</div>`;
 if(b.type=='pat')h+=TG(['bokeh','stripes','dots','grid'].map(k=>TILE(`data-bgp="${k}"`,'bgp|'+k,k,b.pat==k)).join(''))+`<div class="rw"><span>Colours</span>${sp2('bgc1','c1')}${sp2('bgc2','c2')}</div>`;return h+'<p class="mu">The background sits behind every layer. Use Cutout or Chroma on a video, and the background shows through.</p>'}
 function CVP(){return TG(Object.keys(R).map(k=>TILE(`data-r="${k}"`,'ratio|'+k,k,ratio==k)).join(''))+`<div class="chips"><button data-fit="fit" class="${fit=='fit'?'on':''}">Fit</button><button data-fit="fill" class="${fit=='fill'?'on':''}">Fill</button></div><div class="rw"><input type="text" id="cw" placeholder="W" inputmode="numeric" style="width:56px;flex:none"><span style="width:auto">:</span><input type="text" id="ch" placeholder="H" inputmode="numeric" style="width:56px;flex:none"><button data-cu="1">Custom ratio</button></div>`}
-function TXP(){const x=texts[selT];let h=`<div class="chips seg"><button class="ac" id="at">Add text</button>${x?[['edit','Edit'],['style','Style'],['font','Font'],['box','Box'],['anim','Animate'],['shape','Shape'],['t3d','3D'],['zoom','Zoom']].map(([k,l])=>`<button data-tsub="${k}" class="${tsub==k?'on':''}">${l}</button>`).join(''):''}</div>`;
+function TXP(){const x=texts[selT];let h=`<div class="chips seg"><button class="ac" id="at">Add text</button>${x?[['edit','Edit'],['style','Style'],['font','Font'],['box','Box'],['anim','Animate'],['shape','Shape'],['t3d','3D'],['zoom','Zoom'],['mask','Mask']].map(([k,l])=>`<button data-tsub="${k}" class="${tsub==k?'on':''}">${l}</button>`).join(''):''}</div>`;
 if(!x)return h+'<p class="mu">Tap Add text, then drag it on the preview. Pinch to resize and rotate.</p>';const k=kv(x,lt(x)),mx=Math.max(projEnd()+10,1),sp1=(id,f)=>SPH(id,x[f]||'#000000',()=>tsx()[f]||'#000000',v=>{tsx()[f]=v});
 if(tsub=='edit')h+=`<textarea id="tt" rows="2">${esc(x.txt)}</textarea><div class="chips">${['left','center','right'].map(a=>`<button data-ta="${a}" class="${x.al==a?'on':''}">${a}</button>`).join('')}${[['b','Bold'],['i','Italic'],['u','Underline'],['up','AA']].map(([f,l])=>`<button data-tg="${f}" class="${x[f]?'on':''}">${l}</button>`).join('')}</div>`+rg('tz','Size',10,300,1,Math.round(k.z))+rg('top','Opacity',0,100,1,Math.round(k.op*100),q=>q+'%')+rg('tx_rot','Rotate',-180,180,1,Math.round(x.rot||0),q=>q+'°')+rg('ts','Start',0,mx,.1,x.s,s2)+rg('te','End',0,mx,.1,x.e,s2)+TXZ(x);
 else if(tsub=='style')h+=TG(Object.keys(TPS).map(n=>TILE(`data-tp="${n}"`,'tps|'+n,n)).join(''))+SWR()+`<div class="rw"><span>Colour</span>${sp1('tx_c','c')}<button data-tg="grad" class="${x.grad?'on':''}">Gradient</button>${sp1('tx_c2','c2')}</div>`+rg('tx_sw','Outline',0,14,1,x.sw??3)+`<div class="rw"><span>Outline</span>${sp1('tx_sc','sc')}<button data-tg="glow" class="${x.glow?'on':''}">Glow</button></div>`+rg('tx_shb','Shadow',0,40,1,x.shb||0)+rg('tx_shx','Shadow X',-20,20,1,x.shx||0)+rg('tx_shy','Shadow Y',-20,20,1,x.shy||0)+rg('tx_ex','3D depth',0,40,1,x.ex||0)+rg('tx_exa','3D angle',0,360,1,x.exa??45)+`<div class="rw"><span>3D colour</span>${sp1('tx_exc','exc')}</div>`+`<div class="rw"><span>Shadow</span>${sp1('tx_shc','shc')}</div>`;
 else if(tsub=='font')h+=`<div class="chips">${Object.keys(FF).map(n=>`<button data-ff="${n}" class="${x.ff==FF[n]?'on':''}" style="font-family:${FF[n]}">${n}</button>`).join('')}<button id="fimp">+ Import font</button></div>`+rg('tx_ls','Letter space',-5,40,1,x.ls||0)+rg('tx_lh','Line space',.8,2.5,.05,x.lh||1.2);
 else if(tsub=='box')h+=rg('tx_bgo','Box opacity',0,1,.05,x.bgo??(x.bg?.55:0),q=>Math.round(q*100)+'%')+rg('tx_bgr','Corner',0,60,1,x.bgr??12)+`<div class="rw"><span>Box colour</span>${sp1('tx_bgc','bgc')}</div>`;
-else if(tsub=='shape')h+=TXSH(x);else if(tsub=='t3d')h+=T3P(x);else if(tsub=='zoom')h+=`<div class="chips">${[['off','Off'],['plain','Zoom text'],['reveal','Video inside text']].map(([q,l])=>`<button data-zm="${q}" class="${(x.zmode||'off')==q?'on':''}">${l}</button>`).join('')}</div>`+rg('tx_zs','Start zoom',10,1000,10,x.zs||100,q=>q+'%')+rg('tx_ze','End zoom',100,5000,50,x.ze||3000,q=>q+'%')+rg('tx_zd','Duration',.3,6,.1,x.zd||1.5,s1)+rg('tx_zf','Zoom into letter',0,Math.max(0,(x.txt||'').split('\n')[0].length-1),1,x.zf||0,q=>+q+1)+`<div class="rw"><span>Cover colour</span>${sp1('tx_zbg','zbg')}</div><p class="mu">Video inside text: put the next clip at the start of this text. The text zooms until it fills the screen, and the video shows through the letters.</p>`;
+else if(tsub=='mask')h+=TXMK(x);else if(tsub=='shape')h+=TXSH(x);else if(tsub=='t3d')h+=T3P(x);else if(tsub=='zoom')h+=`<div class="chips">${[['off','Off'],['plain','Zoom text'],['reveal','Video inside text']].map(([q,l])=>`<button data-zm="${q}" class="${(x.zmode||'off')==q?'on':''}">${l}</button>`).join('')}</div>`+rg('tx_zs','Start zoom',10,1000,10,x.zs||100,q=>q+'%')+rg('tx_ze','End zoom',100,5000,50,x.ze||3000,q=>q+'%')+rg('tx_zd','Duration',.3,6,.1,x.zd||1.5,s1)+rg('tx_zf','Zoom into letter',0,Math.max(0,(x.txt||'').split('\n')[0].length-1),1,x.zf||0,q=>+q+1)+`<div class="rw"><span>Cover colour</span>${sp1('tx_zbg','zbg')}</div><p class="mu">Video inside text: put the next clip at the start of this text. The text zooms until it fills the screen, and the video shows through the letters.</p>`;
 else{const g=(k,f,cur2)=>`<b class="sec">${k=='in'?'Enter':k=='out'?'Exit':'Loop'}</b>`+TG((k=='loop'?LP:AN).map(([a,l])=>TILE(`data-an="${f}:${a}"`,`ta|${k}|${a}`,l,(cur2||'none')==a)).join(''));h+=g('in','ain',x.ain)+g('out','aout',x.aout)+g('loop','aloop',x.aloop)+rg('tx_ad','Duration',.2,1.5,.05,x.ad||.5,s1)}
 return h}
 // ---- vector stickers ----
@@ -1655,6 +1666,7 @@ if(x.shb>0||x.glow){g.shadowColor=x.glow?x.c:(x.shc||'#000');g.shadowBlur=(x.glo
 g.fillStyle=fill;put((t2,a,b)=>{g.fillText(t2,a,b);if(x.u&&!SL){const lw=g.measureText(t2).width,lx=x.al=='left'?0:x.al=='right'?-lw:-lw/2;g.fillRect(lx,b+z*.52,lw,Math.max(2,z*.06))}});g.shadowBlur=0;g.shadowColor='transparent'}}
 if(!hole&&i==selT&&kfT&&!exporting&&!ESon&&!playing){g.setLineDash([10,8]);g.lineWidth=3/sc2;g.strokeStyle='#34c759';g.strokeRect(ox-12,-h0/2-8,w+24,h0+16)}g.restore()};
 if(zm=='reveal'){const o=FC2(W,H),g=o.getContext('2d');g.setTransform(1,0,0,1,0,0);g.globalAlpha=1;g.globalCompositeOperation='source-over';g.clearRect(0,0,W,H);g.fillStyle=x.zbg||'#000000';g.fillRect(0,0,W,H);g.globalCompositeOperation='destination-out';paint(g,true);g.globalCompositeOperation='source-over';cx.globalAlpha=Math.max(0,Math.min(1,al));cx.drawImage(o,0,0)}
+else if(x.mk&&x.mk!='none'){const o=FC2(W,H),g=o.getContext('2d'),tw=Math.max(8,w*sc2*SXd),th=Math.max(8,h0*sc2*SYd),dxo=(ox+w/2)*sc2*SXd,ra=rot*Math.PI/180,G={cx:tx+dxo*Math.cos(ra),cy:ty+dxo*Math.sin(ra),tw,th,B:Math.max(tw,th*1.4),k:{ms:x.ms,mx:x.mx,my:x.my,mr:x.mr}};TMG.set(x0,G);g.setTransform(1,0,0,1,0,0);g.globalAlpha=1;g.globalCompositeOperation='source-over';g.filter='none';g.clearRect(0,0,W,H);paint(g,false);TMASK(g,x,W,H,G);cx.globalAlpha=Math.max(0,Math.min(1,al));cx.drawImage(o,0,0)}
 else{cx.globalAlpha=Math.max(0,Math.min(1,al));paint(cx,false)}cx.restore()}
 // ===== more motion effects =====
 Object.assign(VX,{
@@ -2286,7 +2298,7 @@ function ovLaneMove(i,dir){const o=ovs[i];if(!o)return false;const cur=o.lane>=0
 if(dir>0)placeOv(o,cur+1);else{const tg=cur-1;ovs.filter(x=>x!==o&&(x.lane||0)===tg&&ovOverlap(o,x)).forEach(x=>{x.lane=cur});o.lane=tg}
 selO=ovs.indexOf(o);tmode='ov';kfT=false;chg();toast('Layer '+((o.lane||0)+1));return true}
 function blackClip(L){return new Promise(res=>{const c=document.createElement('canvas');c.width=c.height=32;c.getContext('2d').fillRect(0,0,32,32);c.toBlob(b=>{const f=new File([b],'Black.png',{type:'image/png'});res(D({url:URL.createObjectURL(f),mid:keep(f),name:'Black',dur:60,in:0,out:L,img:true,sp:1,vol:0,f:{b:100,c:100,s:100,x:''}}))})})}
-async function mainToOverlay(i){const c=clips[i];if(!c)return toast('Select a main-track video first');snap();const st=off(i),L=len(c),n=D({...cl(c),st,lane:0,sc:.5,py:-.2,px:0,tr:{type:'none',d:.5}});placeOv(n,0);clips.splice(i,1);if(!clips.length){clips.push(await blackClip(L))}ovs.push(n);selO=ovs.length-1;sel=Math.min(i,clips.length-1);tmode='ov';kfT=false;chg();seek(st);toast('Sent to Overlay Layer 1. Press Overlay again to move it to the next layer.')}
+async function mainToOverlay(i){const c=clips[i];if(!c)return toast('Select a main-track video first');snap();const st=off(i),L=len(c),n=D({...cl(c),kf:[],st,lane:0,sc:.5,py:-.2,px:0,tr:{type:'none',d:.5}});placeOv(n,0);clips.splice(i,1);if(!clips.length){clips.push(await blackClip(L))}ovs.push(n);selO=ovs.length-1;sel=Math.min(i,clips.length-1);tmode='ov';kfT=false;chg();seek(st);toast('Sent to Overlay Layer 1. Press Overlay again to move it to the next layer.')}
 function overlayToMain(i){const o=ovs[i];if(!o)return;snap();const n=toMain(o);ovs.splice(i,1);selO=-1;insertMain(n);tmode='main';kfT=false;chg();toast('Sent to the main track')}
 function ovChip(){if(tmode=='ov'&&ovs[selO]&&!kfT)return void ovLaneMove(selO,1);if(tmode=='main'&&!kfT&&clips[sel])return void mainToOverlay(sel);toast('Select a main-track video to send it to an overlay layer, or select an overlay to move it to the next layer.')}
 $('#aov').onclick=ovChip;
@@ -2352,6 +2364,176 @@ else if(d.t3a){T.anim=d.t3a;T.on=1}else if(d.t3c){T.side=d.t3c;T.on=1}else if(d.
 chg();panel()},true);
 $('#pn').addEventListener('input',e=>{const i=e.target.id;if(!/^t3_/.test(i)){return}const x=texts[selT];if(!x||!x.t3)return;const v=+e.target.value,T=x.t3;if(i=='t3_depth')T.depth=v;else if(i=='t3_ry')T.ry=v;else if(i=='t3_rx')T.rx=v;else if(i=='t3_rz')T.rz=v;else if(i=='t3_light')T.light=v/100;else if(i=='t3_speed')T.speed=v;T.on=1});
 
+
+
+// ===================== v19: text mask =====================
+Object.assign(MT,{ms:'ms',mx:'mx',my:'my',mr:'mr'});
+{const _kv=kv;kv=function(c,l){if(c&&c.txt!==undefined&&c.ms===undefined)Object.assign(c,{ms:1,mx:0,my:0,mr:0,mf:0,mi:0,mk:c.mk||'none'});return _kv(c,l)}}
+const TMG=new WeakMap();
+function TMASK(g,x,W,H,G){const B=G.B,fth=Math.max(x.mf||0,x.mk=='radial'?40:0)*W/540,k=G.k;
+ g.save();g.setTransform(1,0,0,1,0,0);g.globalCompositeOperation='destination-in';g.fillStyle='#000';g.globalAlpha=1;
+ if(fth>0)g.filter='blur('+fth*.4+'px)';
+ g.translate(G.cx+k.mx*G.tw,G.cy+k.my*G.th*1.4);g.rotate(k.mr*Math.PI/180);g.translate(-B/2,-B/2);
+ mask(x.mk,B,B,k.ms,g);if(x.mi)g.rect(-8*B,-8*B,17*B,17*B);g.fill(x.mi?'evenodd':'nonzero');g.restore();g.filter='none';g.globalCompositeOperation='source-over'}
+function TXMK(x){if(x.ms===undefined)Object.assign(x,{ms:1,mx:0,my:0,mr:0,mf:0,mi:0,mk:x.mk||'none'});const k=kv(x,lt(x)),m=x.mk||'none';
+ return TG(MKL.map(([q,l])=>TILE(`data-tmk="${q}"`,'mk|'+q,l,m==q)).join(''))+`<div class="chips"><button data-tmi="1" class="${x.mi?'on':''}">Invert</button><button data-tmkf="1">◆ Keyframe</button><button data-tmrs="1">Reset</button></div>`+(m=='none'?'<p class="mu">Pick a shape. Linear and Mirror give a line you can drag on the preview; the video behind shows through only where the mask reveals the text.</p>':rg('tmk_ms','Size',.2,3,.05,k.ms,pc)+rg('tmk_mf','Feather',0,100,1,x.mf||0)+rg('tmk_mx','Move X',-1.5,1.5,.01,k.mx,pc)+rg('tmk_my','Move Y',-1.5,1.5,.01,k.my,pc)+rg('tmk_mr','Rotate',-180,180,1,k.mr,z=>Math.round(z)+'°')+'<p class="mu">Drag the yellow dot on the preview to move the mask, and the small ring to rotate it. Add a Keyframe, move the timeline and change a slider to animate the reveal.</p>')}
+function maskGuide(W,H){if(exporting||ESon||playing)return;if(!(tab=='text'&&tsub=='mask'&&kfT))return;const x=texts[selT];if(!x||t<x.s||t>x.e||!x.mk||x.mk=='none')return;const G=TMG.get(x);if(!G)return;
+ const k=G.k,cx0=G.cx+k.mx*G.tw,cy0=G.cy+k.my*G.th*1.4,a=k.mr*Math.PI/180,u=W/540,hx=cx0+Math.sin(a)*86*u,hy=cy0-Math.cos(a)*86*u;
+ cx.save();cx.setLineDash([8*u,6*u]);cx.lineWidth=2*u;cx.strokeStyle='#ffcf4a';cx.fillStyle='#ffcf4a';
+ cx.save();cx.translate(cx0,cy0);cx.rotate(a);cx.translate(-G.B/2,-G.B/2);mask(x.mk,G.B,G.B,k.ms,cx);cx.stroke();cx.restore();
+ cx.setLineDash([]);cx.beginPath();cx.moveTo(cx0,cy0);cx.lineTo(hx,hy);cx.lineWidth=1.5*u;cx.stroke();
+ cx.beginPath();cx.arc(hx,hy,10*u,0,7);cx.lineWidth=3*u;cx.strokeStyle='#ffcf4a';cx.stroke();
+ cx.beginPath();cx.arc(cx0,cy0,13*u,0,7);cx.fill();cx.lineWidth=2*u;cx.strokeStyle='#000';cx.stroke();cx.restore();G.g={cx0,cy0,hx,hy,u,W,H}}
+{const _sb=selBox;selBox=function(W,H){const r=_sb.apply(this,arguments);try{maskGuide(W,H)}catch(_){}return r}}
+let MGDR=null;
+function MGD0(e){if(!(tab=='text'&&tsub=='mask'&&kfT))return false;const x=texts[selT];if(!x||!x.mk||x.mk=='none')return false;const G=TMG.get(x);if(!G||!G.g)return false;const[px,py]=cpos(e),X=px*G.g.W,Y=py*G.g.H,g=G.g,tol=30*g.u;
+ let m=null;if(Math.hypot(X-g.hx,Y-g.hy)<tol)m='rot';else if(Math.hypot(X-g.cx0,Y-g.cy0)<tol*1.3)m='mv';else return false;
+ snap();MGDR={m,x,G};try{cv.setPointerCapture(e.pointerId)}catch(_){}e.preventDefault();return true}
+function MGM(e){if(!MGDR)return;const{m,x,G}=MGDR,[px,py]=cpos(e),X=px*G.g.W,Y=py*G.g.H;
+ if(m=='mv'){setp(x,'mx',Math.max(-1.5,Math.min(1.5,(X-G.cx)/G.tw)));setp(x,'my',Math.max(-1.5,Math.min(1.5,(Y-G.cy)/(G.th*1.4))))}
+ else setp(x,'mr',Math.round(Math.atan2(X-G.g.cx0,-(Y-G.g.cy0))*180/Math.PI));draw()}
+function MGU(){if(!MGDR)return;MGDR=null;panel()}
+{const _pd=cv.onpointerdown;cv.onpointerdown=function(e){if(MGD0(e))return;return _pd&&_pd.call(this,e)};cv.addEventListener('pointermove',MGM);cv.addEventListener('pointerup',MGU);cv.addEventListener('pointercancel',MGU)}
+$('#pn').addEventListener('input',e=>{const id=e.target.id;if(!id||id.indexOf('tmk_')!=0)return;const x=texts[selT];if(!x)return;const f=id.slice(4),v=+e.target.value;if(f=='mf')x.mf=v;else setp(x,f,v);const o=$('#o_'+id);if(o&&FM[id])o.textContent=FM[id](v);draw()});
+$('#pn').addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;const x=texts[selT];if(!x||tab!='text')return;
+ if(b.dataset.tmk){snap();if(x.ms===undefined)Object.assign(x,{ms:1,mx:0,my:0,mr:0,mf:0,mi:0});x.mk=b.dataset.tmk;panel();draw();ui()}
+ else if(b.dataset.tmi){snap();x.mi=x.mi?0:1;panel();draw()}
+ else if(b.dataset.tmkf){addKf()}
+ else if(b.dataset.tmrs){snap();Object.assign(x,{ms:1,mx:0,my:0,mr:0,mf:0,mi:0,mk:'none'});if(x.kf)x.kf.forEach(q=>{q.ms=1;q.mx=0;q.my=0;q.mr=0});panel();draw();ui()}});
+
+// ===================== v19: keyframes (CapCut style) =====================
+{const _sp=setp;setp=function(c,p,v){if(c&&c.klock&&c.kf&&c.kf.length){toast('Keyframes are locked. Tap Lock to unlock.');return}return _sp(c,p,v)}}
+let kfCv=0;
+const kfSpan=T=>T.txt!==undefined?Math.max(.1,T.e-T.s):Math.max(.1,len(T)),kfStart=T=>T.txt!==undefined?T.s:T.st!==undefined?T.st:off(Math.max(0,clips.indexOf(T)));
+KFP=function(){const T=tg();if(!T)return'<p class="mu">Select a video, overlay or text first.</p>';const K=T.kf||[],L=kfSpan(T),l=lt(T),at=K.findIndex(q=>Math.abs(q.t-l)<.05),isT=T.txt!==undefined;if(ks>=K.length)ks=Math.max(0,K.length-1);
+ let h=`<div class="kfrow" id="kfrow"><div class="kln"></div>${K.map((k,i)=>`<button class="kfd ${i==ks?'on':''}" data-k2="${i}" aria-label="Keyframe ${i+1}" style="left:${4+Math.min(92,k.t/L*92)}%"></button>`).join('')}<div class="kph" style="left:${4+Math.min(92,l/L*92)}%"></div></div>`;
+ h+=`<div class="kfact">`+[['edit','✎','Edit'],['mot','↝','Motion'],['kf',at>=0?'◆':'◇','Keyframe'],['cv','∿','Curve'],['lk',T.klock?'🔒':'🔓','Lock'],['dup','⧉','Duplicate'],['del','🗑','Delete']].map(([k,i,n])=>`<button data-kfa="${k}" class="${(k=='kf'&&at>=0)||(k=='cv'&&kfCv)||(k=='lk'&&T.klock)?'on':''}"><i>${i}</i><span>${n}</span></button>`).join('')+`</div>`;
+ h+=`<div class="kfact kfp">`+(isT?[['tf','▣','Position'],['text-style','◐','Opacity'],['text-edit','Aa','Size'],['text-mask','◔','Mask']]:[['tf','▣','Position'],['tf','◐','Opacity'],['tf','⤢','Scale'],['mk','◔','Mask']]).map(([k,i,n])=>`<button data-kfp="${k}"><i>${i}</i><span>${n}</span></button>`).join('')+`</div>`;
+ if(!K.length)return h+'<p class="mu">Nothing is animated yet. Move the timeline to where you want a change, tap Keyframe, then move the timeline again and change Position, Scale, Opacity or Mask. Keyframes are only added when you tap Keyframe. Ready-made moves are in Motion.</p>';
+ const a=K[ks]||K[0];h+=`<p class="mu">Keyframe ${ks+1} of ${K.length} at ${a.t.toFixed(2)}s${T.klock?' · locked':''}</p>`;
+ if(kfCv){const pts=Array.from({length:21},(_,i)=>(i*3)+','+(36-ezf(a,i/20)*32)).join(' ');h+=`<div class="chips">${[['lin','Linear'],['in','Ease in'],['out','Ease out'],['io','Smooth'],['bk','Bounce'],['hold','Hold'],['bz','Custom']].map(([e,l2])=>`<button data-e="${e}" class="${(a.e||'io')==e?'on':''}">${l2}</button>`).join('')}</div>`+(a.e=='bz'?'<canvas id="bzc" width="240" height="150" style="width:200px;height:125px;background:var(--pn2);border-radius:10px;touch-action:none"></canvas><p class="mu">Drag the two dots to shape the curve.</p>':`<svg viewBox="0 0 60 40" width="90" height="60"><polyline fill="none" stroke="#ffcf4a" stroke-width="2" points="${pts}"/></svg>`)}
+ return h+(K.length>1?'<div class="chips"><button id="ck">Clear all</button></div>':'')};
+$('#pn').addEventListener('click',e=>{const b=e.target.closest('button');if(!b||tab!='kf')return;const T=tg();if(!T)return;
+ if(b.dataset.k2!==undefined){const k=(T.kf||[])[+b.dataset.k2];if(k){const s=kfStart(T)+k.t;seek(Math.min(s+.001,Math.max(s,total())))}return}
+ const a=b.dataset.kfa,p=b.dataset.kfp;
+ if(p){if(p=='text-mask'){tab='text';tsub='mask'}else if(p=='text-style'){tab='text';tsub='style'}else if(p=='text-edit'){tab='text';tsub='edit'}else tab=p;ui();panel();return}
+ if(!a)return;const K=T.kf||(T.kf=[]),l=lt(T),L=kfSpan(T),at=K.findIndex(q=>Math.abs(q.t-l)<.05);
+ if(a=='kf'){if(at>=0){snap();T.kf=K.filter((_,i)=>i!=at);ks=0;ui();panel();draw()}else{addKf()}}
+ else if(a=='edit'){const k=K[ks];if(k)seek(kfStart(T)+k.t+.001);else toast('Add a keyframe first')}
+ else if(a=='mot'){tab='an';ui();panel()}
+ else if(a=='cv'){kfCv=kfCv?0:1;panel()}
+ else if(a=='lk'){snap();T.klock=T.klock?0:1;toast(T.klock?'Keyframes locked':'Keyframes unlocked');panel()}
+ else if(a=='dup'){if(!K[ks])return toast('Select a keyframe first');snap();let nt=l;if(K.some(q=>Math.abs(q.t-nt)<.05))nt=Math.min(L,l+.4);if(K.some(q=>Math.abs(q.t-nt)<.05))return toast('No room here. Move the timeline.');T.kf=[...K,{...K[ks],t:nt}].sort((x,y)=>x.t-y.t);ks=T.kf.findIndex(q=>Math.abs(q.t-nt)<.05);ui();panel();draw()}
+ else if(a=='del'){if(!K[ks])return toast('Select a keyframe first');snap();T.kf=K.filter((_,i)=>i!=ks);ks=0;ui();panel();draw()}});
+
+
+// ===================== v19: 3D object + break effects (frame warps) =====================
+const FRT={},FRDEF={};
+const FSN=document.createElement('canvas');
+function frameSnap(g,W,H){if(FSN.width!==W||FSN.height!==H){FSN.width=W;FSN.height=H}const k=FSN.getContext('2d');k.setTransform(1,0,0,1,0,0);k.globalAlpha=1;k.globalCompositeOperation='source-over';k.clearRect(0,0,W,H);k.drawImage(g.canvas,0,0,W,H);return FSN}
+function texTri(g,S,s,d,sh){const[x0,y0]=s[0],[x1,y1]=s[1],[x2,y2]=s[2],[u0,v0]=d[0],[u1,v1]=d[1],[u2,v2]=d[2];
+ const den=x0*(y1-y2)+x1*(y2-y0)+x2*(y0-y1);if(Math.abs(den)<1e-6)return;
+ const a=(u0*(y1-y2)+u1*(y2-y0)+u2*(y0-y1))/den,c=(u0*(x2-x1)+u1*(x0-x2)+u2*(x1-x0))/den,e=(u0*(x1*y2-x2*y1)+u1*(x2*y0-x0*y2)+u2*(x0*y1-x1*y0))/den,
+ b=(v0*(y1-y2)+v1*(y2-y0)+v2*(y0-y1))/den,dd=(v0*(x2-x1)+v1*(x0-x2)+v2*(x1-x0))/den,f=(v0*(x1*y2-x2*y1)+v1*(x2*y0-x0*y2)+v2*(x0*y1-x1*y0))/den;
+ const mx=(u0+u1+u2)/3,my=(v0+v1+v2)/3,ex=p=>{const dx=p[0]-mx,dy=p[1]-my,l=Math.hypot(dx,dy)||1;return[p[0]+dx/l*.9,p[1]+dy/l*.9]},p0=ex(d[0]),p1=ex(d[1]),p2=ex(d[2]);
+ g.save();g.beginPath();g.moveTo(p0[0],p0[1]);g.lineTo(p1[0],p1[1]);g.lineTo(p2[0],p2[1]);g.closePath();g.clip();g.transform(a,b,c,dd,e,f);
+ const bx=Math.max(0,Math.min(x0,x1,x2)-1),by=Math.max(0,Math.min(y0,y1,y2)-1),bw=Math.min(S.width-bx,Math.max(x0,x1,x2)-bx+2),bh=Math.min(S.height-by,Math.max(y0,y1,y2)-by+2);
+ if(bw>0&&bh>0)g.drawImage(S,bx,by,bw,bh,bx,by,bw,bh);g.restore();
+ if(sh>.01){g.save();g.fillStyle='rgba(0,0,0,'+Math.min(.85,sh)+')';g.beginPath();g.moveTo(p0[0],p0[1]);g.lineTo(p1[0],p1[1]);g.lineTo(p2[0],p2[1]);g.closePath();g.fill();g.restore()}}
+function rot3(p,ry,rx,rz){let x=p[0],y=p[1],z=p[2],c=Math.cos(ry),s=Math.sin(ry),q;q=x*c+z*s;z=-x*s+z*c;x=q;c=Math.cos(rx);s=Math.sin(rx);q=y*c-z*s;z=y*s+z*c;y=q;c=Math.cos(rz);s=Math.sin(rz);q=x*c-y*s;y=x*s+y*c;x=q;return[x,y,z]}
+function drawMesh(g,S,tris,o){const{ry,rx,rz,cx0,cy0,R,fl}=o,L=[-.35,-.5,-.8],T=tris.map(t=>{const r=t.v.map(p=>rot3(p,ry,rx,rz)),d=r.map(p=>{const k=fl/(fl+p[2]);return[cx0+p[0]*R*k,cy0+p[1]*R*k]}),
+ a=[r[1][0]-r[0][0],r[1][1]-r[0][1],r[1][2]-r[0][2]],b=[r[2][0]-r[0][0],r[2][1]-r[0][1],r[2][2]-r[0][2]];let n=[a[1]*b[2]-a[2]*b[1],a[2]*b[0]-a[0]*b[2],a[0]*b[1]-a[1]*b[0]];const nl=Math.hypot(n[0],n[1],n[2])||1;
+ return{d,s:t.s,zc:(r[0][2]+r[1][2]+r[2][2])/3,sh:(1-Math.abs((n[0]*L[0]+n[1]*L[1]+n[2]*L[2])/nl))*.6}});
+ T.sort((p,q)=>q.zc-p.zc);for(const t of T)texTri(g,S,t.s,t.d,t.sh)}
+// build meshes. uv in source pixels
+function quadMesh(P,uv,N,out){for(let i=0;i<N;i++)for(let j=0;j<N;j++){const f=(a,b)=>{const u=a/N,v=b/N;return{p:P(u,v),s:uv(u,v)}},A=f(i,j),B=f(i+1,j),C=f(i+1,j+1),D=f(i,j+1);out.push({v:[A.p,B.p,C.p],s:[A.s,B.s,C.s]},{v:[A.p,C.p,D.p],s:[A.s,C.s,D.s]})}}
+const MESH={};
+function meshCube(W,H){const sq=Math.min(W,H),ox=(W-sq)/2,oy=(H-sq)/2,out=[],uv=(u,v)=>[ox+u*sq,oy+v*sq],lerp=(a,b,t)=>a+(b-a)*t,
+ faces=[[[-1,-1,-1],[1,-1,-1],[1,1,-1],[-1,1,-1]],[[1,-1,1],[-1,-1,1],[-1,1,1],[1,1,1]],[[-1,-1,1],[-1,-1,-1],[-1,1,-1],[-1,1,1]],[[1,-1,-1],[1,-1,1],[1,1,1],[1,1,-1]],[[-1,-1,1],[1,-1,1],[1,-1,-1],[-1,-1,-1]],[[-1,1,-1],[1,1,-1],[1,1,1],[-1,1,1]]];
+ for(const q of faces)quadMesh((u,v)=>[0,1,2].map(k=>lerp(lerp(q[0][k],q[1][k],u),lerp(q[3][k],q[2][k],u),v)),uv,3,out);return out}
+function meshSphere(W,H){const out=[],NU=18,NV=10;const P=(u,v)=>{const th=u*Math.PI*2,ph=v*Math.PI;return[Math.sin(ph)*Math.sin(th),-Math.cos(ph),Math.sin(ph)*Math.cos(th)]};
+ for(let i=0;i<NU;i++)for(let j=0;j<NV;j++){const u0=i/NU,u1=(i+1)/NU,v0=j/NV,v1=(j+1)/NV,s=(u,v)=>[(u*2%1||(u>0?1:0))*W,v*H],A=[P(u0,v0),s(u0,v0)],B=[P(u1,v0),s(u1,v0)],C=[P(u1,v1),s(u1,v1)],D=[P(u0,v1),s(u0,v1)];
+  const fix=(a,b)=>{if(Math.abs(a[1][0]-b[1][0])>W*.6)b[1]=[b[1][0]<W/2?b[1][0]+W:b[1][0]-W,b[1][1]];};if(Math.abs(B[1][0]-A[1][0])>W*.6)B[1]=[W,B[1][1]];if(Math.abs(C[1][0]-D[1][0])>W*.6)C[1]=[W,C[1][1]];
+  out.push({v:[A[0],B[0],C[0]],s:[A[1],B[1],C[1]]},{v:[A[0],C[0],D[0]],s:[A[1],C[1],D[1]]})}return out}
+function meshPyramid(W,H){const sq=Math.min(W,H),ox=(W-sq)/2,oy=(H-sq)/2,out=[],ap=[0,-1.15,0],b=[[-1,1,-1],[1,1,-1],[1,1,1],[-1,1,1]],T=[[ox,oy+sq],[ox+sq,oy+sq],[ox+sq/2,oy]];
+ for(let i=0;i<4;i++){out.push({v:[b[i],b[(i+1)%4],ap],s:T})}
+ quadMesh((u,v)=>[-1+2*u,1,-1+2*v],(u,v)=>[ox+u*sq,oy+v*sq],2,out);return out}
+function meshCyl(W,H){const out=[],N=24,sq=Math.min(W,H),ox=(W-sq)/2,oy=(H-sq)/2;for(let i=0;i<N;i++){const a0=i/N*Math.PI*2,a1=(i+1)/N*Math.PI*2,x0=Math.sin(a0),z0=Math.cos(a0),x1=Math.sin(a1),z1=Math.cos(a1),u0=i/N*W,u1=(i+1)/N*W;
+ out.push({v:[[x0,-1,z0],[x1,-1,z1],[x1,1,z1]],s:[[u0,0],[u1,0],[u1,H]]},{v:[[x0,-1,z0],[x1,1,z1],[x0,1,z0]],s:[[u0,0],[u1,H],[u0,H]]});
+ for(const y of[-1,1]){const cu=[ox+sq/2,oy+sq/2];out.push({v:[[0,y,0],[x0,y,z0],[x1,y,z1]],s:[cu,[ox+sq/2+x0*sq/2,oy+sq/2+z0*sq/2],[ox+sq/2+x1*sq/2,oy+sq/2+z1*sq/2]]})}}return out}
+function meshRing(W,H){const out=[],n=6,hh=.62,ww=hh*W/H,rr=ww/2/Math.tan(Math.PI/n)*1.35+.1;for(let i=0;i<n;i++){const a=i/n*Math.PI*2,cxp=Math.sin(a)*rr,czp=Math.cos(a)*rr,tx=Math.cos(a),tz=-Math.sin(a),
+ q=[[cxp-tx*ww/2,-hh,czp-tz*ww/2],[cxp+tx*ww/2,-hh,czp+tz*ww/2],[cxp+tx*ww/2,hh,czp+tz*ww/2],[cxp-tx*ww/2,hh,czp-tz*ww/2]],s=[[0,0],[W,0],[W,H],[0,H]];
+ out.push({v:[q[0],q[1],q[2]],s:[s[0],s[1],s[2]]},{v:[q[0],q[2],q[3]],s:[s[0],s[2],s[3]]})}return out}
+const MESHF={cube:meshCube,sphere:meshSphere,pyramid:meshPyramid,cylinder:meshCyl,ring:meshRing};
+function mesh3(kind,g,W,H,τ,o,spin){const S=frameSnap(g,W,H),dur=o.dur||4,env=Math.min(1,τ/.5,Math.max(0,(dur-τ)/.5)),key=kind+'|'+W+'|'+H;let M=MESH[key];if(!M){M=MESH[key]=MESHF[kind](W,H)}
+ g.save();g.setTransform(1,0,0,1,0,0);g.globalAlpha=1;g.fillStyle='rgba(8,10,16,'+(.8*env)+')';g.fillRect(0,0,W,H);g.globalAlpha=Math.max(0,env);
+ const sz=(o.sz||1)*(kind=='ring'?.62:kind=='cylinder'?.34:kind=='sphere'?.42:.34),R=Math.min(W,H)*sz*(.35+.65*env),sp=(o.spd||1);
+ drawMesh(g,S,M,{...spin(τ*sp),cx0:W/2,cy0:H/2,R,fl:kind=='ring'?3.2:4.2});g.restore()}
+const ez3=p=>p<.5?4*p*p*p:1-Math.pow(-2*p+2,3)/2;
+Object.assign(FRT,{
+ cube:(g,W,H,τ,o)=>mesh3('cube',g,W,H,τ,o,t=>({ry:t*1.05,rx:.45*Math.sin(t*.8)+.35,rz:.12*Math.sin(t*.6)})),
+ cubeflip:(g,W,H,τ,o)=>mesh3('cube',g,W,H,τ,o,t=>{const s=t/1.3,k=Math.floor(s),f=s-k;return{ry:(k+ez3(f))*Math.PI/2+.5,rx:.35*Math.sin(s*Math.PI/2),rz:0}}),
+ sphere:(g,W,H,τ,o)=>mesh3('sphere',g,W,H,τ,o,t=>({ry:t*.9,rx:.28,rz:.18})),
+ pyramid:(g,W,H,τ,o)=>mesh3('pyramid',g,W,H,τ,o,t=>({ry:t*1.1,rx:.38,rz:0})),
+ cylinder:(g,W,H,τ,o)=>mesh3('cylinder',g,W,H,τ,o,t=>({ry:t*1.0,rx:.32+.12*Math.sin(t*.9),rz:.1})),
+ ring:(g,W,H,τ,o)=>mesh3('ring',g,W,H,τ,o,t=>({ry:t*.8,rx:.22,rz:0}))});
+// ---- shatter / paper break ----
+const SHC={};let _sr=1;const rnd=()=>{_sr=(_sr*16807)%2147483647;return(_sr-1)/2147483646};
+function shards(W,H,cols,rows,seed){const key=[W,H,cols,rows,seed].join('|');if(SHC[key])return SHC[key];_sr=seed*977+13;const V=[];for(let j=0;j<=rows;j++){V.push([]);for(let i=0;i<=cols;i++){const edge=i==0||j==0||i==cols||j==rows;V[j].push([i/cols*W+(edge&&(i==0||i==cols)?0:(rnd()-.5)*W/cols*.8),j/rows*H+(edge&&(j==0||j==rows)?0:(rnd()-.5)*H/rows*.8)])}}
+ const T=[];for(let j=0;j<rows;j++)for(let i=0;i<cols;i++){const a=V[j][i],b=V[j][i+1],c=V[j+1][i+1],d=V[j+1][i],sp=rnd()>.5;for(const p of sp?[[a,b,c],[a,c,d]]:[[a,b,d],[b,c,d]]){const cxx=(p[0][0]+p[1][0]+p[2][0])/3,cyy=(p[0][1]+p[1][1]+p[2][1])/3;T.push({p,c:[cxx,cyy],r1:rnd(),r2:rnd(),r3:rnd(),d:Math.hypot(cxx-W/2,cyy-H/2)/Math.hypot(W/2,H/2)})}}
+ const o=Object.keys(SHC);if(o.length>8)delete SHC[o[0]];return SHC[key]=T}
+function breakFx(kind,g,W,H,τ,o){const dur=o.dur||3,pr=Math.max(0,Math.min(1,τ*(o.spd||1)/dur)),paper=kind=='paperbreak'||kind=='paperbuild',rev=kind=='mirrorbuild'||kind=='paperbuild',cols=Math.round((paper?2:3)+(o.amt||55)/22),rows=Math.round(cols*H/W*(paper?1.0:1.1)),T=shards(W,H,cols,Math.max(3,rows),paper?7:3),S=frameSnap(g,W,H),k=W/540;
+ const p=rev?1-pr:pr,crackEnd=kind=='glass'?1:.3;g.save();g.setTransform(1,0,0,1,0,0);g.globalAlpha=1;
+ const cr=kind=='glass'?Math.min(1,pr*1.6):rev?0:Math.min(1,p/crackEnd),seam=rev?Math.max(0,(pr)*(paper?1:1.2)):0;
+ const moving=kind!='glass'&&(rev?p>0.001:p>crackEnd);
+ const edges=(alpha,reach,col)=>{g.save();g.strokeStyle=col;g.lineWidth=1.6*k;g.globalAlpha=alpha;g.beginPath();for(const t of T){if(t.d>reach)continue;const q=t.p;g.moveTo(q[0][0],q[0][1]);g.lineTo(q[1][0],q[1][1]);g.lineTo(q[2][0],q[2][1]);g.closePath()}g.stroke();g.restore()};
+ if(!moving){g.drawImage(S,0,0);if(kind=='glass'){for(const t of T){const j=(t.r1-.5)*5*k*Math.min(1,pr*3);g.save();g.translate(j,(t.r2-.5)*4*k*Math.min(1,pr*3));g.beginPath();const q=t.p;g.moveTo(q[0][0],q[0][1]);g.lineTo(q[1][0],q[1][1]);g.lineTo(q[2][0],q[2][1]);g.closePath();g.clip();g.translate(-j,-(t.r2-.5)*4*k*Math.min(1,pr*3));g.drawImage(S,0,0);g.restore()}
+  edges(.85,cr*1.15,'rgba(255,255,255,.95)');g.fillStyle='rgba(255,255,255,'+Math.max(0,.5-pr*3)+')';g.fillRect(0,0,W,H)}else if(!rev&&cr>0){edges(.9,cr*1.1,'rgba(255,255,255,.95)');g.fillStyle='rgba(255,255,255,'+(cr>.9?.18:0)+')';g.fillRect(0,0,W,H)}g.restore();return}
+ g.fillStyle=paper?'#14100c':'#06080d';g.fillRect(0,0,W,H);
+ const order=T.map((t,i)=>({t,i})).sort((a,b)=>b.t.d-a.t.d);
+ for(const{t}of order){let q;if(rev){const o0=(1-t.d)*.35;q=Math.max(0,Math.min(1,(p-o0)/(1-o0+1e-6)))}else{const st=crackEnd+t.d*.38*(1-crackEnd);q=Math.max(0,Math.min(1,(p-st)/(1-st+1e-6)))}
+  const qq=q*q,ang=Math.atan2(t.c[1]-H/2,t.c[0]-W/2),spd=(paper?.45:.7)*(.6+t.r1),dx=Math.cos(ang)*spd*qq*W+(paper?Math.sin(qq*6+t.r2*6)*.04*W*qq:0),dy=Math.sin(ang)*spd*qq*H*.5+qq*qq*H*(paper?.55:1.15)*(.5+t.r3),rt=(t.r2-.5)*(paper?5:3.2)*qq,al=Math.max(0,1-Math.pow(qq,1.8));
+  if(al<=0.01)continue;g.save();g.globalAlpha=Math.min(1,al+.15*(1-qq));g.translate(t.c[0]+dx,t.c[1]+dy);g.rotate(rt);g.scale(1-.25*qq,1-.25*qq);g.translate(-t.c[0],-t.c[1]);
+  if(paper){g.shadowColor='rgba(0,0,0,.55)';g.shadowBlur=10*k*qq;g.shadowOffsetY=4*k*qq}
+  g.beginPath();g.moveTo(t.p[0][0],t.p[0][1]);g.lineTo(t.p[1][0],t.p[1][1]);g.lineTo(t.p[2][0],t.p[2][1]);g.closePath();g.save();g.clip();g.drawImage(S,0,0);g.restore();g.shadowColor='transparent';g.shadowBlur=0;
+  if(paper){g.strokeStyle='rgba(255,250,235,'+(.9*Math.min(1,qq*3+(rev?0:.0)))+')';g.lineWidth=2.2*k;g.stroke()}else{g.strokeStyle='rgba(255,255,255,'+(.55*Math.min(1,qq*4))+')';g.lineWidth=1.2*k;g.stroke()}g.restore()}
+ g.restore()}
+Object.assign(FRT,{shatter:(g,W,H,τ,o)=>breakFx('shatter',g,W,H,τ,o),mirrorbuild:(g,W,H,τ,o)=>breakFx('mirrorbuild',g,W,H,τ,o),paperbreak:(g,W,H,τ,o)=>breakFx('paperbreak',g,W,H,τ,o),paperbuild:(g,W,H,τ,o)=>breakFx('paperbuild',g,W,H,τ,o),glass:(g,W,H,τ,o)=>breakFx('glass',g,W,H,τ,o)});
+Object.assign(FRDEF,{shatter:3,mirrorbuild:3,paperbreak:3,paperbuild:3,glass:2.5,cube:5,cubeflip:5,sphere:5,pyramid:5,cylinder:5,ring:5});
+const BRK=[['shatter','Mirror shatter'],['mirrorbuild','Mirror rebuild'],['glass','Glass crack'],['paperbreak','Paper tear'],['paperbuild','Torn paper → image']],
+ OBJ3=[['cube','3D Cube'],['cubeflip','Cube flip'],['sphere','3D Sphere'],['pyramid','3D Pyramid'],['cylinder','3D Drum'],['ring','Photo ring']];
+for(const[k,l]of[...OBJ3,...BRK]){VX[k]=()=>{};VXL.push([k,l])}
+{const _tv=TD.vx;TD.vx=(g,w,h,a,b,τ)=>{if(FRT[a]){sampleNow();g.fillStyle='#121722';g.fillRect(0,0,w,h);g.drawImage(SAMP,0,0,w,h);try{FRT[a](g,w,h,(τ%5)+.4,{amt:55,spd:1,sz:1,dur:5})}catch(_){}return}return _tv(g,w,h,a,b,τ)}}
+{const _dv=drawVfx;drawVfx=function(W,H){_dv(W,H);for(const f of fxl){if(f.hid||!FRT[f.type]||t<f.st||t>=f.st+f.dur)continue;try{FRT[f.type](cx,W,H,t-f.st,f)}catch(_){}}}}
+{const _av=addVfx;addVfx=function(type){_av(type);const f=fxl[selV];if(f&&FRDEF[type]){f.dur=FRDEF[type];chg()}}}
+// Effects tab: Break & tear section adds a timed layer at the playhead
+{const _F=FXP;FXP=function(c){return _F(c)+`<b class="sec">Break &amp; tear</b>`+TG(BRK.map(([k,l])=>TILE(`data-brk="${k}"`,'vx|'+k,l,0)).join(''))+'<p class="mu">Adds the effect as a layer at the playhead (see the Motion lane). Drag or trim it to fit, and change Amount for bigger or smaller pieces.</p>'}}
+$('#pn').addEventListener('click',e=>{const b=e.target.closest('[data-brk]');if(!b)return;const k=b.dataset.brk,n=(BRK.find(a=>a[0]==k)||[0,k])[1];snap();fxl.push({type:k,name:n,st:t,dur:FRDEF[k]||3,amt:55,spd:1,sz:1,col:'#ffffff',lane:-1,hid:0});chg();toast(n+' added at the playhead. Press Play to see it; trim it in the Motion lane.')});
+
+// ===================== v19: cloud login (MongoDB) + backup before uninstall =====================
+const CLOUD_DEFAULT='';   // paste your API address here, e.g. 'https://editor-api.onrender.com'
+const cloudUrl=()=>String(CLOUD_DEFAULT||LS.getItem('ed_cloud')||'').trim().replace(/\/+$/,'');
+async function cloudCall(path,body){const u=cloudUrl();if(!u)return{off:1};const ctl=new AbortController(),to=setTimeout(()=>ctl.abort(),15000);try{const r=await fetch(u+path,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body),signal:ctl.signal});const j=await r.json().catch(()=>({}));return{...j,status:r.status}}catch(e){return{net:1}}finally{clearTimeout(to)}}
+{const _dl=doLogin;doLogin=async function(){const idEl=$('#lid'),pwEl=$('#lpw');if(!idEl||!pwEl||!cloudUrl())return _dl();
+ const raw=idEl.value.trim(),pw=pwEl.value,nm=$('#lnm')?$('#lnm').value.trim():'';let key;
+ if(lk=='email'){if(!/^\S+@\S+\.\S+$/.test(raw))return _dl();key=raw.toLowerCase()}else{key=raw.replace(/[^\d+]/g,'');if(key.replace(/\D/g,'').length<8)return _dl()}
+ if(pw.length<6)return _dl();const h=await hash(pw),b=$('#lgo');if(b){b.disabled=true;b.textContent='Please wait…'}
+ if(lm=='up'){const r=await cloudCall('/signup',{key,name:nm||'Creator',kind:lk,h});
+  if(r.status==409){lm='in';return loginUI('This account already exists. Log in instead.')}
+  if(r.net)toast('Cloud server not reachable. Account saved on this phone only for now.');
+  else if(r.status!=200&&r.status!=201)return loginUI(r.error||'Cloud server error. Please try again.');
+  return _dl()}
+ const r=await cloudCall('/login',{key,h});
+ if(r.status==200&&r.ok){const U=users();U[key]={name:r.name||'Creator',kind:r.kind||lk,joined:r.joined||Date.now(),h};LS.setItem('ed_users',JSON.stringify(U));return _dl()}
+ if(r.status==404||r.status==401){const U=users();if(U[key]&&U[key].h==h){cloudCall('/signup',{key,name:U[key].name,kind:U[key].kind,h});return _dl()}return loginUI(r.status==404?'No account found. Tap “New here?” to create one.':'Details do not match. Check and try again.')}
+ return _dl()}}
+{const _l=loginUI;loginUI=function(m){_l(m);const p=$('#sc .pg');if(p&&p.insertAdjacentHTML&&!CLOUD_DEFAULT)p.insertAdjacentHTML('beforeend',`<details class="mu" style="margin-top:6px"><summary>Cloud login server (optional)</summary><input type="text" id="lcl" placeholder="https://your-api.onrender.com" value="${esc(LS.getItem('ed_cloud')||'')}" style="margin-top:6px"></details>`)}}
+document.addEventListener('change',e=>{if(e.target&&e.target.id=='lcl'){const v=e.target.value.trim();if(v)LS.setItem('ed_cloud',v);else LS.removeItem('ed_cloud');toast(v?'Cloud server saved':'Cloud server removed')}});
+function uninstUI(){scrN='un';scr(`<div class="pg"><div class="row" style="padding:0"><button id="bkb">Back</button><b style="flex:1;text-align:center;font-size:18px">Before you uninstall</b></div><div class="card"><b>1. Save a backup</b><p class="mu">Uninstalling erases every project, photo and video kept inside the app. Save a backup file to Files or Google Drive first.</p><label class="mini"><input type="checkbox" id="bkm" checked> Include videos and photos</label><div class="chips"><button class="ac" id="bknow">Save backup now</button></div><p class="mu" id="bkst"></p></div><div class="card"><b>2. Your login</b><p class="mu">${cloudUrl()?'Your account is stored in the cloud. After reinstalling, log in with the same email or mobile number and password.':'Cloud login is not switched on in this build, so your account is only inside the backup file. After reinstalling, tap “Restore from a backup file” on the login screen.'}</p></div><div class="card"><b>3. Uninstall</b><p class="mu">Long-press the Editor icon, choose App info, then Uninstall. After reinstalling: log in, open the menu, Backup &amp; restore, Restore from file.</p></div></div>`)}
+{const _m=menuUI;menuUI=function(){_m.apply(this,arguments);const b=$('#m_lo');if(b)b.insertAdjacentHTML('beforebegin','<button id="m_un">⚠ Backup before uninstall</button>')}}
+$('#dr').addEventListener('click',e=>{if(e.target.closest&&e.target.closest('#m_un')){$('#dr').hidden=true;uninstUI()}});
+$('#sc').addEventListener('click',e=>{const b=e.target.closest&&e.target.closest('button');if(b&&b.id=='bknow')LS.setItem('ed_lastbk',String(Date.now()))},true);
+setTimeout(async()=>{try{if(!me)return;const L=await listP().catch(()=>[]);if(!L.length)return;const last=+LS.getItem('ed_lastbk')||0,nag=+LS.getItem('ed_bknag')||0,now=Date.now();if(now-last>7*864e5&&now-nag>2*864e5){LS.setItem('ed_bknag',String(now));toast('Tip: Menu → Backup before uninstall keeps your projects safe')}}catch(_){}},9000);
 
 ui();panel();tick();boot();if('serviceWorker' in navigator&&location.protocol.startsWith('http'))navigator.serviceWorker.register('sw.js').catch(()=>{});
 </script></body></html>
