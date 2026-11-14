@@ -2,5 +2,8 @@
   "appId": "com.editor.app",
   "appName": "Editor",
   "webDir": "www",
-  "backgroundColor": "#171a24"
+  "backgroundColor": "#171a24",
+  "plugins": {
+    "CapacitorHttp": { "enabled": true }
+  }
 }
