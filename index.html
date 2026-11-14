@@ -203,8 +203,10 @@ body.pnbig #tl{height:84px!important}
 .msr{display:flex;align-items:center;gap:6px;padding:8px 0;border-top:1px solid rgba(128,128,128,.2)}.msi{flex:1;min-width:0;display:flex;flex-direction:column}.msi b{font-size:13px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.msi small{font-size:11px;opacity:.7}.msr button{padding:6px 10px!important;min-width:0}
 .aihd{display:flex;flex-direction:column;gap:2px;margin:2px 2px 10px}.aihd b{font-size:19px}.aihd small{opacity:.7}
 .ai2s{display:flex;align-items:center;gap:8px;padding:6px 0;border-top:1px solid rgba(128,128,128,.2)}.ai2t{width:52px;height:52px;border-radius:10px;background:var(--pn2);overflow:hidden;display:flex;align-items:center;justify-content:center;flex:0 0 auto}.ai2t img{width:100%;height:100%;object-fit:cover}.ai2i{flex:1;min-width:0;display:flex;flex-direction:column;gap:3px}.ai2i input{width:100%;box-sizing:border-box;padding:7px;border-radius:8px;border:1.5px solid var(--pn2);background:var(--bg);color:var(--tx);font:inherit;font-size:12px}.ai2i small{font-size:10px;opacity:.65}
+.paywall{border:1px solid rgba(255,207,74,.45);background:linear-gradient(135deg,rgba(255,207,74,.10),rgba(91,108,255,.10))}
+.pwh{display:inline-block;background:#ffcf4a;color:#1a1200;font-weight:800;font-size:11px;padding:2px 9px;border-radius:99px;margin-bottom:6px}
 </style></head><body>
-<header><div style="display:flex;align-items:center;gap:8px"><button id="mn" aria-label="Menu">☰</button><h1>Editor</h1><span class="mu" style="margin:0;font-size:11px">v20</span></div><div style="display:flex;gap:6px"><button id="un">Undo</button><button class="ac" id="ex">Export</button></div></header>
+<header><div style="display:flex;align-items:center;gap:8px"><button id="mn" aria-label="Menu">☰</button><h1>Editor</h1><span class="mu" style="margin:0;font-size:11px">v21</span></div><div style="display:flex;gap:6px"><button id="un">Undo</button><button class="ac" id="ex">Export</button></div></header>
 <div id="stage"><canvas id="cv"></canvas><div id="fsc"><button id="fsp" class="ac">Play</button><span id="fst"></span><button id="fsx">Exit</button></div>
 <div id="empty"><div style="font-size:18px;font-weight:700">Start a new project</div><div class="mu">Pick one or more videos from your device.</div><button class="ac" id="ad0">Add videos</button></div></div>
 <div class="row"><button id="pl" class="ac" style="min-width:74px">Play</button><button id="pv">Preview</button><div id="tm">00:00.0 / 00:00.0</div><button id="zo">−</button><button id="zi">+</button></div>
@@ -262,7 +264,7 @@ function mask(m,W,H,s){const r=Math.min(W,H)*s/2,X=W/2,Y=H/2,P=cx;P.beginPath();
 if(m=='circle')P.arc(X,Y,r,0,7);else if(m=='ellipse')P.ellipse(X,Y,W*s/2,H*s/2,0,0,7);else if(m=='box')P.rect(X-r,Y-r*.7,r*2,r*1.4);else if(m=='line')P.rect(-W,Y-4*H,3*W,4*H);else if(m=='mirror')P.rect(-W,Y-r*.5,3*W,r);
 else if(m=='heart'){P.moveTo(X,Y+r*.9);P.bezierCurveTo(X-r*1.6,Y-r*.2,X-r*.7,Y-r*1.2,X,Y-r*.4);P.bezierCurveTo(X+r*.7,Y-r*1.2,X+r*1.6,Y-r*.2,X,Y+r*.9)}
 else if(m=='star'){for(let i=0;i<10;i++){const a=-Math.PI/2+i*Math.PI/5,q=i%2?r*.45:r;P[i?'lineTo':'moveTo'](X+q*Math.cos(a),Y+q*Math.sin(a))}P.closePath()}}
-const VER='v20',LS=makeLS(),uid=()=>Math.random().toString(36).slice(2,9)+Date.now().toString(36);
+const VER='v21',LS=makeLS(),uid=()=>Math.random().toString(36).slice(2,9)+Date.now().toString(36);
 let me=null,pid=null,pname='Untitled',pst='pending',saveT,mus=null,progUntil=0,ESon=false,ES=720,EF=30,EFm='mp4',scrN='',pfI,lm='in',lk='email',an,mg,duck=1;
 const RES=[['480p',480],['720p HD',720],['1080p FHD',1080],['2K',1440],['4K',2160]],OWN=()=>me||'guest';
 const SW=['#ffffff','#0b0f19','#ff5c7a','#ff8a5c','#ffc857','#ffe66d','#b8f55b','#3ddc97','#2ee6a6','#22d3ee','#4da3ff','#6c7bff','#8b5cf6','#c084fc','#f472b6','#fb7185','#f97316','#eab308','#84cc16','#14b8a6','#0ea5e9','#6366f1','#a3a3a3','#525252'];
@@ -1665,17 +1667,17 @@ if(x.ain&&x.ain!='none'&&age<D0)an(x.ain,EZ.out(Math.min(1,age/D0)));if(x.aout&&
 const lp=x.aloop;if(lp=='spin3d'){SXd=Math.max(.06,Math.abs(Math.cos(age*2.2)));SKd=Math.sin(age*2.2)*.18}else if(lp=='float3d'){SYd=1+.06*Math.sin(age*2.5);dy+=Math.sin(age*2.5)*.015;SKd=.12*Math.sin(age*1.6)}else if(lp=='tilt3d'){SKd=.25*Math.sin(age*2);SXd=1-.1*Math.abs(Math.sin(age*2))}else if(lp=='wave3d'){SKd=.3*Math.sin(age*3);rot+=Math.sin(age*3)*3;SYd=1+.08*Math.cos(age*3)}else if(lp=='pulse')sx*=1+.06*Math.sin(age*6);else if(lp=='shake')dx+=Math.sin(age*60)*.006;else if(lp=='blink')al*=Math.sin(age*8)>0?1:.15;else if(lp=='float')dy+=Math.sin(age*3)*.012;else if(lp=='swing')rot+=Math.sin(age*3)*7;else if(lp=='wobble')rot+=Math.sin(age*8)*4;else if(lp=='spin')rot+=age*120;else if(lp=='heartbeat'){const q=Math.max(0,Math.sin(age*7));sx*=1+.1*q*q}else if(lp=='jitter'){dx+=(hsh(Math.floor(age*20))-.5)*.01;dy+=(hsh(Math.floor(age*20)+9)-.5)*.01}else if(lp=='flicker')al*=hsh(Math.floor(age*16))>.22?1:.25;else if(lp=='glitch'){const gq=hsh(Math.floor(age*14));if(gq>.62){dx+=(hsh(Math.floor(age*14)+3)-.5)*.05;SKd+=(gq-.8)*.6;x.rgb=Math.max(x.rgb||0,10)}}else if(lp=='neonpulse')x.neon=Math.max(x.neon||0,1)*(.7+.6*Math.sin(age*5))
 const zm=x.zmode||'off';let zs=1,zu=0,s0z=1;if(zm!='off'){const zd=Math.max(.2,x.zd||1.5);zu=EZ.io(Math.min(1,Math.max(0,age/zd)));s0z=(x.zs||100)/100;const s1z=Math.max(s0z,(x.ze||3000)/100);zs=s0z*Math.pow(s1z/s0z,zu)}
 const sh=x.shape&&x.shape!='line'?x.shape:null,txt=TXF(x),full=sh?[txt.replace(/\n/g,' ')]:txt.split('\n');let lines=full;if(vis<1){let r=Math.floor(txt.replace(/\n/g,'').length*vis);lines=full.map(l=>{const s=l.slice(0,Math.max(0,r));r-=l.length;return s})}
-const font=`${x.i?'italic ':''}${x.b?800:400} ${z}px ${x.ff}`,lsp=(x.ls||0)*kS,ls=lsp+'px';cx.save();cx.font=font;cx.textBaseline='middle';cx.textAlign=x.al;try{cx.letterSpacing=sh?'0px':ls}catch(_){}
-let chW=null,SL=null;if(sh){chW=[...full[0]].map(c=>cx.measureText(c).width+lsp);const Lw=Math.max(1,chW.reduce((a,b)=>a+b,0));SL=shapeLay(sh,Lw*(sh=='circle'||sh=='heart'||sh=='square'||sh=='triangle'?1.02:1),chW)}
-const lh=z*(x.lh||1.2),w=SL?Math.max(1,SL.bx*2+z):Math.max(1,...full.map(l=>cx.measureText(l).width)),h0=SL?Math.max(z,SL.by*2+z):lh*full.length,ox=SL?-w/2:x.al=='left'?0:x.al=='right'?-w:-w/2,y0=-h0/2+lh/2,bgo=x.bgo!==undefined?x.bgo:(x.bg?.55:0);
-let pvx=0;if(zm!='off'&&!SL){const L0=full[0]||'',k=Math.min(Math.max(0,L0.length-1),Math.max(0,x.zf||0)),w0=cx.measureText(L0).width;pvx=(x.al=='left'?0:x.al=='right'?-w0:-w0/2)+cx.measureText(L0.slice(0,k)).width+cx.measureText(L0[k]||'').width/2}
+const font=`${x.i?'italic ':''}${x.b?800:400} ${z}px ${x.ff}`,lsp=(x.ls||0)*kS,ls=lsp+'px';TCX.save();TCX.font=font;TCX.textBaseline='middle';TCX.textAlign=x.al;try{TCX.letterSpacing=sh?'0px':ls}catch(_){}
+let chW=null,SL=null;if(sh){chW=[...full[0]].map(c=>TCX.measureText(c).width+lsp);const Lw=Math.max(1,chW.reduce((a,b)=>a+b,0));SL=shapeLay(sh,Lw*(sh=='circle'||sh=='heart'||sh=='square'||sh=='triangle'?1.02:1),chW)}
+const lh=z*(x.lh||1.2),w=SL?Math.max(1,SL.bx*2+z):Math.max(1,...full.map(l=>TCX.measureText(l).width)),h0=SL?Math.max(z,SL.by*2+z):lh*full.length,ox=SL?-w/2:x.al=='left'?0:x.al=='right'?-w:-w/2,y0=-h0/2+lh/2,bgo=x.bgo!==undefined?x.bgo:(x.bg?.55:0);
+let pvx=0;if(zm!='off'&&!SL){const L0=full[0]||'',k=Math.min(Math.max(0,L0.length-1),Math.max(0,x.zf||0)),w0=TCX.measureText(L0).width;pvx=(x.al=='left'?0:x.al=='right'?-w0:-w0/2)+TCX.measureText(L0.slice(0,k)).width+TCX.measureText(L0[k]||'').width/2}
 const bx=x.x*W+dx*W,by=x.y*H+dy*H,sc2=sx*zs;let tx=bx,ty=by;if(zm!='off'){const p0=bx+pvx*sx*s0z;tx=p0+(W/2-p0)*zu-pvx*sc2;ty=by+(H/2-by)*zu}
 const paint=(g,hole)=>{g.save();g.translate(tx,ty);g.rotate(rot*Math.PI/180);g.transform(1,0,SKd,1,0,0);g.scale(sc2*SXd,sc2*SYd);g.font=font;g.textBaseline='middle';g.textAlign=SL?'center':x.al;try{g.letterSpacing=SL?'0px':ls}catch(_){}
 const nCh=SL?Math.floor(full[0].length*vis):0,drawChars=fn=>{SL.out.forEach((p,i2)=>{if(i2>=nCh+(vis<1?0:999))return;g.save();g.translate(p.x,p.y);g.rotate(p.a);fn([...full[0]][i2]);g.restore()})};
 if(hole){g.fillStyle='#000';if(SL)drawChars(c=>g.fillText(c,0,0));else lines.forEach((l,j)=>g.fillText(l,0,y0+j*lh))}else{
 if(bgo>0){const pd=z*.3;g.save();g.globalAlpha*=bgo;g.fillStyle=x.bgc||'#000000';g.beginPath();const rr=(x.bgr||0)*kS;if(g.roundRect)g.roundRect(ox-pd,-h0/2-pd*.5,w+pd*2,h0+pd,rr);else g.rect(ox-pd,-h0/2-pd*.5,w+pd*2,h0+pd);g.fill();g.restore()}
-let fill=x.c;if(x.grad){const q=g.createLinearGradient(0,-h0/2,0,h0/2);q.addColorStop(0,x.c);q.addColorStop(1,x.c2||'#ff3b30');fill=q}g.lineJoin='round';const sw=x.sw!==undefined?x.sw:3,put=(fn)=>{if(SL)drawChars(c=>fn(c,0,0));else lines.forEach((l,j)=>fn(l,0,y0+j*lh))};
-if(x.t3&&x.t3.on&&!SL){t3paint(g,x,put,fill,kS,age,ox,w,h0,sw)}else{if(sw>0){g.lineWidth=sw*2*kS;g.strokeStyle=x.sc||'#000';put((t2,a,b)=>g.strokeText(t2,a,b))}
+let fill=x.c;if(x.grad){const q=g.createLinearGradient(0,-h0/2,0,h0/2);q.addColorStop(0,x.c);q.addColorStop(1,x.c2||'#ff3b30');fill=q}if((x.gs&&x.gs.length>1)||x.fx=='rainbow')fill=TGS(g,x,w,h0,age);g.lineJoin='round';const sw=x.sw!==undefined?x.sw:3,put=(fn)=>{if(SL)drawChars(c=>fn(c,0,0));else lines.forEach((l,j)=>fn(l,0,y0+j*lh))};
+if(x.t3&&x.t3.on&&!SL){t3paint(g,x,put,fill,kS,age,ox,w,h0,sw)}else{if(x.ly&&x.ly.length)TLY(g,x,put,kS);else if(sw>0){g.lineWidth=sw*2*kS;g.strokeStyle=x.sc||'#000';put((t2,a,b)=>g.strokeText(t2,a,b))}
 if(x.ex>0){g.fillStyle=x.exc||'#000';const ea=(x.exa??45)*Math.PI/180,ca=Math.cos(ea),sa=Math.sin(ea);for(let e2=x.ex;e2>0;e2--){const o=e2*.8*kS;put((t2,a,b)=>g.fillText(t2,a+o*ca,b+o*sa))}}
 if(x.shb>0||x.glow){g.shadowColor=x.glow?x.c:(x.shc||'#000');g.shadowBlur=(x.glow?Math.max(x.shb,22):x.shb)*kS;g.shadowOffsetX=x.glow?0:(x.shx||0)*kS;g.shadowOffsetY=x.glow?0:(x.shy||0)*kS}
 if(x.refl){g.save();g.globalAlpha*=.28;g.translate(0,h0);g.scale(1,-1);g.fillStyle=fill;put((t2,a,b)=>g.fillText(t2,a,b));g.restore()}
@@ -1683,11 +1685,11 @@ if(x.neon>0){g.save();g.fillStyle=x.c;for(let q=0;q<3;q++){g.shadowColor=x.neonc
 if(x.ech>0){g.save();const a0=g.globalAlpha;g.fillStyle=fill;for(let q=x.ech;q>0;q--){g.globalAlpha=a0*(1-q/(x.ech+1))*.7;const o=q*(x.ecd||10)*kS;put((t2,a,b)=>g.fillText(t2,a+o,b+o*.6))}g.restore()}
 if(x.rgb>0){g.save();g.globalCompositeOperation='lighter';const o=x.rgb*kS*.6;g.fillStyle='#ff0040';put((t2,a,b)=>g.fillText(t2,a-o,b));g.fillStyle='#00e5ff';put((t2,a,b)=>g.fillText(t2,a+o,b));g.restore()}
 if(x.hollow){g.save();g.strokeStyle=x.c;g.lineWidth=3*kS;put((t2,a,b)=>g.strokeText(t2,a,b));g.restore();fill='rgba(0,0,0,0)'}
-g.fillStyle=fill;put((t2,a,b)=>{g.fillText(t2,a,b);if(x.u&&!SL){const lw=g.measureText(t2).width,lx=x.al=='left'?0:x.al=='right'?-lw:-lw/2;g.fillRect(lx,b+z*.52,lw,Math.max(2,z*.06))}});g.shadowBlur=0;g.shadowColor='transparent'}}
+g.fillStyle=fill;put((t2,a,b)=>{g.fillText(t2,a,b);if(x.u&&!SL){const lw=g.measureText(t2).width,lx=x.al=='left'?0:x.al=='right'?-lw:-lw/2;g.fillRect(lx,b+z*.52,lw,Math.max(2,z*.06))}});g.shadowBlur=0;g.shadowColor='transparent';if(x.fx&&x.fx!='rainbow')TFX(g,x,put,kS,w,h0,ox,age,z)}}
 if(!hole&&i==selT&&kfT&&!exporting&&!ESon&&!playing){g.setLineDash([10,8]);g.lineWidth=3/sc2;g.strokeStyle='#34c759';g.strokeRect(ox-12,-h0/2-8,w+24,h0+16)}g.restore()};
-if(zm=='reveal'){const o=FC2(W,H),g=o.getContext('2d');g.setTransform(1,0,0,1,0,0);g.globalAlpha=1;g.globalCompositeOperation='source-over';g.clearRect(0,0,W,H);g.fillStyle=x.zbg||'#000000';g.fillRect(0,0,W,H);g.globalCompositeOperation='destination-out';paint(g,true);g.globalCompositeOperation='source-over';cx.globalAlpha=Math.max(0,Math.min(1,al));cx.drawImage(o,0,0)}
-else if(x.mk&&x.mk!='none'){const o=FC2(W,H),g=o.getContext('2d');g.setTransform(1,0,0,1,0,0);g.globalAlpha=1;g.globalCompositeOperation='source-over';g.filter='none';g.clearRect(0,0,W,H);if(x.mplate!==0){g.fillStyle=x.mpc||'#000000';g.fillRect(0,0,W,H)}paint(g,false);TMASK(g,x,W,H,{ms:x.ms,mw:x.mw||1,mx:x.mx,my:x.my,mr:x.mr});cx.globalAlpha=Math.max(0,Math.min(1,al));cx.drawImage(o,0,0)}
-else{cx.globalAlpha=Math.max(0,Math.min(1,al));paint(cx,false)}cx.restore()}
+if(zm=='reveal'){const o=FC2(W,H),g=o.getContext('2d');g.setTransform(1,0,0,1,0,0);g.globalAlpha=1;g.globalCompositeOperation='source-over';g.clearRect(0,0,W,H);g.fillStyle=x.zbg||'#000000';g.fillRect(0,0,W,H);g.globalCompositeOperation='destination-out';paint(g,true);g.globalCompositeOperation='source-over';TCX.globalAlpha=Math.max(0,Math.min(1,al));TCX.drawImage(o,0,0)}
+else if(x.mk&&x.mk!='none'){const o=FC2(W,H),g=o.getContext('2d');g.setTransform(1,0,0,1,0,0);g.globalAlpha=1;g.globalCompositeOperation='source-over';g.filter='none';g.clearRect(0,0,W,H);if(x.mplate!==0){g.fillStyle=x.mpc||'#000000';g.fillRect(0,0,W,H)}paint(g,false);TMASK(g,x,W,H,{ms:x.ms,mw:x.mw||1,mx:x.mx,my:x.my,mr:x.mr});TCX.globalAlpha=Math.max(0,Math.min(1,al));TCX.drawImage(o,0,0)}
+else{TCX.globalAlpha=Math.max(0,Math.min(1,al));paint(TCX,false)}TCX.restore()}
 // ===== more motion effects =====
 Object.assign(VX,{
 bubbles:(g,W,H,τ,o)=>{const n=10+o.amt/5,k=W/540;g.lineWidth=2*k;for(let i=0;i<n;i++){const x=hsh(i)*W+Math.sin(τ*1.2*o.spd+i)*18*k,y=H-((τ*70*o.spd*k*(.4+hsh(i+5))+hsh(i+3)*H)%(H+80)),r=(8+hsh(i+7)*26)*k*o.sz;g.strokeStyle='rgba(255,255,255,.7)';g.fillStyle='rgba(180,230,255,.18)';g.beginPath();g.arc(x,y,r,0,7);g.fill();g.stroke();g.strokeStyle='rgba(255,255,255,.85)';g.beginPath();g.arc(x,y,r*.7,3.6,4.6);g.stroke()}},
@@ -2689,26 +2691,6 @@ $('#pn').addEventListener('click',async e=>{const b=e.target.closest('button');i
  else if(d.fef){snap();x[d.fef]=x[d.fef]?0:1;chg()}},true);
 LP.push(['flicker','Flicker'],['glitch','Glitch'],['neonpulse','Neon pulse']);
 
-// ===================== v20: search free music on the web =====================
-const MSS={q:'',src:'ov',res:[],busy:0,msg:'',play:-1,aud:null};
-const fetchT=async(u,ms=15000,o)=>{const c=new AbortController(),to=setTimeout(()=>c.abort(),ms);try{return await fetch(u,{...o,signal:c.signal})}finally{clearTimeout(to)}};
-async function msSearch(q,src){if(src=='ar'){const u='https://archive.org/advancedsearch.php?q='+encodeURIComponent('('+q+') AND mediatype:(audio) AND (licenseurl:(*creativecommons*) OR collection:(opensource_audio))')+'&fl%5B%5D=identifier&fl%5B%5D=title&fl%5B%5D=creator&fl%5B%5D=licenseurl&rows=12&sort%5B%5D=downloads+desc&output=json';
-  const j=await(await fetchT(u)).json();return((j.response&&j.response.docs)||[]).map(d=>({title:d.title||d.identifier,artist:[].concat(d.creator||[]).join(', ')||'Unknown',id:d.identifier,license:/publicdomain|zero/i.test(d.licenseurl||'')?'Public domain':'Creative Commons',src:'ar',dur:0}))}
- const j=await(await fetchT('https://api.openverse.org/v1/audio/?q='+encodeURIComponent(q)+'&page_size=14&mature=false')).json();return((j&&j.results)||[]).filter(r=>r.url).map(r=>({title:r.title||'Untitled',artist:r.creator||'Unknown',url:r.url,dur:r.duration?r.duration/1000:0,license:('CC '+String(r.license||'').toUpperCase()+' '+(r.license_version||'')).trim(),page:r.foreign_landing_url||'',src:'ov'}))}
-async function msResolve(r){if(r.url)return r.url;const j=await(await fetchT('https://archive.org/metadata/'+encodeURIComponent(r.id))).json(),f=(j.files||[]).filter(x=>/\.(mp3|ogg|m4a|wav)$/i.test(x.name)&&!/_spectrogram/.test(x.name)).sort((a,b)=>(/\.mp3$/i.test(b.name)?1:0)-(/\.mp3$/i.test(a.name)?1:0)||(+b.size||0)-(+a.size||0))[0];if(!f)throw new Error('No audio file in that item');r.url='https://archive.org/download/'+encodeURIComponent(r.id)+'/'+encodeURIComponent(f.name);return r.url}
-async function msGo(){const q=MSS.q.trim();if(!q)return toast('Type a song name, artist or mood');MSS.busy=1;MSS.msg='Searching…';MSS.res=[];if(tab=='mus')panel();try{MSS.res=await msSearch(q,MSS.src);MSS.msg=MSS.res.length?'':'Nothing found. Try another word, or switch the source.'}catch(e){MSS.msg='Couldn’t reach the music service. Check your internet and try again.'}MSS.busy=0;if(tab=='mus')panel()}
-function msStop(){if(MSS.aud){try{MSS.aud.pause()}catch(_){}MSS.aud=null}}
-async function msPlay(i){const r=MSS.res[i];if(!r)return;if(MSS.play==i){msStop();MSS.play=-1;panel();return}msStop();MSS.play=i;panel();try{const u=await msResolve(r);const a=new Audio(u);a.onended=()=>{MSS.play=-1;if(tab=='mus')panel()};a.onerror=()=>{MSS.play=-1;toast('That preview can’t be played');if(tab=='mus')panel()};MSS.aud=a;await a.play()}catch(e){MSS.play=-1;toast('That preview can’t be played');panel()}}
-async function msSave(i,add){const r=MSS.res[i];if(!r)return;if(pause)pause();msStop();MSS.play=-1;MSS.msg='Downloading “'+r.title.slice(0,24)+'”…';panel();try{const u=await msResolve(r),res=await fetchT(u,120000);if(!res.ok)throw new Error('download failed');const b=await res.blob();if(b.size>60e6)throw new Error('That file is too large');
-  const url=URL.createObjectURL(b),dur=await new Promise(k=>{const a=new Audio();a.preload='metadata';a.onloadedmetadata=()=>k(a.duration);a.onerror=()=>k(0);a.src=url});if(!dur||!isFinite(dur))throw new Error('That file isn’t playable audio');
-  const nm=(r.title+' – '+r.artist).slice(0,60);await smSave({url,name:nm,dur,src:dur},nm);MSS.msg='Saved “'+r.title.slice(0,24)+'” ('+r.license+'). Credit '+r.artist+' if you publish.';if(add){const L=smList();if(L[0])await smAdd(L[0].id)}}catch(e){MSS.msg='Couldn’t save it: '+(e&&e.message||e)}panel()}
-function msHTML(){const rs=MSS.res.map((r,i)=>`<div class="msr"><div class="msi"><b>${esc(r.title.slice(0,46))}</b><small>${esc(r.artist.slice(0,30))} · ${r.dur?Math.floor(r.dur/60)+':'+String(Math.round(r.dur%60)).padStart(2,'0')+' · ':''}${esc(r.license)}</small></div><button data-msp="${i}" class="${MSS.play==i?'on':''}">${MSS.play==i?'■':'▶'}</button><button data-mssv="${i}">Save</button><button data-msad="${i}" class="ac">Add</button></div>`).join('');
- return`<div class="card msb"><b>Search music on the web</b><div class="msq"><input id="msq" placeholder="Song, artist or mood (e.g. calm piano)" value="${esc(MSS.q)}"><button class="ac" id="msgo">${MSS.busy?'…':'Search'}</button></div><div class="chips"><button data-mssrc="ov" class="${MSS.src=='ov'?'on':''}">Free music (Openverse)</button><button data-mssrc="ar" class="${MSS.src=='ar'?'on':''}">Internet Archive</button></div>${MSS.msg?`<p class="mu">${esc(MSS.msg)}</p>`:''}${rs}<p class="mu">Finds free-to-use music (Creative Commons and public domain). Chart songs aren’t offered because of copyright. Save keeps the track under Saved music so it stays after you close the app.</p></div>`}
-{const _M=MUSP;MUSP=function(){return msHTML()+_M()}}
-$('#pn').addEventListener('input',e=>{if(e.target.id=='msq')MSS.q=e.target.value});
-$('#pn').addEventListener('keydown',e=>{if(e.target.id=='msq'&&e.key=='Enter'){e.preventDefault();msGo()}});
-$('#pn').addEventListener('click',e=>{const b=e.target.closest('button');if(!b||tab!='mus')return;const d=b.dataset;if(b.id=='msgo')msGo();else if(d.mssrc){MSS.src=d.mssrc;MSS.res=[];MSS.msg='';panel();if(MSS.q.trim())msGo()}else if(d.msp!==undefined)msPlay(+d.msp);else if(d.mssv!==undefined)msSave(+d.mssv,false);else if(d.msad!==undefined)msSave(+d.msad,true)},true);
-
 // ===================== v20: AI Studio (script -> video, and edit-my-media) =====================
 const AI2={mode:'script',desc:'',scenes:[],pic:'ai',style:'cinematic',len:0,music:1,tx:1,vx:1,col:1,kfs:1,busy:0,msg:'',media:[],made:0};
 const AIKW=[[/diwali|lamp|diya|cracker|firework|new year/i,['fireworks','sparkle']],[/love|heart|romance|valentine|wedding/i,['hearts']],[/snow|winter|christmas|cold/i,['snow']],[/rain|monsoon|storm/i,['rain']],[/party|celebrat|birthday|congrat|fun/i,['confetti']],[/night|star|moon|sky|galaxy/i,['starfield']],[/magic|shine|dream|sparkl|gold/i,['sparkle']],[/flower|spring|garden|petal|blossom/i,['petals']],[/sea|ocean|water|beach|bubble/i,['bubbles']],[/fire|flame|burn|hot|summer/i,['embers']],[/fog|mist|memory|vintage|old/i,['dust']]];
@@ -2816,6 +2798,200 @@ TBLD.ex='';
 {const _T=TPLP;TPLP=function(){let h=_T();if(TPX.cat=='build'){const pros=TPLD.filter(d=>d[1]=='pro'||d[1]=='epic');h=h.replace('</div></div>','</div></div>'+`<b class="sec">Start from a pro design</b><div class="chips" style="flex-wrap:nowrap;overflow-x:auto">${pros.map(d=>`<button data-tbpro="${d[0]}">${esc(d[2])}</button>`).join('')}</div><b class="sec">Reveal for new text</b><div class="chips">${[['','None'],['wipe','Wipe'],['iris','Iris'],['heart','Heart'],['mirror','Mirror'],['spot','Spotlight'],['mask','Video inside']].map(([k,l])=>`<button data-tbex="${k}" class="${TBLD.ex==k?'on':''}">${l}</button>`).join('')}</div>`)}return h}}
 $('#pn').addEventListener('click',e=>{const b=e.target.closest('button');if(!b||tab!='tpl')return;const d=b.dataset;if(d.tbex!==undefined){TBLD.ex=d.tbex;panel()}
  else if(d.tbpro){const q=TPLD.find(z=>z[0]==d.tbpro);if(!q)return;TBLD.bg=q[3];TBLD.dur=q[4];TBLD.items=[];q[5].forEach((t,i)=>{TBLD.items.push({k:'text',txt:String(t[0]).replace(/\{(\d)\}/g,(m,n)=>q[7][n-1]||''),tps:t[2],ain:t[3],size:t[4],y:t[1],ex:t[5]||''})});q[6].forEach(v=>TBLD.items.push({k:'vfx',id:v}));panel();toast('Loaded “'+q[2]+'”. Change the words, effects and background, then add it to your video.')}},true);
+
+// ===================== v21: search open-licence music (Indian languages + artists) =====================
+const MSS={q:'',lang:'',src:'all',com:0,res:[],busy:0,msg:'',play:-1,aud:null,warn:''};
+const MLANG=[['','Any'],['hi','Hindi',['hindi','bollywood','हिन्दी']],['te','Telugu',['telugu','tollywood','తెలుగు']],['ta','Tamil',['tamil','kollywood','தமிழ்']],['kn','Kannada',['kannada','sandalwood','ಕನ್ನಡ']],['ml','Malayalam',['malayalam','mollywood','മലയാളം']],['mr','Marathi',['marathi','मराठी','lavani']],['bn','Bengali',['bengali','bangla','বাংলা','rabindra']],['pa','Punjabi',['punjabi','ਪੰਜਾਬੀ','bhangra']],['gu','Gujarati',['gujarati','garba','ગુજરાતી']],['cl','Classical',['carnatic','hindustani','raga','sitar','veena','flute','tabla']]];
+const mlTerms=()=>{const l=MLANG.find(x=>x[0]==MSS.lang);return l&&l[2]?l[2]:[]};
+const mkey=()=>{try{return localStorage.getItem('ed_jmkey')||''}catch(_){return''}};
+const fetchT=async(u,ms=15000,o)=>{const c=new AbortController(),to=setTimeout(()=>c.abort(),ms);try{return await fetch(u,{...o,signal:c.signal})}finally{clearTimeout(to)}};
+const lic=(s,v)=>('CC '+String(s||'').toUpperCase()+' '+(v||'')).trim();
+const licUrl=u=>{const m=/licenses\/([a-z-]+)\/([\d.]+)/i.exec(u||'');return m?'CC '+m[1].toUpperCase()+' '+m[2]:/publicdomain|zero/i.test(u||'')?'Public domain':'Creative Commons'};
+const jget=async u=>{const r=await fetchT(u);if(!r.ok)throw new Error('HTTP '+r.status);return r.json()};
+async function srcOV(q,creator,n){const u='https://api.openverse.org/v1/audio/?page_size='+n+'&mature=false'+(q?'&q='+encodeURIComponent(q):'')+(creator?'&creator='+encodeURIComponent(creator):'')+(MSS.com?'&license_type=commercial':'');const j=await jget(u);return((j&&j.results)||[]).filter(r=>r.url).map(r=>({title:r.title||'Untitled',artist:r.creator||'Unknown',url:r.url,dur:r.duration?r.duration/1000:0,license:lic(r.license,r.license_version),page:r.foreign_landing_url||'',src:'Openverse'}))}
+async function srcAR(expr,n){const u='https://archive.org/advancedsearch.php?q='+encodeURIComponent('('+expr+') AND mediatype:(audio) AND (licenseurl:(*creativecommons*) OR licenseurl:(*publicdomain*) OR collection:(opensource_audio) OR collection:(audio_music))')+'&fl%5B%5D=identifier&fl%5B%5D=title&fl%5B%5D=creator&fl%5B%5D=licenseurl&rows='+n+'&sort%5B%5D=downloads+desc&output=json';const j=await jget(u);return((j.response&&j.response.docs)||[]).map(d=>({title:d.title||d.identifier,artist:[].concat(d.creator||[]).join(', ')||'Unknown',id:d.identifier,license:d.licenseurl?licUrl(d.licenseurl):'Public domain / open',src:'Archive',dur:0}))}
+async function srcWC(q,n){const u='https://commons.wikimedia.org/w/api.php?action=query&generator=search&gsrnamespace=6&gsrlimit='+n+'&gsrsearch='+encodeURIComponent(q+' filetype:audio')+'&prop=imageinfo&iiprop=url|mime|extmetadata&format=json&origin=*';const j=await jget(u),p=Object.values((j.query&&j.query.pages)||{});return p.filter(x=>x.imageinfo&&x.imageinfo[0]&&x.imageinfo[0].url).map(x=>{const i=x.imageinfo[0],em=i.extmetadata||{},sp=h=>String(h&&h.value||'').replace(/<[^>]*>/g,'').trim();return{title:x.title.replace(/^File:/,'').replace(/\.[a-z0-9]+$/i,'').replace(/_/g,' '),artist:sp(em.Artist)||'Unknown',url:i.url,dur:0,license:sp(em.LicenseShortName)||'Open licence',page:i.descriptionurl||'',src:'Commons'}})}
+async function srcJM(q,artist,tags,n){const k=mkey();if(!k)return null;const u='https://api.jamendo.com/v3.0/tracks/?client_id='+encodeURIComponent(k)+'&format=json&limit='+n+'&include=musicinfo&audioformat=mp32&order=popularity_total'+(q?'&search='+encodeURIComponent(q):'')+(artist?'&artist_name='+encodeURIComponent(artist):'')+(tags?'&tags='+encodeURIComponent(tags):'');const j=await jget(u);return((j&&j.results)||[]).filter(r=>r.audio).map(r=>({title:r.name,artist:r.artist_name,url:r.audio,dur:+r.duration||0,license:licUrl(r.license_ccurl),page:r.shareurl||'',src:'Jamendo'}))}
+async function msSearch(){const q=MSS.q.trim(),T=mlTerms(),jobs=[],use=s=>MSS.src=='all'||MSS.src==s,add=(name,p)=>jobs.push(p.then(v=>({name,v}),e=>({name,e})));
+ // text queries: what the person typed combined with the language words, then each alone
+ const qs=[];if(q&&T.length){qs.push(q+' '+T[0]);qs.push(q)}else if(q)qs.push(q);else if(T.length){qs.push(T[0]);if(T[1])qs.push(T[1])}
+ if(!qs.length)return{res:[],warn:''};
+ if(use('ov')){qs.forEach(x=>add('Openverse',srcOV(x,'',10)));if(q)add('Openverse',srcOV('',q,10))}
+ if(use('ar')){qs.forEach(x=>add('Archive',srcAR(x,10)));if(q)add('Archive',srcAR('creator:('+q+')',8))}
+ if(use('wc'))qs.forEach(x=>add('Commons',srcWC(x,10)));
+ if(use('jm')){const tg=T.length?T[0]:'';if(mkey()){if(q)add('Jamendo',srcJM(q,'',tg,10));if(q)add('Jamendo',srcJM('',q,tg,10));if(!q)add('Jamendo',srcJM('','',tg,12))}}
+ const out=await Promise.all(jobs),seen=new Set(),res=[];let ok=0,fail=[];
+ out.forEach(o=>{if(o.e){fail.push(o.name);return}if(o.v===null)return;ok++;o.v.forEach(r=>{const k=r.url||r.id;if(seen.has(k))return;seen.add(k);res.push(r)})});
+ let r2=res;if(MSS.com)r2=res.filter(r=>!/\b(NC|ND)\b/i.test(r.license));
+ // artist matches first
+ if(q){const lq=q.toLowerCase();r2.sort((a,b)=>(b.artist.toLowerCase().includes(lq)?1:0)-(a.artist.toLowerCase().includes(lq)?1:0))}
+ const f=[...new Set(fail)];return{res:r2.slice(0,40),warn:ok?'':'Couldn’t reach the music services. Check your internet and try again.',failed:f}}
+async function msResolve(r){if(r.url)return r.url;const j=await jget('https://archive.org/metadata/'+encodeURIComponent(r.id)),f=(j.files||[]).filter(x=>/\.(mp3|ogg|m4a|wav|flac|opus)$/i.test(x.name)&&!/_spectrogram/.test(x.name)).sort((a,b)=>(/\.mp3$/i.test(b.name)?1:0)-(/\.mp3$/i.test(a.name)?1:0)||(+b.size||0)-(+a.size||0))[0];if(!f)throw new Error('No audio file in that item');r.url='https://archive.org/download/'+encodeURIComponent(r.id)+'/'+encodeURIComponent(f.name);return r.url}
+async function msGo(){if(!MSS.q.trim()&&!MSS.lang)return toast('Type a song or artist, or pick a language');MSS.busy=1;MSS.msg='Searching…';MSS.res=[];msStop();MSS.play=-1;if(tab=='mus')panel();try{const o=await msSearch();MSS.res=o.res;MSS.msg=o.warn||(o.res.length?'':'Nothing found with an open licence. Try an artist who publishes under Creative Commons, another language, or switch the source.');if(o.res.length&&o.failed&&o.failed.length)MSS.msg='Some sources didn’t answer ('+o.failed.join(', ')+'); showing the rest.'}catch(e){MSS.msg='Couldn’t reach the music services. Check your internet and try again.'}MSS.busy=0;if(tab=='mus')panel()}
+function msStop(){if(MSS.aud){try{MSS.aud.pause()}catch(_){}MSS.aud=null}}
+async function msPlay(i){const r=MSS.res[i];if(!r)return;if(MSS.play==i){msStop();MSS.play=-1;panel();return}msStop();MSS.play=i;panel();try{const u=await msResolve(r);const a=new Audio(u);a.onended=()=>{MSS.play=-1;if(tab=='mus')panel()};a.onerror=()=>{MSS.play=-1;toast('That preview can’t be played');if(tab=='mus')panel()};MSS.aud=a;await a.play()}catch(e){MSS.play=-1;toast('That preview can’t be played');panel()}}
+async function msSave(i,add){const r=MSS.res[i];if(!r)return;if(pause)pause();msStop();MSS.play=-1;MSS.msg='Downloading “'+r.title.slice(0,24)+'”…';panel();try{const u=await msResolve(r),res=await fetchT(u,120000);if(!res.ok)throw new Error('download failed');const b=await res.blob();if(b.size>60e6)throw new Error('That file is too large');
+  const url=URL.createObjectURL(b),dur=await new Promise(k=>{const a=new Audio();a.preload='metadata';a.onloadedmetadata=()=>k(a.duration);a.onerror=()=>k(0);a.src=url});if(!dur||!isFinite(dur))throw new Error('That file isn’t playable audio');
+  const nm=(r.title+' – '+r.artist).slice(0,60);await smSave({url,name:nm,dur,src:dur},nm);MSS.msg='Saved “'+r.title.slice(0,24)+'” ('+r.license+'). Credit '+r.artist+' if you publish.';if(add){const L=smList();if(L[0])await smAdd(L[0].id)}}catch(e){MSS.msg='Couldn’t save it: '+(e&&e.message||e)}panel()}
+function msHTML(){const rs=MSS.res.map((r,i)=>`<div class="msr"><div class="msi"><b>${esc(r.title.slice(0,46))}</b><small>${esc(r.artist.slice(0,30))} · ${r.dur?Math.floor(r.dur/60)+':'+String(Math.round(r.dur%60)).padStart(2,'0')+' · ':''}${esc(r.license)} · ${esc(r.src)}</small></div><button data-msp="${i}" class="${MSS.play==i?'on':''}">${MSS.play==i?'■':'▶'}</button><button data-mssv="${i}">Save</button><button data-msad="${i}" class="ac">Add</button></div>`).join('');
+ const SR=[['all','All sources'],['ov','Openverse'],['ar','Internet Archive'],['wc','Wikimedia'],['jm','Jamendo']];
+ return`<div class="card msb"><b>Search music on the web</b><div class="msq"><input id="msq" placeholder="Song or artist name" value="${esc(MSS.q)}"><button class="ac" id="msgo">${MSS.busy?'…':'Search'}</button></div><div class="chips" style="flex-wrap:nowrap;overflow-x:auto">${MLANG.map(l=>`<button data-mslang="${l[0]}" class="${MSS.lang==l[0]?'on':''}">${l[1]}</button>`).join('')}</div><div class="chips" style="flex-wrap:nowrap;overflow-x:auto">${SR.map(s=>`<button data-mssrc="${s[0]}" class="${MSS.src==s[0]?'on':''}">${s[1]}</button>`).join('')}<button data-mscom="1" class="${MSS.com?'on':''}">Monetised-safe only</button></div>${(MSS.src=='jm'||MSS.src=='all')&&!mkey()?`<div class="msq"><input id="msjk" placeholder="Jamendo key (free, developer.jamendo.com) – optional"><button id="msjs">Save key</button></div>`:''}${MSS.msg?`<p class="mu">${esc(MSS.msg)}</p>`:''}${rs}<p class="mu">Finds music that is openly licensed (Creative Commons / public domain) in Hindi, Telugu, Tamil, Kannada, Malayalam, Marathi, Bengali and more, and by artist name. Popular film and chart songs are copyrighted, so they can’t be offered here. Save keeps a track under Saved music; credit the artist if you publish. “Monetised-safe” hides non-commercial licences.</p></div>`}
+{const _M=MUSP;MUSP=function(){return msHTML()+_M()}}
+$('#pn').addEventListener('input',e=>{if(e.target.id=='msq')MSS.q=e.target.value});
+$('#pn').addEventListener('keydown',e=>{if(e.target.id=='msq'&&e.key=='Enter'){e.preventDefault();msGo()}});
+$('#pn').addEventListener('click',e=>{const b=e.target.closest('button');if(!b||tab!='mus')return;const d=b.dataset;if(b.id=='msgo')msGo();else if(b.id=='msjs'){const v=($('#msjk')||{}).value;if(v&&v.trim()){try{localStorage.setItem('ed_jmkey',v.trim())}catch(_){}panel();toast('Jamendo key saved')}}else if(d.mslang!==undefined){MSS.lang=d.mslang;MSS.res=[];MSS.msg='';panel();if(MSS.q.trim()||MSS.lang)msGo()}else if(d.mssrc){MSS.src=d.mssrc;MSS.res=[];MSS.msg='';panel();if(MSS.q.trim()||MSS.lang)msGo()}else if(d.mscom){MSS.com=MSS.com?0:1;panel();if(MSS.res.length)msGo()}else if(d.msp!==undefined)msPlay(+d.msp);else if(d.mssv!==undefined)msSave(+d.mssv,false);else if(d.msad!==undefined)msSave(+d.msad,true)},true);
+
+// ===================== v21: Pro plan (Rs 49 / month) for Mask, Keyframes, Templates, AI Studio =====================
+const TESTE='vdadi4@gmail.com',TESTH='8173dacebd9941dd2d341ccf78e8f1a5b477d3ed59ce049d2832ef39194f003f';
+const sha=async s=>{const b=await crypto.subtle.digest('SHA-256',new TextEncoder().encode(s));return[...new Uint8Array(b)].map(x=>x.toString(16).padStart(2,'0')).join('')};
+const GATED=['tmk','mk','kf','tpl','ai'],GFEAT={tmk:'Text mask',mk:'Mask',kf:'Keyframes',tpl:'Templates',ai:'AI Studio'},BASEN={};GATED.forEach(k=>BASEN[k]=TABN[k]);
+const proData=()=>{try{return JSON.parse(LS.getItem('ed_pro')||'{}')}catch(_){return{}}};
+function isTester(){return me==TESTE&&LS.getItem('ed_tester')=='1'}
+function isPro(){if(isTester())return true;const p=proData();return !!(me&&p.key==me&&p.until>Date.now())}
+function proLabels(){GATED.forEach(k=>{TABN[k]=BASEN[k]+(isPro()?'':' 🔒')})}
+{const _ui=ui;ui=function(){proLabels();return _ui.apply(this,arguments)}}
+// tester login: checked against a hash, so the password isn't stored in plain text
+{const _d=doLogin;doLogin=async function(){const a=$('#lid'),b=$('#lpw');if(a&&b){const key=a.value.trim().toLowerCase();if(key==TESTE&&await sha(key+':'+b.value)==TESTH){const U=users(),h=await hash(b.value);if(!U[key]||U[key].h!==h){U[key]={name:'Tester',kind:'email',joined:Date.now(),h};LS.setItem('ed_users',JSON.stringify(U))}lm='in';lk='email';LS.setItem('ed_tester','1')}else LS.removeItem('ed_tester')}return _d.apply(this,arguments)}}
+{const _l=logout;logout=async function(){LS.removeItem('ed_tester');LS.removeItem('ed_pro');return _l.apply(this,arguments)}}
+async function proRefresh(){if(!me||isTester())return;const u=users()[me];if(!u||!cloudUrl())return;const r=await cloudCall('/status',{key:me,h:u.h});if(r&&r.ok){LS.setItem('ed_pro',JSON.stringify({key:me,until:r.pro?r.until:0}));ui();if(GATED.includes(tab))panel()}}
+// keep older phone-only accounts safe: copy them to the cloud once (the server ignores duplicates)
+async function cloudSync(){if(!me||!cloudUrl())return;const fl='ed_sync_'+me;if(LS.getItem(fl))return;const u=users()[me];if(!u||!u.h)return;const r=await cloudCall('/signup',{key:me,name:u.name||'Creator',kind:u.kind||'email',h:u.h});if(r.status==201||r.status==409||r.status==200)LS.setItem(fl,'1')}
+{const _a=afterLogin;afterLogin=async function(){await _a.apply(this,arguments);cloudSync().then(proRefresh)}}
+setTimeout(()=>{cloudSync().then(proRefresh)},1500);document.addEventListener('visibilitychange',()=>{if(!document.hidden)proRefresh()});
+const PAYM={msg:'',busy:0};
+function PAYW(feat){const until=proData().until,f=GFEAT[feat]||'This feature';let a;
+ if(!me)a=`<p class="mu">Log in or create an account to subscribe. Your plan stays with your account, even after you reinstall.</p><div class="chips"><button class="ac" id="paylog">Log in / Sign up</button></div>`;
+ else if(!cloudUrl())a=`<p class="mu">Payments need the Editor cloud server, which isn’t set up in this build yet.</p>`;
+ else a=`<div class="chips"><button class="ac" id="paygo">${PAYM.busy?'Please wait…':'Subscribe · ₹49 for 30 days'}</button><button id="payrf">I already paid</button></div>`;
+ return`<div class="card paywall"><div class="pwh">🔒 Pro</div><b>${esc(f)} is part of Pro</b><p class="mu">₹49 per month unlocks <b>Mask</b>, <b>Keyframes</b>, <b>Templates</b> and <b>AI Studio</b>. Everything else in the editor stays free.</p>${a}${PAYM.msg?`<p class="mu">${esc(PAYM.msg)}</p>`:''}${until&&until<=Date.now()?'<p class="mu">Your last pass has ended. Renew to continue.</p>':''}<small class="mu">Pay with UPI, card or netbanking. Each payment adds 30 days; renew any time.</small></div>`}
+{const _p=panel;panel=function(){if(GATED.includes(tab)&&!isPro()){$('#pn').innerHTML=PAYW(tab);return}return _p.apply(this,arguments)}}
+{const _k=addKf;addKf=function(){if(!isPro()){tab='kf';ui();panel();return}return _k.apply(this,arguments)}}
+const loadRzp=()=>window.Razorpay?Promise.resolve():new Promise((ok,no)=>{const s=document.createElement('script');s.src='https://checkout.razorpay.com/v1/checkout.js';s.onload=ok;s.onerror=()=>no(new Error('Couldn’t load the payment window. Check your internet.'));document.head.appendChild(s)});
+async function payStart(){if(PAYM.busy)return;const u=users()[me];if(!u)return;PAYM.busy=1;PAYM.msg='';panel();
+ try{const o=await cloudCall('/pay/order',{key:me,h:u.h});if(o.net)throw new Error('Couldn’t reach the server. Check your internet.');if(!o.orderId)throw new Error(o.error||'Payment couldn’t be started.');await loadRzp();
+  await new Promise((ok,no)=>{const z=new Razorpay({key:o.keyId,amount:o.amount,currency:o.currency||'INR',name:'Editor',description:'Pro · 30 days',order_id:o.orderId,prefill:me.includes('@')?{email:me}:{contact:me},theme:{color:'#5b6cff'},
+   handler:async r=>{const v=await cloudCall('/pay/verify',{key:me,h:u.h,orderId:r.razorpay_order_id,paymentId:r.razorpay_payment_id,signature:r.razorpay_signature});if(v.ok&&v.pro){LS.setItem('ed_pro',JSON.stringify({key:me,until:v.until}));PAYM.msg='';ui();panel();toast('Pro unlocked until '+new Date(v.until).toLocaleDateString());ok()}else no(new Error(v.error||'We couldn’t confirm the payment. If money was taken, tap “I already paid”.'))},
+   modal:{ondismiss:()=>ok()}});z.on&&z.on('payment.failed',r=>no(new Error((r.error&&r.error.description)||'Payment failed.')));z.open()})}
+ catch(e){PAYM.msg=String(e&&e.message||e)}PAYM.busy=0;panel()}
+$('#pn').addEventListener('click',e=>{const b=e.target.closest&&e.target.closest('button');if(!b)return;if(b.id=='paygo')payStart();else if(b.id=='payrf'){PAYM.msg='Checking…';panel();proRefresh().then(()=>{if(!isPro()){PAYM.msg='No active pass found yet. If you just paid, wait a minute and try again.';panel()}})}else if(b.id=='paylog'){loginUI()}},true);
+function proUI(){scrN='pro';const p=proData(),on=isPro();scr(`<div class="pg"><div class="row" style="padding:0"><button id="bkb">Back</button><b style="flex:1;text-align:center;font-size:18px">Pro plan</b></div>${on?`<div class="card"><b>✓ Pro is active</b><p class="mu">${isTester()?'Tester account: all features unlocked.':'Valid until '+new Date(p.until).toLocaleDateString()+'. You can add another 30 days at any time.'}</p></div>`:''}${PAYW('')}</div>`)}
+{const _m=menuUI;menuUI=function(){_m.apply(this,arguments);const b=$('#m_lo');if(b)b.insertAdjacentHTML('beforebegin','<button id="m_pro">'+(isPro()?'✓ Pro active':'🔒 Get Pro · ₹49/month')+'</button>')}}
+$('#dr').addEventListener('click',e=>{if(e.target.closest&&e.target.closest('#m_pro')){$('#dr').hidden=true;proUI()}});
+$('#sc').addEventListener('click',e=>{const b=e.target.closest&&e.target.closest('button');if(!b)return;if(b.id=='paygo')payStart().then(()=>{if(scrN=='pro')proUI()});else if(b.id=='payrf'){proRefresh().then(()=>{if(scrN=='pro')proUI()})}else if(b.id=='paylog')loginUI()},true);
+
+// ===================== v21: canvas dragging hardening (mouse) =====================
+cv.style.touchAction='none';
+{const prev=cv.onpointerdown;cv.onpointerdown=function(e){
+  if(e.pointerType=='mouse'){try{PT2.clear()}catch(_){}pz2=null;dg2=null}      // a mouse is a single pointer: never inherit a stale touch/pinch state
+  if(e.button===0&&!window.EYE&&!window.EYEK&&tab!='tmk'&&!kfT&&!(tmode=='ov'&&ovs[selO])&&!playing){    // nothing selected: click an overlay to select it, then drag it
+    const[px,py]=cpos(e),asp=cv.width/cv.height;let hit=null;
+    activeOvs().map((o,i)=>[o,i]).sort((a,b)=>(b[0].lane||0)-(a[0].lane||0)||b[1]-a[1]).some(([o])=>{const k=kv(o,lt(o)),hw=(k.s||o.sc||.5)*.5,hh=hw*asp*(o.img?1:.56);if(Math.abs(px-.5-(k.x||0))<=hw&&Math.abs(py-.5-(k.y||0))<=Math.max(hh,.12)){hit=o;return true}return false});
+    if(hit){selO=ovs.indexOf(hit);tmode='ov';kfT=false;ui();panel()}}
+  return prev.call(this,e)}}
+
+// ===================== v21: CapCut-style text looks (layered outlines, 3D, glow, gradients) + effects =====================
+let TCX=cx;
+function TLY(g,x,put,kS){for(const L of x.ly){g.save();g.lineJoin='round';g.lineCap='round';g.miterLimit=2;
+ if(L.k=='st'){g.lineWidth=L.w*2*kS;g.strokeStyle=L.c;put((t,a,b)=>g.strokeText(t,a+(L.dx||0)*kS,b+(L.dy||0)*kS))}
+ else if(L.k=='ex'){const n=L.n||10;g.fillStyle=L.c;g.strokeStyle=L.c;g.lineWidth=(L.w||0)*2*kS;for(let i=n;i>0;i--){const f=i/n,ox=(L.dx||0)*f*kS,oy=(L.dy||0)*f*kS;put((t,a,b)=>{if(L.w)g.strokeText(t,a+ox,b+oy);g.fillText(t,a+ox,b+oy)})}}
+ else if(L.k=='sh'){g.fillStyle=L.c;g.strokeStyle=L.c;g.lineWidth=(L.w||0)*2*kS;g.shadowColor=L.c;g.shadowBlur=(L.b||0)*kS;g.shadowOffsetX=(L.dx||0)*kS;g.shadowOffsetY=(L.dy||0)*kS;put((t,a,b)=>{if(L.w)g.strokeText(t,a,b);g.fillText(t,a,b)})}
+ else if(L.k=='gl'){g.fillStyle=L.c;for(let i=0;i<(L.n||2);i++){g.shadowColor=L.c;g.shadowBlur=L.b*kS*(1+i*.7);put((t,a,b)=>g.fillText(t,a,b))}}
+ g.restore()}}
+function TGS(g,x,w,h,age){let st;if(x.fx=='rainbow'){st=[];for(let i=0;i<=6;i++)st.push(['hsl('+Math.round((i*60+age*90)%360)+',95%,60%)',i/6])}else st=x.gs.map((s,i,a)=>Array.isArray(s)?s:[s,i/(a.length-1)]);
+ const aa=(x.fx=='rainbow'?0:(x.ga??90))*Math.PI/180,rx=Math.cos(aa)*Math.max(w*.5,1),ry=Math.sin(aa)*Math.max(h*.5,1),q=g.createLinearGradient(-rx,-ry,rx,ry);st.forEach(s=>{try{q.addColorStop(Math.max(0,Math.min(1,s[1])),s[0])}catch(_){}});return q}
+function TFX(g,x,put,kS,w,h,ox,age,z){g.save();g.shadowBlur=0;g.shadowColor='transparent';
+ if(x.fx=='shine'){const p=((age%2.4)/2.4)*1.7-.35,q=g.createLinearGradient(ox+w*(p-.16),-h/2,ox+w*(p+.16),h/2);q.addColorStop(0,'rgba(255,255,255,0)');q.addColorStop(.5,'rgba(255,255,255,.95)');q.addColorStop(1,'rgba(255,255,255,0)');g.fillStyle=q;put((t2,a,b)=>g.fillText(t2,a,b))}
+ else if(x.fx=='sparkle'){g.fillStyle='#fff';g.shadowColor='#fff';g.shadowBlur=8*kS;for(let i=0;i<7;i++){const s=Math.max(0,Math.sin(age*3.2+i*1.9)),r=z*.2*s,px=ox+hsh(i*3+1)*w,py=-h/2+hsh(i*5+2)*h;if(r<.5)continue;g.beginPath();for(let k=0;k<8;k++){const a=k*Math.PI/4,rr=k%2?r*.28:r;g.lineTo(px+Math.cos(a)*rr,py+Math.sin(a)*rr)}g.closePath();g.fill()}}
+ g.restore()}
+// thumbnails are the real text renderer, pointed at a small canvas
+const TXR2={ly:null,gs:null,ga:90,fx:'',c2:'#ff3b30'},TKEEP=['al','ori','lst','rot','lh','up'];
+function txThumb(g,w,h,patch,txt){const o=newText(0);Object.assign(o,TXR,TXR2,{txt:txt||'Aa',s:t-1.1,e:t+1e6,x:.5,y:.53,z:Math.round(h*.5*540/w),op:1,ain:'none',aout:'none',aloop:'none',hid:0,rot:0,kf:[],zmode:'off',mk:'none',al:'center',t3:null,shape:'line',ori:'h',lst:0,up:0},patch||{});delete o.aloop;o.aloop='none';
+ const f=patch&&patch.ff;if(f){o.ff=fstack(f);loadFont(f)}g.save();const q=g.createLinearGradient(0,0,w,h);q.addColorStop(0,'#2c3145');q.addColorStop(1,'#171a26');g.fillStyle=q;g.fillRect(0,0,w,h);const sv=TCX;TCX=g;try{drawText(o,-9,w,h)}catch(e){}TCX=sv;g.restore()}
+const tO=(w,c)=>({k:'st',w,c}),tX=(n,dx,dy,c,w)=>({k:'ex',n,dx,dy,c,w}),tS=(dx,dy,b,c,w)=>({k:'sh',dx,dy,b,c,w}),tG=(b,c,n)=>({k:'gl',b,c,n:n||2});
+const TGOLD=[['#fff6c2',0],['#ffd54a',.48],['#c98a00',.52],['#ffe27a',1]],TCHROME=[['#ffffff',0],['#9ab0c8',.48],['#3d4b5e',.52],['#cfe0f0',1]],TSILVER=[['#ffffff',0],['#b8c0cc',.5],['#6b7686',.52],['#e6ebf2',1]];
+const STY2=[ // [category, name, props]
+['Trending','Sticker Pink',{ff:'Luckiest Guy',c:'#ff2d78',sw:0,ly:[tS(0,6,10,'rgba(0,0,0,.45)',15),tO(15,'#ffffff'),tO(6,'#8a0a3c')]}],
+['Trending','Sticker Yellow',{ff:'Luckiest Guy',c:'#ffe600',sw:0,ly:[tS(0,6,10,'rgba(0,0,0,.45)',15),tO(15,'#ffffff'),tO(6,'#1a1a1a')]}],
+['Trending','Sticker Blue',{ff:'Luckiest Guy',c:'#35a8ff',sw:0,ly:[tS(0,6,10,'rgba(0,0,0,.45)',15),tO(15,'#ffffff'),tO(6,'#0a2a66')]}],
+['Trending','Pop Black',{ff:'Anton',c:'#ffffff',sw:0,ly:[tS(0,8,0,'#000000',9),tO(9,'#000000')]}],
+['Trending','Comic Boom',{ff:'Bangers',c:'#ffe14d',sw:0,ly:[tX(1,7,7,'#e63946',8),tO(8,'#111111')]}],
+['Trending','Meme Impact',{ff:'Anton',c:'#ffffff',sw:0,up:1,ly:[tO(9,'#000000')]}],
+['Trending','Clean Shadow',{ff:'Montserrat',c:'#ffffff',sw:0,ly:[tS(0,5,16,'rgba(0,0,0,.65)')]}],
+['Trending','Lime Pop',{ff:'Bungee',c:'#c6ff00',sw:0,ly:[tX(9,5,7,'#1b5e20',3),tO(5,'#0a2e0a')]}],
+['Trending','Viral Label',{ff:'Poppins',c:'#111111',sw:0,bgo:1,bgc:'#ffe14d',bgr:14,ly:null}],
+['Trending','Orange Pop',{ff:'Titan One',c:'#ff8a00',sw:0,ly:[tS(0,6,8,'rgba(0,0,0,.4)',13),tO(13,'#ffffff'),tO(5,'#6b2a00')]}],
+['Glow','Neon Pink',{ff:'Righteous',c:'#ffe6f4',sw:0,ly:[tG(46,'#ff2d95',2),tG(16,'#ff2d95',2),tO(2,'#ff7bc0')]}],
+['Glow','Neon Blue',{ff:'Righteous',c:'#e6faff',sw:0,ly:[tG(46,'#00d4ff',2),tG(16,'#00d4ff',2),tO(2,'#6fe6ff')]}],
+['Glow','Neon Green',{ff:'Righteous',c:'#eaffe6',sw:0,ly:[tG(46,'#2bff6a',2),tG(16,'#2bff6a',2),tO(2,'#8dffb0')]}],
+['Glow','Neon Orange',{ff:'Righteous',c:'#fff3e0',sw:0,ly:[tG(46,'#ff8a00',2),tG(16,'#ff8a00',2),tO(2,'#ffb85c')]}],
+['Glow','Neon Purple',{ff:'Righteous',c:'#f5eaff',sw:0,ly:[tG(46,'#a855f7',2),tG(16,'#a855f7',2),tO(2,'#d3a6ff')]}],
+['Glow','Red Alert',{ff:'Anton',c:'#ffffff',sw:0,ly:[tG(44,'#ff1f1f',2),tG(14,'#ff1f1f',2),tO(2,'#ff6b6b')]}],
+['Glow','Ice Glow',{ff:'Bebas Neue',c:'#f0fcff',sw:0,ls:4,ly:[tG(40,'#5ac8fa',2),tO(2,'#9fe3ff')]}],
+['Glow','Gold Glow',{ff:'Cinzel',c:'#fff1c1',sw:0,ls:3,ly:[tG(40,'#ffb300',2),tO(2,'#ffd34e')]}],
+['Glow','Lava',{ff:'Anton',c:'#ffb703',sw:0,gs:[['#fff3b0',0],['#ffb703',.45],['#e63900',1]],ly:[tG(34,'#ff5a00',2),tO(4,'#4a0d00')]}],
+['Glow','Toxic',{ff:'Bungee',c:'#b6ff00',sw:0,ly:[tG(40,'#7cff00',2),tO(4,'#0b2a00')]}],
+['3D','Gold 3D',{ff:'Alfa Slab One',c:'#ffd54a',sw:0,gs:TGOLD,ly:[tX(16,6,10,'#7a4a00',3),tO(5,'#5a3200')]}],
+['3D','Chrome 3D',{ff:'Russo One',c:'#cfe0f0',sw:0,gs:TCHROME,ly:[tX(12,4,8,'#1c2735',2),tO(4,'#111c2a')]}],
+['3D','Red 3D',{ff:'Alfa Slab One',c:'#ff3b3b',sw:0,ly:[tX(15,6,10,'#7a0c0c',2),tO(5,'#3b0505')]}],
+['3D','Blue 3D',{ff:'Titan One',c:'#4dabff',sw:0,ly:[tX(15,6,10,'#0b3d91',2),tO(5,'#061f4a')]}],
+['3D','Pink 3D',{ff:'Chewy',c:'#ff8fd1',sw:0,ly:[tX(15,6,10,'#a0185f',2),tO(5,'#4a0a2c')]}],
+['3D','White 3D',{ff:'Bungee',c:'#ffffff',sw:0,ly:[tX(15,6,10,'#4a5163',2),tO(5,'#1b1e27')]}],
+['3D','Green 3D',{ff:'Bungee',c:'#4cf27a',sw:0,ly:[tX(15,6,10,'#0d6b2c',2),tO(5,'#063a18')]}],
+['3D','Block Shadow',{ff:'Bebas Neue',c:'#ffffff',sw:0,ly:[tX(22,12,12,'#000000',0)]}],
+['3D','Retro Slab',{ff:'Alfa Slab One',c:'#ffc933',sw:0,ly:[tX(14,7,10,'#7a1fa2',2),tO(5,'#3a0a5a')]}],
+['Gradient','Sunset',{ff:'Montserrat',c:'#ff7a45',sw:0,gs:[['#ff512f',0],['#f09819',1]],ly:[tS(0,5,10,'rgba(0,0,0,.4)',7),tO(7,'#ffffff')]}],
+['Gradient','Ocean',{ff:'Montserrat',c:'#00a2ff',sw:0,gs:[['#00e0ff',0],['#0056ff',1]],ly:[tS(0,5,10,'rgba(0,0,0,.4)',7),tO(7,'#ffffff')]}],
+['Gradient','Rainbow',{ff:'Fredoka One',c:'#ffffff',sw:0,fx:'rainbow',ly:[tS(0,5,10,'rgba(0,0,0,.4)',7),tO(7,'#ffffff')]}],
+['Gradient','Candy',{ff:'Chewy',c:'#ff9a9e',sw:0,gs:[['#ff6fb5',0],['#ffc2a1',1]],ly:[tS(0,5,10,'rgba(0,0,0,.35)',8),tO(8,'#ffffff')]}],
+['Gradient','Aurora',{ff:'Poppins',c:'#43e97b',sw:0,gs:[['#43e97b',0],['#38f9d7',1]],ly:[tS(0,5,10,'rgba(0,0,0,.4)',7),tO(7,'#06323a')]}],
+['Gradient','Purple Haze',{ff:'Poppins',c:'#a18cd1',sw:0,gs:[['#a18cd1',0],['#fbc2eb',1]],ly:[tS(0,5,10,'rgba(0,0,0,.4)',7),tO(7,'#ffffff')]}],
+['Gradient','Fire',{ff:'Anton',c:'#ff7a00',sw:0,gs:[['#fff200',0],['#ff7a00',.5],['#ff1e00',1]],ly:[tG(26,'#ff4d00',2),tO(4,'#3a0900')]}],
+['Gradient','Silver',{ff:'Russo One',c:'#e6ebf2',sw:0,gs:TSILVER,ly:[tS(0,5,8,'rgba(0,0,0,.5)',4),tO(4,'#20262f')]}],
+['Gradient','Rose Gold',{ff:'Playfair Display',c:'#e0a08a',sw:0,gs:[['#fbd3c0',0],['#e0a08a',.5],['#b76e79',1]],ly:[tS(0,4,10,'rgba(0,0,0,.45)')]}],
+['Gradient','Holo',{ff:'Fredoka One',c:'#ffffff',sw:0,ga:0,gs:['#ff9aa2','#ffdac1','#e2f0cb','#b5ead7','#c7ceea'],ly:[tS(0,5,10,'rgba(0,0,0,.4)',7),tO(7,'#ffffff')]}],
+['Retro','VHS Glitch',{ff:'Orbitron',c:'#ffffff',sw:0,rgb:9,ly:null}],
+['Retro','Vaporwave',{ff:'Righteous',c:'#ff71ce',sw:0,gs:[['#ff71ce',0],['#01cdfe',1]],ly:[tG(28,'#b967ff',2),tO(3,'#2a0a4a')]}],
+['Retro','Arcade',{ff:'Press Start 2P',c:'#ffe600',sw:0,ly:[tX(8,4,4,'#ff0044',1),tO(3,'#000000')]}],
+['Retro','Typewriter',{ff:'Special Elite',c:'#f4ecd8',sw:0,b:0,ly:[tS(0,2,5,'rgba(0,0,0,.55)')]}],
+['Retro','Marker',{ff:'Permanent Marker',c:'#ffffff',sw:0,ly:[tO(7,'#e91e63')]}],
+['Retro','Graffiti',{ff:'Permanent Marker',c:'#ffe600',sw:0,ly:[tX(7,5,6,'#111111',3),tO(7,'#ff3d00')]}],
+['Retro','Bubble Pink',{ff:'Chewy',c:'#ff7eb6',sw:0,ly:[tS(0,6,8,'rgba(0,0,0,.3)',13),tO(13,'#ffffff'),tO(5,'#c2185b')]}],
+['Retro','Bubble Blue',{ff:'Chewy',c:'#5cc8ff',sw:0,ly:[tS(0,6,8,'rgba(0,0,0,.3)',13),tO(13,'#ffffff'),tO(5,'#0b5a9e')]}],
+['Retro','Hand Script',{ff:'Dancing Script',c:'#ffffff',sw:0,ly:[tS(0,3,9,'rgba(0,0,0,.55)')]}],
+['Retro','Chalk',{ff:'Caveat',c:'#f5f5f5',sw:0,b:0,ly:[tS(0,0,7,'rgba(255,255,255,.55)')]}],
+['Label','Pill Black',{ff:'Poppins',c:'#ffffff',sw:0,bgo:.88,bgc:'#000000',bgr:60,ly:null}],
+['Label','Pill White',{ff:'Poppins',c:'#111111',sw:0,bgo:1,bgc:'#ffffff',bgr:60,ly:null}],
+['Label','Pill Red',{ff:'Poppins',c:'#ffffff',sw:0,bgo:1,bgc:'#e11d48',bgr:60,ly:null}],
+['Label','Tag Blue',{ff:'Montserrat',c:'#ffffff',sw:0,bgo:1,bgc:'#2563eb',bgr:10,ly:null}],
+['Label','Ribbon Gold',{ff:'Anton',c:'#2b1b00',sw:0,bgo:1,bgc:'#ffcf4a',bgr:4,ly:null}],
+['Label','Glass',{ff:'Poppins',c:'#ffffff',sw:0,bgo:.22,bgc:'#ffffff',bgr:30,ly:[tS(0,3,10,'rgba(0,0,0,.4)')]}],
+['Cinema','Cinema Gold',{ff:'Cinzel',c:'#e8c15a',sw:0,b:0,ls:8,gs:[['#fff3c4',0],['#d4a017',1]],ly:[tS(0,3,12,'rgba(0,0,0,.65)')]}],
+['Cinema','Film Serif',{ff:'Playfair Display',c:'#ffffff',sw:0,b:0,ls:4,ly:[tS(0,4,18,'rgba(0,0,0,.7)')]}],
+['Cinema','Minimal Wide',{ff:'Montserrat',c:'#ffffff',sw:0,b:0,ls:14,ly:[tS(0,2,10,'rgba(0,0,0,.5)')]}],
+['Cinema','Horror',{ff:'Creepster',c:'#d00000',sw:0,ly:[tG(26,'#ff0000',2),tO(3,'#200000')]}],
+['Cinema','Western',{ff:'Alfa Slab One',c:'#d9a05b',sw:0,ly:[tX(9,3,6,'#3a2200',2),tO(4,'#2a1700')]}],
+['Cinema','Sports',{ff:'Bebas Neue',c:'#ffffff',sw:0,i:1,ly:[tX(11,-7,7,'#e11d48',2),tO(4,'#111111')]}]
+];
+const STYC=['Trending','Glow','3D','Gradient','Retro','Label','Cinema'];
+const EFX2=[['shine','Shine',{fx:'shine'}],['sparkle','Sparkle',{fx:'sparkle'}],['rainbow','Rainbow',{fx:'rainbow'}],['rgb','RGB split',{rgb:10}],['glitch','Glitch',{rgb:8,aloop:'glitch'}],['echo','Echo',{ech:3,ecd:12}],['neon','Neon',{neon:1.2,neonc:'#00e5ff'}],['hollow','Hollow',{hollow:1}],['mirror','Mirror',{refl:1}],['flicker','Flicker',{aloop:'flicker'}],['npulse','Neon pulse',{neon:1,neonc:'#ff2fa0',aloop:'neonpulse'}],['shake','Shake',{aloop:'shake'}],['pulse','Pulse',{aloop:'pulse'}],['float','Float',{aloop:'float'}],['wobble','Wobble',{aloop:'wobble'}],['jitter','Jitter',{aloop:'jitter'}]];
+const EFXOFF={fx:'',rgb:0,ech:0,neon:0,hollow:0,refl:0,aloop:'none'},EFXB={ff:'Anton',c:'#ffffff',sw:0,ly:[tO(6,'#111111')]};
+TD.tsy=(g,w,h,a)=>{const p=STY2[+a];if(p)txThumb(g,w,h,p[2],'Aa')};
+TD.tfx=(g,w,h,a)=>{const e=EFX2[+a];if(!e)return;const p={...EFXB,...e[2]};delete p.aloop;if(e[0]=='shine')p.c='#ff9f1c';txThumb(g,w,h,p,'Aa')};
+const TXN={cat:'Trending'};
+function TXSTY2(x){return`<div class="chips seg" style="flex-wrap:nowrap;overflow-x:auto">${STYC.map(c=>`<button data-nsc="${c}" class="${TXN.cat==c?'on':''}">${c}</button>`).join('')}</div>`+TG(STY2.map((p,i)=>[p,i]).filter(([p])=>p[0]==TXN.cat).map(([p,i])=>TILE(`data-ns="${i}"`,'tsy|'+i,p[1],0)).join(''))+'<p class="mu">Tap a look to apply it to the selected text (or to add new text). Your words, size and position stay. Add Shine, Glitch and more in Effects+.</p>'}
+function TXEFX2(x){const on=e=>Object.entries(e[2]).every(([k,v])=>x[k]==v);return TG(`<button class="tile" data-nefx="-1" aria-label="No effect"><span style="font-size:22px;line-height:96px">⌀</span><span>None</span></button>`+EFX2.map((e,i)=>TILE(`data-nefx="${i}"`,'tfx|'+i,(e[2].aloop?'▶ ':'')+e[1],on(e))).join(''))+
+ rg('tx_rgb','RGB split',0,30,1,x.rgb||0)+rg('tx_ech','Echo copies',0,8,1,x.ech||0)+rg('tx_ecd','Echo distance',3,40,1,x.ecd||10)+rg('tx_neon','Neon glow',0,3,.1,x.neon||0,q=>(+q).toFixed(1))+`<div class="rw"><span>Neon colour</span><input type="color" id="fnc" value="${x.neonc||'#00e5ff'}"></div><p class="mu">▶ marks effects that move. You can combine several. They work on top of any look, 3D and animation.</p>`}
+TXSUB.sty=TXSTY2;TXSUB.efx=TXEFX2;
+function applyNS(i){const p=STY2[i];if(!p)return;snap();let x=texts[selT];if(!x||!kfT){x=newText(t);x.e=x.s+4;texts.push(x);selT=texts.length-1;kfT=true;x.txt='Your text'}
+ const R={...TXR,...TXR2};TKEEP.forEach(k=>{if(!(k in p[2]))delete R[k]});Object.assign(x,R,p[2]);x.ly=p[2].ly?p[2].ly.map(l=>({...l})):null;if(p[2].ff){x.ff=fstack(p[2].ff);loadFont(p[2].ff)}x.op=x.op??1;chg();toast(p[1]+' applied')}
+function tilesAfterFonts(){const fam=[...new Set(STY2.map(p=>p[2].ff).concat(['Anton']))].filter(Boolean);if(!document.fonts||!document.fonts.load)return;Promise.all(fam.map(f=>document.fonts.load('40px "'+f+'"').catch(()=>0))).then(()=>{try{drawTiles(0,true)}catch(_){}})}
+$('#pn').addEventListener('click',e=>{const b=e.target.closest('button');if(!b||tab!='text')return;const d=b.dataset;
+ if(d.nsc){TXN.cat=d.nsc;panel();tilesAfterFonts();e.stopImmediatePropagation();return}
+ if(d.ns!==undefined){applyNS(+d.ns);panel();e.stopImmediatePropagation();return}
+ if(d.nefx!==undefined){const x=texts[selT];if(!x)return;snap();const i=+d.nefx;if(i<0)Object.assign(x,EFXOFF);else{const E=EFX2[i];if(Object.entries(E[2]).every(([k,v])=>x[k]==v))Object.entries(E[2]).forEach(([k,v])=>x[k]=EFXOFF[k]);else{Object.assign(x,E[2]);if(E[2].fx=='rainbow'&&!x.gs)x.gs=null}}chg();panel();e.stopImmediatePropagation()}},true);
+// a manual change to outline / shadow / 3D / colours replaces the look's layered recipe so the sliders act
+$('#pn').addEventListener('input',e=>{const x=texts[selT];if(!x||!x.ly)return;const id=e.target.id||'';if(/^tx_(sw|shb|ex|exa|shx|shy|glow)$/.test(id)||((id=='clrp')&&TXC.tab&&TXC.tab!='text')){x.ly=null;draw()}},true);
+{const _p=panel;panel=function(){_p.apply(this,arguments);if(tab=='text'&&(tsub=='sty'||tsub=='efx'))tilesAfterFonts()}}
 
 ui();panel();tick();boot();if('serviceWorker' in navigator&&location.protocol.startsWith('http'))navigator.serviceWorker.register('sw.js').catch(()=>{});
 </script></body></html>
