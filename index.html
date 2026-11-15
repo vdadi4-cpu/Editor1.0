@@ -205,8 +205,11 @@ body.pnbig #tl{height:84px!important}
 .ai2s{display:flex;align-items:center;gap:8px;padding:6px 0;border-top:1px solid rgba(128,128,128,.2)}.ai2t{width:52px;height:52px;border-radius:10px;background:var(--pn2);overflow:hidden;display:flex;align-items:center;justify-content:center;flex:0 0 auto}.ai2t img{width:100%;height:100%;object-fit:cover}.ai2i{flex:1;min-width:0;display:flex;flex-direction:column;gap:3px}.ai2i input{width:100%;box-sizing:border-box;padding:7px;border-radius:8px;border:1.5px solid var(--pn2);background:var(--bg);color:var(--tx);font:inherit;font-size:12px}.ai2i small{font-size:10px;opacity:.65}
 .paywall{border:1px solid rgba(255,207,74,.45);background:linear-gradient(135deg,rgba(255,207,74,.10),rgba(91,108,255,.10))}
 .pwh{display:inline-block;background:#ffcf4a;color:#1a1200;font-weight:800;font-size:11px;padding:2px 9px;border-radius:99px;margin-bottom:6px}
+.pml{display:flex;flex-direction:column;gap:8px;margin:8px 0}
+.pml button{display:flex;flex-direction:column;align-items:flex-start;text-align:left;padding:11px 14px;min-height:0;gap:2px}
+.pml button small{opacity:.7;font-size:12px;font-weight:500}
 </style></head><body>
-<header><div style="display:flex;align-items:center;gap:8px"><button id="mn" aria-label="Menu">☰</button><h1>Editor</h1><span class="mu" style="margin:0;font-size:11px">v21</span></div><div style="display:flex;gap:6px"><button id="un">Undo</button><button class="ac" id="ex">Export</button></div></header>
+<header><div style="display:flex;align-items:center;gap:8px"><button id="mn" aria-label="Menu">☰</button><h1>Editor</h1><span class="mu" style="margin:0;font-size:11px">v22</span></div><div style="display:flex;gap:6px"><button id="un">Undo</button><button class="ac" id="ex">Export</button></div></header>
 <div id="stage"><canvas id="cv"></canvas><div id="fsc"><button id="fsp" class="ac">Play</button><span id="fst"></span><button id="fsx">Exit</button></div>
 <div id="empty"><div style="font-size:18px;font-weight:700">Start a new project</div><div class="mu">Pick one or more videos from your device.</div><button class="ac" id="ad0">Add videos</button></div></div>
 <div class="row"><button id="pl" class="ac" style="min-width:74px">Play</button><button id="pv">Preview</button><div id="tm">00:00.0 / 00:00.0</div><button id="zo">−</button><button id="zi">+</button></div>
@@ -264,7 +267,7 @@ function mask(m,W,H,s){const r=Math.min(W,H)*s/2,X=W/2,Y=H/2,P=cx;P.beginPath();
 if(m=='circle')P.arc(X,Y,r,0,7);else if(m=='ellipse')P.ellipse(X,Y,W*s/2,H*s/2,0,0,7);else if(m=='box')P.rect(X-r,Y-r*.7,r*2,r*1.4);else if(m=='line')P.rect(-W,Y-4*H,3*W,4*H);else if(m=='mirror')P.rect(-W,Y-r*.5,3*W,r);
 else if(m=='heart'){P.moveTo(X,Y+r*.9);P.bezierCurveTo(X-r*1.6,Y-r*.2,X-r*.7,Y-r*1.2,X,Y-r*.4);P.bezierCurveTo(X+r*.7,Y-r*1.2,X+r*1.6,Y-r*.2,X,Y+r*.9)}
 else if(m=='star'){for(let i=0;i<10;i++){const a=-Math.PI/2+i*Math.PI/5,q=i%2?r*.45:r;P[i?'lineTo':'moveTo'](X+q*Math.cos(a),Y+q*Math.sin(a))}P.closePath()}}
-const VER='v21',LS=makeLS(),uid=()=>Math.random().toString(36).slice(2,9)+Date.now().toString(36);
+const VER='v22',LS=makeLS(),uid=()=>Math.random().toString(36).slice(2,9)+Date.now().toString(36);
 let me=null,pid=null,pname='Untitled',pst='pending',saveT,mus=null,progUntil=0,ESon=false,ES=720,EF=30,EFm='mp4',scrN='',pfI,lm='in',lk='email',an,mg,duck=1;
 const RES=[['480p',480],['720p HD',720],['1080p FHD',1080],['2K',1440],['4K',2160]],OWN=()=>me||'guest';
 const SW=['#ffffff','#0b0f19','#ff5c7a','#ff8a5c','#ffc857','#ffe66d','#b8f55b','#3ddc97','#2ee6a6','#22d3ee','#4da3ff','#6c7bff','#8b5cf6','#c084fc','#f472b6','#fb7185','#f97316','#eab308','#84cc16','#14b8a6','#0ea5e9','#6366f1','#a3a3a3','#525252'];
@@ -2497,7 +2500,7 @@ for(const[k,l]of[...OBJ3,...BRK]){VX[k]=()=>{};VXL.push([k,l])}
 $('#pn').addEventListener('click',e=>{const b=e.target.closest('[data-brk]');if(!b)return;const k=b.dataset.brk,n=(BRK.find(a=>a[0]==k)||[0,k])[1];snap();fxl.push({type:k,name:n,st:t,dur:FRDEF[k]||3,amt:55,spd:1,sz:1,col:'#ffffff',lane:-1,hid:0});chg();toast(n+' added at the playhead. Press Play to see it; trim it in the Motion lane.')});
 
 // ===================== v19: cloud login (MongoDB) + backup before uninstall =====================
-const CLOUD_DEFAULT='https://editor1-0-2.onrender.com';   // paste your API address here, e.g. 'https://editor-api.onrender.com'
+const CLOUD_DEFAULT='';   // paste your API address here, e.g. 'https://editor-api.onrender.com'
 const cloudUrl=()=>String(CLOUD_DEFAULT||LS.getItem('ed_cloud')||'').trim().replace(/\/+$/,'');
 async function cloudCall(path,body){const u=cloudUrl();if(!u)return{off:1};const ctl=new AbortController(),to=setTimeout(()=>ctl.abort(),15000);try{const r=await fetch(u+path,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body),signal:ctl.signal});const j=await r.json().catch(()=>({}));return{...j,status:r.status}}catch(e){return{net:1}}finally{clearTimeout(to)}}
 {const _dl=doLogin;doLogin=async function(){const idEl=$('#lid'),pwEl=$('#lpw');if(!idEl||!pwEl||!cloudUrl())return _dl();
@@ -2841,43 +2844,87 @@ $('#pn').addEventListener('input',e=>{if(e.target.id=='msq')MSS.q=e.target.value
 $('#pn').addEventListener('keydown',e=>{if(e.target.id=='msq'&&e.key=='Enter'){e.preventDefault();msGo()}});
 $('#pn').addEventListener('click',e=>{const b=e.target.closest('button');if(!b||tab!='mus')return;const d=b.dataset;if(b.id=='msgo')msGo();else if(b.id=='msjs'){const v=($('#msjk')||{}).value;if(v&&v.trim()){try{localStorage.setItem('ed_jmkey',v.trim())}catch(_){}panel();toast('Jamendo key saved')}}else if(d.mslang!==undefined){MSS.lang=d.mslang;MSS.res=[];MSS.msg='';panel();if(MSS.q.trim()||MSS.lang)msGo()}else if(d.mssrc){MSS.src=d.mssrc;MSS.res=[];MSS.msg='';panel();if(MSS.q.trim()||MSS.lang)msGo()}else if(d.mscom){MSS.com=MSS.com?0:1;panel();if(MSS.res.length)msGo()}else if(d.msp!==undefined)msPlay(+d.msp);else if(d.mssv!==undefined)msSave(+d.mssv,false);else if(d.msad!==undefined)msSave(+d.msad,true)},true);
 
-// ===================== v21: Pro plan (Rs 49 / month) for Mask, Keyframes, Templates, AI Studio =====================
-const TESTE='vdadi4@gmail.com',TESTH='8173dacebd9941dd2d341ccf78e8f1a5b477d3ed59ce049d2832ef39194f003f';
-const sha=async s=>{const b=await crypto.subtle.digest('SHA-256',new TextEncoder().encode(s));return[...new Uint8Array(b)].map(x=>x.toString(16).padStart(2,'0')).join('')};
+// ===================== v22: Pro plan (Rs 49 / 30 days): Mask, Keyframes, Templates, AI Studio =====================
+const TESTE='vdadi4@gmail.com';
 const GATED=['tmk','mk','kf','tpl','ai'],GFEAT={tmk:'Text mask',mk:'Mask',kf:'Keyframes',tpl:'Templates',ai:'AI Studio'},BASEN={};GATED.forEach(k=>BASEN[k]=TABN[k]);
 const proData=()=>{try{return JSON.parse(LS.getItem('ed_pro')||'{}')}catch(_){return{}}};
 function isTester(){return me==TESTE&&LS.getItem('ed_tester')=='1'}
-function isPro(){if(isTester())return true;const p=proData();return !!(me&&p.key==me&&p.until>Date.now())}
+// the tester account pays like everyone else unless "unlock free" is switched on (Pro screen)
+function isPro(){if(isTester()&&LS.getItem('ed_testfree')=='1')return true;const p=proData();return !!(me&&p.key==me&&p.until>Date.now())}
 function proLabels(){GATED.forEach(k=>{TABN[k]=BASEN[k]+(isPro()?'':' 🔒')})}
 {const _ui=ui;ui=function(){proLabels();return _ui.apply(this,arguments)}}
-// tester login: checked against a hash, so the password isn't stored in plain text
-{const _d=doLogin;doLogin=async function(){const a=$('#lid'),b=$('#lpw');if(a&&b){const key=a.value.trim().toLowerCase();if(key==TESTE&&await sha(key+':'+b.value)==TESTH){const U=users(),h=await hash(b.value);if(!U[key]||U[key].h!==h){U[key]={name:'Tester',kind:'email',joined:Date.now(),h};LS.setItem('ed_users',JSON.stringify(U))}lm='in';lk='email';LS.setItem('ed_tester','1')}else LS.removeItem('ed_tester')}return _d.apply(this,arguments)}}
-{const _l=logout;logout=async function(){LS.removeItem('ed_tester');LS.removeItem('ed_pro');return _l.apply(this,arguments)}}
-async function proRefresh(){if(!me||isTester())return;const u=users()[me];if(!u||!cloudUrl())return;const r=await cloudCall('/status',{key:me,h:u.h});if(r&&r.ok){LS.setItem('ed_pro',JSON.stringify({key:me,until:r.pro?r.until:0}));ui();if(GATED.includes(tab))panel()}}
-// keep older phone-only accounts safe: copy them to the cloud once (the server ignores duplicates)
-async function cloudSync(){if(!me||!cloudUrl())return;const fl='ed_sync_'+me;if(LS.getItem(fl))return;const u=users()[me];if(!u||!u.h)return;const r=await cloudCall('/signup',{key:me,name:u.name||'Creator',kind:u.kind||'email',h:u.h});if(r.status==201||r.status==409||r.status==200)LS.setItem(fl,'1')}
-{const _a=afterLogin;afterLogin=async function(){await _a.apply(this,arguments);cloudSync().then(proRefresh)}}
-setTimeout(()=>{cloudSync().then(proRefresh)},1500);document.addEventListener('visibilitychange',()=>{if(!document.hidden)proRefresh()});
-const PAYM={msg:'',busy:0};
-function PAYW(feat){const until=proData().until,f=GFEAT[feat]||'This feature';let a;
+{const _l=logout;logout=async function(){LS.removeItem('ed_tester');LS.removeItem('ed_pro');LS.removeItem('ed_testfree');return _l.apply(this,arguments)}}
+async function proRefresh(){if(!me)return;const u=users()[me];if(!u||!cloudUrl())return;const r=await cloudCall('/status',{key:me,h:u.h});if(r&&r.ok){LS.setItem('ed_pro',JSON.stringify({key:me,until:r.pro?r.until:0}));ui();if(GATED.includes(tab))panel()}return r}
+setTimeout(()=>{proRefresh()},1500);document.addEventListener('visibilitychange',()=>{if(!document.hidden)proRefresh()});
+const PAYM={msg:'',busy:0,choose:0,url:'',srv:null};
+async function srvPing(){const u=cloudUrl();if(!u){PAYM.srv={off:1};return}try{const r=await fetchT(u+'/',9000);PAYM.srv=await r.json()}catch(_){PAYM.srv={down:1}}if(GATED.includes(tab)&&!isPro())panel();else if(scrN=='pro')proUI()}
+const PMS=[['upi','UPI app','Google Pay · PhonePe · Paytm · BHIM'],['card','Credit / Debit card','Visa · Mastercard · RuPay'],['netbanking','Net banking','All major banks'],['wallet','Wallets','Paytm · Mobikwik · others'],['browser','Open payment page in browser','Most reliable on phones: pick any UPI app there']];
+function srvLine(){const s=PAYM.srv;if(!s)return'<small class="mu">Checking payment server…</small>';if(s.off)return'<small class="mu" style="color:#ff7a7a">Cloud server address is not set in this build.</small>';if(s.down)return'<small class="mu" style="color:#ff7a7a">Payment server not reachable. If you use Render’s free plan it may be waking up; wait 30 seconds and reopen.</small>';return`<small class="mu">Server online · payments: ${s.pay=='test'?'<b>TEST MODE</b> (no real money)':s.pay=='live'?'live':'<b style="color:#ff7a7a">not set up</b>'}</small>`}
+function PAYW(feat){const p=proData(),f=GFEAT[feat]||'This feature';let a;
  if(!me)a=`<p class="mu">Log in or create an account to subscribe. Your plan stays with your account, even after you reinstall.</p><div class="chips"><button class="ac" id="paylog">Log in / Sign up</button></div>`;
  else if(!cloudUrl())a=`<p class="mu">Payments need the Editor cloud server, which isn’t set up in this build yet.</p>`;
+ else if(PAYM.choose)a=`<b>How would you like to pay ₹49?</b><div class="pml">${PMS.map(m=>`<button data-pm="${m[0]}"><b>${m[1]}</b><small>${m[2]}</small></button>`).join('')}</div><div class="chips"><button id="paycx">Cancel</button></div>`;
  else a=`<div class="chips"><button class="ac" id="paygo">${PAYM.busy?'Please wait…':'Subscribe · ₹49 for 30 days'}</button><button id="payrf">I already paid</button></div>`;
- return`<div class="card paywall"><div class="pwh">🔒 Pro</div><b>${esc(f)} is part of Pro</b><p class="mu">₹49 per month unlocks <b>Mask</b>, <b>Keyframes</b>, <b>Templates</b> and <b>AI Studio</b>. Everything else in the editor stays free.</p>${a}${PAYM.msg?`<p class="mu">${esc(PAYM.msg)}</p>`:''}${until&&until<=Date.now()?'<p class="mu">Your last pass has ended. Renew to continue.</p>':''}<small class="mu">Pay with UPI, card or netbanking. Each payment adds 30 days; renew any time.</small></div>`}
-{const _p=panel;panel=function(){if(GATED.includes(tab)&&!isPro()){$('#pn').innerHTML=PAYW(tab);return}return _p.apply(this,arguments)}}
+ return`<div class="card paywall"><div class="pwh">🔒 Pro</div><b>${feat?esc(f)+' is part of Pro':(proData().until>Date.now()?'Add 30 more days':'Get Pro')}</b><p class="mu">₹49 per month unlocks <b>Mask</b>, <b>Keyframes</b>, <b>Templates</b> and <b>AI Studio</b>. Everything else in the editor stays free.</p>${a}${PAYM.url?`<p class="mu">Payment page didn’t open? <a href="${esc(PAYM.url)}" target="_blank" rel="noopener" style="color:#7fb0ff">Tap here to open it</a>, pay, then come back and tap “I already paid”.</p>`:''}${PAYM.msg?`<p class="mu">${esc(PAYM.msg)}</p>`:''}${p.until&&p.until<=Date.now()?'<p class="mu">Your last pass has ended. Renew to continue.</p>':''}${srvLine()}<small class="mu">Each payment adds 30 days; renew any time.</small></div>`}
+{const _p=panel;panel=function(){if(GATED.includes(tab)&&!isPro()){$('#pn').innerHTML=PAYW(tab);if(!PAYM.srv&&!PAYM.pinging){PAYM.pinging=1;srvPing().finally(()=>PAYM.pinging=0)}return}return _p.apply(this,arguments)}}
 {const _k=addKf;addKf=function(){if(!isPro()){tab='kf';ui();panel();return}return _k.apply(this,arguments)}}
 const loadRzp=()=>window.Razorpay?Promise.resolve():new Promise((ok,no)=>{const s=document.createElement('script');s.src='https://checkout.razorpay.com/v1/checkout.js';s.onload=ok;s.onerror=()=>no(new Error('Couldn’t load the payment window. Check your internet.'));document.head.appendChild(s)});
-async function payStart(){if(PAYM.busy)return;const u=users()[me];if(!u)return;PAYM.busy=1;PAYM.msg='';panel();
- try{const o=await cloudCall('/pay/order',{key:me,h:u.h});if(o.net)throw new Error('Couldn’t reach the server. Check your internet.');if(!o.orderId)throw new Error(o.error||'Payment couldn’t be started.');await loadRzp();
-  await new Promise((ok,no)=>{const z=new Razorpay({key:o.keyId,amount:o.amount,currency:o.currency||'INR',name:'Editor',description:'Pro · 30 days',order_id:o.orderId,prefill:me.includes('@')?{email:me}:{contact:me},theme:{color:'#5b6cff'},
-   handler:async r=>{const v=await cloudCall('/pay/verify',{key:me,h:u.h,orderId:r.razorpay_order_id,paymentId:r.razorpay_payment_id,signature:r.razorpay_signature});if(v.ok&&v.pro){LS.setItem('ed_pro',JSON.stringify({key:me,until:v.until}));PAYM.msg='';ui();panel();toast('Pro unlocked until '+new Date(v.until).toLocaleDateString());ok()}else no(new Error(v.error||'We couldn’t confirm the payment. If money was taken, tap “I already paid”.'))},
-   modal:{ondismiss:()=>ok()}});z.on&&z.on('payment.failed',r=>no(new Error((r.error&&r.error.description)||'Payment failed.')));z.open()})}
- catch(e){PAYM.msg=String(e&&e.message||e)}PAYM.busy=0;panel()}
-$('#pn').addEventListener('click',e=>{const b=e.target.closest&&e.target.closest('button');if(!b)return;if(b.id=='paygo')payStart();else if(b.id=='payrf'){PAYM.msg='Checking…';panel();proRefresh().then(()=>{if(!isPro()){PAYM.msg='No active pass found yet. If you just paid, wait a minute and try again.';panel()}})}else if(b.id=='paylog'){loginUI()}},true);
-function proUI(){scrN='pro';const p=proData(),on=isPro();scr(`<div class="pg"><div class="row" style="padding:0"><button id="bkb">Back</button><b style="flex:1;text-align:center;font-size:18px">Pro plan</b></div>${on?`<div class="card"><b>✓ Pro is active</b><p class="mu">${isTester()?'Tester account: all features unlocked.':'Valid until '+new Date(p.until).toLocaleDateString()+'. You can add another 30 days at any time.'}</p></div>`:''}${PAYW('')}</div>`)}
-{const _m=menuUI;menuUI=function(){_m.apply(this,arguments);const b=$('#m_lo');if(b)b.insertAdjacentHTML('beforebegin','<button id="m_pro">'+(isPro()?'✓ Pro active':'🔒 Get Pro · ₹49/month')+'</button>')}}
-$('#dr').addEventListener('click',e=>{if(e.target.closest&&e.target.closest('#m_pro')){$('#dr').hidden=true;proUI()}});
-$('#sc').addEventListener('click',e=>{const b=e.target.closest&&e.target.closest('button');if(!b)return;if(b.id=='paygo')payStart().then(()=>{if(scrN=='pro')proUI()});else if(b.id=='payrf'){proRefresh().then(()=>{if(scrN=='pro')proUI()})}else if(b.id=='paylog')loginUI()},true);
+function proDone(until){LS.setItem('ed_pro',JSON.stringify({key:me,until}));PAYM.msg='';PAYM.choose=0;PAYM.url='';ui();panel();toast('Pro unlocked until '+new Date(until).toLocaleDateString())}
+async function payStart(method){if(PAYM.busy)return;const u=users()[me];if(!u)return;PAYM.busy=1;PAYM.msg='';PAYM.choose=0;PAYM.url='';repaint();
+ try{
+  if(method=='browser'){const r=await cloudCall('/pay/link',{key:me,h:u.h});if(r.net)throw new Error('Couldn’t reach the server. Check your internet.');if(!r.url)throw new Error(r.error||'Payment page couldn’t be created.');PAYM.url=r.url;PAYM.msg='Pay on the page that opens, then come back here. Pro unlocks by itself, or tap “I already paid”.';try{window.open(r.url,'_blank')}catch(_){}}
+  else{const o=await cloudCall('/pay/order',{key:me,h:u.h});if(o.net)throw new Error('Couldn’t reach the server. Check your internet.');if(!o.orderId)throw new Error(o.error||'Payment couldn’t be started.');await loadRzp();
+   const M={upi:false,card:false,netbanking:false,wallet:false,emi:false,paylater:false};if(method)M[method]=true;else Object.keys(M).forEach(k=>M[k]=true);
+   await new Promise((ok,no)=>{const z=new Razorpay({key:o.keyId,amount:o.amount,currency:o.currency||'INR',name:'Editor',description:'Pro · 30 days',order_id:o.orderId,prefill:me.includes('@')?{email:me}:{contact:me},method:M,theme:{color:'#5b6cff'},
+    handler:async r=>{const v=await cloudCall('/pay/verify',{key:me,h:u.h,orderId:r.razorpay_order_id,paymentId:r.razorpay_payment_id,signature:r.razorpay_signature});if(v.ok&&v.pro){proDone(v.until);ok()}else no(new Error(v.error||'We couldn’t confirm the payment. If money was taken, tap “I already paid”.'))},
+    modal:{ondismiss:()=>ok()}});z.on&&z.on('payment.failed',r=>no(new Error((r.error&&r.error.description)||'Payment failed.')));z.open()})}}
+ catch(e){PAYM.msg=String(e&&e.message||e)}PAYM.busy=0;repaint()}
+function repaint(){if(scrN=='pro'&&!$('#sc').hidden)proUI();else panel()}
+function pay_click(e){const b=e.target.closest&&e.target.closest('button');if(!b)return false;const d=b.dataset;
+ if(b.id=='paygo'){PAYM.choose=1;PAYM.msg='';repaint();return true}
+ if(b.id=='paycx'){PAYM.choose=0;repaint();return true}
+ if(d.pm){payStart(d.pm);return true}
+ if(b.id=='payrf'){PAYM.msg='Checking…';repaint();proRefresh().then(()=>{if(!isPro()){PAYM.msg='No active pass found yet. If you just paid, wait a minute and try again.';repaint()}else{PAYM.msg='';repaint()}});return true}
+ if(b.id=='paylog'){loginUI();return true}
+ if(b.id=='tfree'){LS.setItem('ed_testfree',LS.getItem('ed_testfree')=='1'?'0':'1');ui();repaint();return true}
+ return false}
+$('#pn').addEventListener('click',e=>{if(pay_click(e))e.stopImmediatePropagation()},true);
+$('#sc').addEventListener('click',e=>{if(scrN=='pro'&&pay_click(e))e.stopImmediatePropagation()},true);
+function proUI(){scrN='pro';const p=proData(),on=isPro(),left=p.until>Date.now()?Math.ceil((p.until-Date.now())/864e5):0;if(!PAYM.srv&&!PAYM.pinging){PAYM.pinging=1;srvPing().finally(()=>PAYM.pinging=0)}
+ scr(`<div class="pg"><div class="row" style="padding:0"><button id="bkb">Back</button><b style="flex:1;text-align:center;font-size:18px">Pro plan</b></div>${on?`<div class="card"><b>✓ Pro is active</b><p class="mu">${left?'Valid until '+new Date(p.until).toLocaleDateString()+' ('+left+' day'+(left==1?'':'s')+' left). You can add another 30 days at any time.':'Unlocked for testing.'}</p></div>`:''}${isTester()?`<div class="card"><b>Tester options</b><p class="mu">This account can test the real payment. Switch on to unlock everything without paying (for trying features only).</p><div class="chips"><button id="tfree" class="${LS.getItem('ed_testfree')=='1'?'on':''}">Unlock all features free: ${LS.getItem('ed_testfree')=='1'?'ON':'OFF'}</button></div></div>`:''}${PAYW('')}</div>`)}
+{const _m=menuUI;menuUI=function(){_m.apply(this,arguments);const b=$('#m_lo');const p=proData(),left=p.until>Date.now()?Math.ceil((p.until-Date.now())/864e5):0;if(b)b.insertAdjacentHTML('beforebegin','<button id="m_pro">'+(isPro()?'✓ Pro active'+(left?' · '+left+'d left':''):'🔒 Get Pro · ₹49/month')+'</button>')}}
+$('#dr').addEventListener('click',e=>{if(e.target.closest&&e.target.closest('#m_pro')){$('#dr').hidden=true;PAYM.srv=null;proUI()}});
+
+// ===================== v22: one-time code (OTP) check on sign-up and login =====================
+const TESTH='07578b1591c4ef755fc9410219f502b8dfe8e16997662bcc7c84682965dfab1a';
+let OTPC=null;
+async function otpFinish(c,r){const U=users(),old=U[c.key]||{};U[c.key]={name:(r&&r.name)||old.name||c.name,kind:(r&&r.kind)||old.kind||c.kind,joined:(r&&r.joined)||old.joined||Date.now(),h:c.h};LS.setItem('ed_users',JSON.stringify(U));
+ if(c.key==TESTE&&c.h==TESTH)LS.setItem('ed_tester','1');else LS.removeItem('ed_tester');
+ me=c.key;LS.setItem('ed_me',c.key);LS.removeItem('ed_guest');LS.setItem('ed_last',me);OTPC=null;await saveP();await adopt(me);closeS();afterLogin();if(c.mode=='up')recoveryUI();proRefresh()}
+function otpUI(c,to,msg){scrN='otp';scr(`<div class="pg"><div class="row" style="padding:0"><button id="otb">Back</button><b style="flex:1;text-align:center;font-size:18px">Verify it’s you</b></div><div class="card"><p>We sent a 6-digit code to <b>${esc(to||'you')}</b>. It works for 5 minutes.</p><input type="text" id="otpc" inputmode="numeric" maxlength="6" autocomplete="one-time-code" placeholder="123456" style="font-size:24px;letter-spacing:8px;text-align:center"><div class="chips"><button class="ac" id="otok">Verify</button><button id="otrs">Resend code</button></div><p class="mu" id="otm" style="color:${/sent/i.test(msg||'')?'#7fe0a0':'#ff7a7a'}">${esc(msg||'')}</p></div><p class="mu">${c.kind=='phone'?'Check your SMS messages.':'Check your inbox and the spam folder.'}</p></div>`);setTimeout(()=>{const i=$('#otpc');i&&i.focus()},60)}
+async function otpGo(c,otp){const resend=otp===undefined&&scrN=='otp';
+ const r=await cloudCall(c.path,{key:c.key,h:c.h,name:c.name,kind:c.kind,otp});
+ if(r.net){if(c.mode=='in'){const U=users();if(U[c.key]&&U[c.key].h==c.h){toast('Server not reachable: signed in on this phone only');return otpFinish(c,{})}}return loginUI('Can’t reach the server. Check your internet and try again.')}
+ if(r.status==202){c.to=r.to;return otpUI(c,r.to,resend?'A new code was sent.':'')}
+ if(r.status==200||r.status==201)return otpFinish(c,r);
+ if(r.status==409){lm='in';return loginUI('This account already exists. Log in instead.')}
+ if(r.status==404){const U=users();if(U[c.key]&&U[c.key].h==c.h&&c.path=='/login'){c.path='/signup';c.mode='in';return otpGo(c)}return loginUI('No account found. Tap “New here?” to create one.')}
+ if(r.status==401&&r.code||scrN=='otp'&&otp!==undefined)return otpUI(c,c.to,r.error||'Wrong code');
+ if(r.status==401)return loginUI('Details do not match. Check and try again.');
+ if(resend)return otpUI(c,c.to,r.error||'Couldn’t send a new code.');
+ return loginUI(r.error||'Something went wrong. Please try again.')}
+{const _inner=doLogin;doLogin=async function(){const idEl=$('#lid'),pwEl=$('#lpw');if(!idEl||!pwEl||!cloudUrl())return _inner.apply(this,arguments);
+ const raw=idEl.value.trim(),pw=pwEl.value,nm=$('#lnm')?$('#lnm').value.trim():'';let key;
+ if(lk=='email'){if(!/^\S+@\S+\.\S+$/.test(raw))return loginUI('Enter a valid email address.');key=raw.toLowerCase()}else{key=raw.replace(/[^\d+]/g,'');if(key.replace(/\D/g,'').length<8)return loginUI('Enter a valid mobile number.')}
+ if(pw.length<6)return loginUI('Password must be at least 6 characters.');
+ const h=await hash(pw),b=$('#lgo');if(b){b.disabled=true;b.textContent='Please wait…'}
+ const c={key,h,name:nm||'Creator',kind:lk,path:lm=='up'?'/signup':'/login',mode:lm};OTPC=c;await otpGo(c)}}
+$('#sc').addEventListener('click',e=>{const b=e.target.closest&&e.target.closest('button');if(!b||scrN!='otp'||!OTPC)return;
+ if(b.id=='otok'){const v=($('#otpc')||{}).value||'';if(!/^\d{6}$/.test(v.trim())){const m=$('#otm');if(m){m.style.color='#ff7a7a';m.textContent='Enter the 6-digit code.'}return}b.disabled=true;b.textContent='Checking…';otpGo(OTPC,v.trim())}
+ else if(b.id=='otrs'){b.disabled=true;otpGo(OTPC)}
+ else if(b.id=='otb'){OTPC=null;loginUI()}},true);
+$('#sc').addEventListener('keydown',e=>{if(scrN=='otp'&&e.key=='Enter'&&e.target.id=='otpc'){e.preventDefault();const o=$('#otok');o&&o.click()}});
+{const _l=loginUI;loginUI=function(m){_l(m);if(cloudUrl()&&scrN=='login'){const g=$('#lgo');if(g&&!$('#lotp'))g.insertAdjacentHTML('beforebegin','<p class="mu" id="lotp">For your safety we’ll send a 6-digit code to your '+(lk=='email'?'email':'mobile number')+' to confirm it’s you.</p>')}}}
 
 // ===================== v21: canvas dragging hardening (mouse) =====================
 cv.style.touchAction='none';
