@@ -1,20 +1,8 @@
 {
-  "name": "editor",
+  "name": "editor-login-api",
   "version": "1.0.0",
-  "private": true,
-  "scripts": {
-    "sync": "cap sync",
-    "capacitor:sync:after": "node setup.js"
-  },
-  "dependencies": {
-    "@capacitor/core": "^7.0.0",
-    "@capacitor/android": "^7.0.0",
-    "@capacitor/ios": "^7.0.0",
-    "@capacitor/filesystem": "^7.0.0",
-    "@capacitor/share": "^7.0.0",
-    "@capacitor/preferences": "^7.0.0"
-  },
-  "devDependencies": {
-    "@capacitor/cli": "^7.0.0"
-  }
+  "main": "server.js",
+  "scripts": { "start": "node server.js" },
+  "engines": { "node": ">=18" },
+  "dependencies": { "mongodb": "^6.8.0" }
 }
