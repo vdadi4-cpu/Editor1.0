@@ -3,7 +3,16 @@ const http = require('http'), crypto = require('crypto');
 
 // Render env values often arrive with stray spaces or quotes; clean them all.
 const cleanEnv = e => { const o = {}; for (const k of Object.keys(e)) { let v = e[k]; if (typeof v === 'string') { v = v.trim(); if (/^(["']).*\1$/.test(v)) v = v.slice(1, -1).trim(); } o[k] = v; } return o; };
-const VERSION = 'v23';
+const VERSION = 'v24';
+// Latest app version: APP_LATEST env, else read `const VER='vNN'` from index.html in your GitHub repo (cached 10 min).
+const ghLatest = env => async () => {
+  const repo = env.GITHUB_REPO || 'vdadi4-cpu/Editor1.0', hd = env.GITHUB_TOKEN ? { Authorization: 'token ' + env.GITHUB_TOKEN } : {};
+  for (const br of env.GITHUB_BRANCH ? [env.GITHUB_BRANCH] : ['main', 'master']) {
+    const r = await fetch(env.APP_VERSION_URL || 'https://raw.githubusercontent.com/' + repo + '/' + br + '/index.html', { headers: hd, signal: AbortSignal.timeout(6000) });
+    if (!r.ok) continue; const m = /const VER='(v[\d.]+)'/.exec(await r.text()); if (m) return m[1];
+  }
+  return '';
+};
 const DAY = 864e5, PASS_DAYS = 30, OTP_TTL = 5 * 60e3, OTP_GAP = 30e3;
 const rzAuth = env => 'Basic ' + Buffer.from(env.RAZORPAY_KEY_ID + ':' + env.RAZORPAY_KEY_SECRET).toString('base64');
 const rz = async (env, method, path, body) => {
@@ -49,6 +58,8 @@ function makeHandler(users, opt = {}) {
   const testUser = String(env.OTP_TEST_USER || 'vdadi4@gmail.com').toLowerCase(), testH = env.OTP_TEST_H || '07578b1591c4ef755fc9410219f502b8dfe8e16997662bcc7c84682965dfab1a';
   const bypass = (key, h) => testUser !== 'off' && key === testUser && h === testH;
   const info = (d, key) => { const until = Math.max(+d.premiumUntil || 0, proEmails.includes(key) ? now() + PASS_DAYS * DAY : 0); return { pro: until > now(), until }; };
+  let latest = { at: 0, v: '' };
+  const getLatest = async () => { if (env.APP_LATEST) return env.APP_LATEST; const t = Date.now(); if (latest.v && t - latest.at < 600e3) return latest.v; try { const v = await (opt.fetchLatest || ghLatest(env))(); if (v) latest = { at: t, v }; else latest.at = t - 540e3; } catch (e) { latest.at = t - 540e3; } return latest.v; };
   const hits = new Map(), otps = new Map(), sent = new Map();
   const limited = ip => { const n = Date.now(), a = (hits.get(ip) || []).filter(x => n - x < 60000); a.push(n); hits.set(ip, a); return a.length > 60; };
   const scrypt = (h, salt) => new Promise((ok, no) => crypto.scrypt(h, salt, 32, (e, k) => e ? no(e) : ok(k.toString('hex'))));
@@ -84,7 +95,7 @@ function makeHandler(users, opt = {}) {
   return async (req, res) => {
     try {
       if (req.method === 'OPTIONS') return send(res, 204, {});
-      if (req.method === 'GET') return send(res, 200, { ok: 1, service: 'editor-login', version: VERSION, payKeys: { id: !!env.RAZORPAY_KEY_ID, secret: !!env.RAZORPAY_KEY_SECRET }, mailFrom: !!env.MAIL_FROM, mailer: env.BREVO_API_KEY ? 'brevo' : env.RESEND_API_KEY ? 'resend' : env.OTP_LOG ? 'log' : 'none', testUser: testUser !== 'off', pay: env.RAZORPAY_KEY_ID ? (/^rzp_test/.test(env.RAZORPAY_KEY_ID) ? 'test' : 'live') : 'off', otp: { email: !!(env.BREVO_API_KEY || env.RESEND_API_KEY || env.OTP_LOG), sms: !!(env.MSG91_AUTHKEY || env.FAST2SMS_KEY || env.TWILIO_SID || env.OTP_LOG) } });
+      if (req.method === 'GET') return send(res, 200, { ok: 1, service: 'editor-login', version: VERSION, latest: await getLatest(), appUrl: env.APP_URL || 'https://github.com/' + (env.GITHUB_REPO || 'vdadi4-cpu/Editor1.0') + '/actions', payKeys: { id: !!env.RAZORPAY_KEY_ID, secret: !!env.RAZORPAY_KEY_SECRET }, mailFrom: !!env.MAIL_FROM, mailer: env.BREVO_API_KEY ? 'brevo' : env.RESEND_API_KEY ? 'resend' : env.OTP_LOG ? 'log' : 'none', testUser: testUser !== 'off', pay: env.RAZORPAY_KEY_ID ? (/^rzp_test/.test(env.RAZORPAY_KEY_ID) ? 'test' : 'live') : 'off', otp: { email: !!(env.BREVO_API_KEY || env.RESEND_API_KEY || env.OTP_LOG), sms: !!(env.MSG91_AUTHKEY || env.FAST2SMS_KEY || env.TWILIO_SID || env.OTP_LOG) } });
       if (req.method !== 'POST') return send(res, 405, { error: 'Method not allowed' });
       const ip = (req.headers['x-forwarded-for'] || req.socket.remoteAddress || '').split(',')[0].trim();
       if (limited(ip)) return send(res, 429, { error: 'Too many tries. Wait a minute.' });

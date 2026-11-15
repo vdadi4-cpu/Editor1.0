@@ -208,8 +208,11 @@ body.pnbig #tl{height:84px!important}
 .pml{display:flex;flex-direction:column;gap:8px;margin:8px 0}
 .pml button{display:flex;flex-direction:column;align-items:flex-start;text-align:left;padding:11px 14px;min-height:0;gap:2px}
 .pml button small{opacity:.7;font-size:12px;font-weight:500}
+#updb{position:fixed;left:8px;right:8px;top:calc(8px + env(safe-area-inset-top,0px));z-index:60;display:flex;align-items:center;gap:10px;background:#5b6cff;color:#fff;border-radius:12px;padding:9px 12px;box-shadow:0 6px 20px rgba(0,0,0,.45);font-size:14px}
+#updb span{flex:1}#updb a{background:#fff;color:#2a2f8f;font-weight:700;border-radius:8px;padding:6px 12px;text-decoration:none}#updb button{background:transparent;border:0;color:#fff;font-size:16px;padding:4px 6px}
+#akf.lk::after{content:'🔒';font-size:10px;margin-left:3px}
 </style></head><body>
-<header><div style="display:flex;align-items:center;gap:8px"><button id="mn" aria-label="Menu">☰</button><h1>Editor</h1><span class="mu" style="margin:0;font-size:11px">v23</span></div><div style="display:flex;gap:6px"><button id="un">Undo</button><button class="ac" id="ex">Export</button></div></header>
+<header><div style="display:flex;align-items:center;gap:8px"><button id="mn" aria-label="Menu">☰</button><h1>Editor</h1><span class="mu" style="margin:0;font-size:11px">v24</span></div><div style="display:flex;gap:6px"><button id="un">Undo</button><button class="ac" id="ex">Export</button></div></header>
 <div id="stage"><canvas id="cv"></canvas><div id="fsc"><button id="fsp" class="ac">Play</button><span id="fst"></span><button id="fsx">Exit</button></div>
 <div id="empty"><div style="font-size:18px;font-weight:700">Start a new project</div><div class="mu">Pick one or more videos from your device.</div><button class="ac" id="ad0">Add videos</button></div></div>
 <div class="row"><button id="pl" class="ac" style="min-width:74px">Play</button><button id="pv">Preview</button><div id="tm">00:00.0 / 00:00.0</div><button id="zo">−</button><button id="zi">+</button></div>
@@ -267,7 +270,7 @@ function mask(m,W,H,s){const r=Math.min(W,H)*s/2,X=W/2,Y=H/2,P=cx;P.beginPath();
 if(m=='circle')P.arc(X,Y,r,0,7);else if(m=='ellipse')P.ellipse(X,Y,W*s/2,H*s/2,0,0,7);else if(m=='box')P.rect(X-r,Y-r*.7,r*2,r*1.4);else if(m=='line')P.rect(-W,Y-4*H,3*W,4*H);else if(m=='mirror')P.rect(-W,Y-r*.5,3*W,r);
 else if(m=='heart'){P.moveTo(X,Y+r*.9);P.bezierCurveTo(X-r*1.6,Y-r*.2,X-r*.7,Y-r*1.2,X,Y-r*.4);P.bezierCurveTo(X+r*.7,Y-r*1.2,X+r*1.6,Y-r*.2,X,Y+r*.9)}
 else if(m=='star'){for(let i=0;i<10;i++){const a=-Math.PI/2+i*Math.PI/5,q=i%2?r*.45:r;P[i?'lineTo':'moveTo'](X+q*Math.cos(a),Y+q*Math.sin(a))}P.closePath()}}
-const VER='v23',LS=makeLS(),uid=()=>Math.random().toString(36).slice(2,9)+Date.now().toString(36);
+const VER='v24',LS=makeLS(),uid=()=>Math.random().toString(36).slice(2,9)+Date.now().toString(36);
 let me=null,pid=null,pname='Untitled',pst='pending',saveT,mus=null,progUntil=0,ESon=false,ES=720,EF=30,EFm='mp4',scrN='',pfI,lm='in',lk='email',an,mg,duck=1;
 const RES=[['480p',480],['720p HD',720],['1080p FHD',1080],['2K',1440],['4K',2160]],OWN=()=>me||'guest';
 const SW=['#ffffff','#0b0f19','#ff5c7a','#ff8a5c','#ffc857','#ffe66d','#b8f55b','#3ddc97','#2ee6a6','#22d3ee','#4da3ff','#6c7bff','#8b5cf6','#c084fc','#f472b6','#fb7185','#f97316','#eab308','#84cc16','#14b8a6','#0ea5e9','#6366f1','#a3a3a3','#525252'];
@@ -2500,7 +2503,7 @@ for(const[k,l]of[...OBJ3,...BRK]){VX[k]=()=>{};VXL.push([k,l])}
 $('#pn').addEventListener('click',e=>{const b=e.target.closest('[data-brk]');if(!b)return;const k=b.dataset.brk,n=(BRK.find(a=>a[0]==k)||[0,k])[1];snap();fxl.push({type:k,name:n,st:t,dur:FRDEF[k]||3,amt:55,spd:1,sz:1,col:'#ffffff',lane:-1,hid:0});chg();toast(n+' added at the playhead. Press Play to see it; trim it in the Motion lane.')});
 
 // ===================== v19: cloud login (MongoDB) + backup before uninstall =====================
-const CLOUD_DEFAULT='https://editor1-0-2.onrender.com';   // paste your API address here, e.g. 'https://xxxxapi.onrender.com'
+const CLOUD_DEFAULT='https://editor1-0-2.onrender.com';   // paste your API address here, e.g. 'https://editor-api.onrender.com'
 const cloudUrl=()=>String(CLOUD_DEFAULT||LS.getItem('ed_cloud')||'').trim().replace(/\/+$/,'');
 async function cloudCall(path,body){const u=cloudUrl();if(!u)return{off:1};const ctl=new AbortController(),to=setTimeout(()=>ctl.abort(),15000);try{const r=await fetch(u+path,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body),signal:ctl.signal});const j=await r.json().catch(()=>({}));return{...j,status:r.status}}catch(e){return{net:1}}finally{clearTimeout(to)}}
 {const _dl=doLogin;doLogin=async function(){const idEl=$('#lid'),pwEl=$('#lpw');if(!idEl||!pwEl||!cloudUrl())return _dl();
@@ -2847,7 +2850,7 @@ $('#pn').addEventListener('click',e=>{const b=e.target.closest('button');if(!b||
 
 // ===================== v22: Pro plan (Rs 49 / 30 days): Mask, Keyframes, Templates, AI Studio =====================
 const TESTE='vdadi4@gmail.com';
-const GATED=['tmk','mk','kf','tpl','ai'],GFEAT={tmk:'Text mask',mk:'Mask',kf:'Keyframes',tpl:'Templates',ai:'AI Studio'},BASEN={};GATED.forEach(k=>BASEN[k]=TABN[k]);
+const GATED=['tmk','mk','kf','vfx','tpl','ai'],GFEAT={tmk:'Text mask',mk:'Mask',kf:'Keyframes',vfx:'Motion effects',tpl:'Templates',ai:'AI Studio'},BASEN={};GATED.forEach(k=>BASEN[k]=TABN[k]);
 const proData=()=>{try{return JSON.parse(LS.getItem('ed_pro')||'{}')}catch(_){return{}}};
 function isTester(){return me==TESTE&&LS.getItem('ed_tester')=='1'}
 // the tester account pays like everyone else unless "unlock free" is switched on (Pro screen)
@@ -2866,7 +2869,7 @@ function PAYW(feat){const p=proData(),f=GFEAT[feat]||'This feature';let a;
  else if(!cloudUrl())a=`<p class="mu">Payments need the Editor cloud server, which isn’t set up in this build yet.</p>`;
  else if(PAYM.choose)a=`<b>How would you like to pay ₹49?</b><div class="pml">${PMS.map(m=>`<button data-pm="${m[0]}"><b>${m[1]}</b><small>${m[2]}</small></button>`).join('')}</div><div class="chips"><button id="paycx">Cancel</button></div>`;
  else a=`<div class="chips"><button class="ac" id="paygo">${PAYM.busy?'Please wait…':'Subscribe · ₹49 for 30 days'}</button><button id="payrf">I already paid</button></div>`;
- return`<div class="card paywall"><div class="pwh">🔒 Pro</div><b>${feat?esc(f)+' is part of Pro':(proData().until>Date.now()?'Add 30 more days':'Get Pro')}</b><p class="mu">₹49 per month unlocks <b>Mask</b>, <b>Keyframes</b>, <b>Templates</b> and <b>AI Studio</b>. Everything else in the editor stays free.</p>${a}${PAYM.url?`<p class="mu"><a href="${esc(PAYM.url)}" target="_blank" rel="noopener" style="display:block;text-align:center;padding:12px;border-radius:10px;background:#5b6cff;color:#fff;font-weight:700;text-decoration:none">Open payment page</a></p><p class="mu">Pay there, then come back and tap “I already paid”.</p>`:''}${PAYM.msg?`<p class="mu">${esc(PAYM.msg)}</p>`:''}${p.until&&p.until<=Date.now()?'<p class="mu">Your last pass has ended. Renew to continue.</p>':''}${srvLine()}<small class="mu">Each payment adds 30 days; renew any time.</small></div>`}
+ return`<div class="card paywall"><div class="pwh">🔒 Pro</div><b>${feat?esc(f)+' is part of Pro':(proData().until>Date.now()?'Add 30 more days':'Get Pro')}</b><p class="mu">₹49 per month unlocks <b>Mask</b>, <b>Keyframes</b>, <b>Motion</b>, <b>Templates</b> and <b>AI Studio</b>. Everything else in the editor stays free.</p>${a}${PAYM.url?`<p class="mu"><a href="${esc(PAYM.url)}" target="_blank" rel="noopener" style="display:block;text-align:center;padding:12px;border-radius:10px;background:#5b6cff;color:#fff;font-weight:700;text-decoration:none">Open payment page</a></p><p class="mu">Pay there, then come back and tap “I already paid”.</p>`:''}${PAYM.msg?`<p class="mu">${esc(PAYM.msg)}</p>`:''}${p.until&&p.until<=Date.now()?'<p class="mu">Your last pass has ended. Renew to continue.</p>':''}${srvLine()}<small class="mu">Each payment adds 30 days; renew any time.</small></div>`}
 {const _p=panel;panel=function(){if(GATED.includes(tab)&&!isPro()){$('#pn').innerHTML=PAYW(tab);if(!PAYM.srv&&!PAYM.pinging){PAYM.pinging=1;srvPing().finally(()=>PAYM.pinging=0)}return}return _p.apply(this,arguments)}}
 {const _k=addKf;addKf=function(){if(!isPro()){tab='kf';ui();panel();return}return _k.apply(this,arguments)}}
 const loadRzp=()=>window.Razorpay?Promise.resolve():new Promise((ok,no)=>{const s=document.createElement('script');s.src='https://checkout.razorpay.com/v1/checkout.js';s.onload=ok;s.onerror=()=>no(new Error('Couldn’t load the payment window. Check your internet.'));document.head.appendChild(s)});
@@ -3053,7 +3056,7 @@ function diagHTML(s){const u=cloudUrl();let h='';
   else if(s.down)h+=dgRow(false,'Can’t reach the server','Check the address spelling, your internet, and that the Render service is running (it may be waking up: wait a minute and tap Check again).');
   else if(s.bad)h+=dgRow(false,'Server answered with an error ('+s.status+')','The address is probably not your Editor API. Use the address shown at the top of your Render service page.');
   else{h+=dgRow(true,'Server online',s.version?'server '+esc(s.version):'');
-   if(s.version!='v23')h+=dgRow(false,'Server is an older version','Upload the v23 server.js to GitHub (keep mongodb in package.json) and let Render redeploy.');
+   if(s.version!=VER)h+=dgRow(false,'Server is an older version','Upload the v23 server.js to GitHub (keep mongodb in package.json) and let Render redeploy.');
    h+=dgRow(!!(s.payKeys?s.payKeys.id&&s.payKeys.secret:s.pay!='off'),'Razorpay keys',s.pay=='test'?'Test mode: no real money':s.pay=='live'?'Live mode':'Missing: set RAZORPAY_KEY_ID and RAZORPAY_KEY_SECRET in Render');
    const em=s.mailer&&s.mailer!='none';h+=dgRow(em&&s.mailFrom!==false,'Email codes',!em?'No email service: set BREVO_API_KEY in Render':s.mailer=='log'?'Test mode: codes only appear in Render logs':s.mailFrom===false?'MAIL_FROM is missing: set it to the sender you verified in Brevo':'Sending with '+esc(s.mailer));
    h+=dgRow(!!(s.otp&&s.otp.sms),'SMS codes',s.otp&&s.otp.sms?'Ready':'Not set up (mobile-number login needs an SMS service; email works without it)');
@@ -3084,6 +3087,22 @@ $('#dr').addEventListener('click',e=>{if(e.target.closest&&e.target.closest('#m_
   if(body.key==TESTE&&body.h==TESTH){const s=await _c('/signup',{key:body.key,h:body.h,name:'Tester',kind:'email'});if(s.status==201||s.status==409)return _c(path,body)}
   return{...r,error:'Your account isn’t on the server yet. Log out, then log in again once to link it.'}}
  return r}}
+
+// ===================== v24: Pro adds top Keyframe button + Motion tab, update banner, test-mode payment hints =====================
+// top "◆ Keyframe" button: goes through the Pro check (it was bound to the original function before)
+{const b=$('#akf');if(b)b.onclick=()=>addKf()}
+{const _u=ui;ui=function(){const r=_u.apply(this,arguments);const b=$('#akf');if(b)b.classList.toggle('lk',!isPro());return r}}
+// update banner: asks the server which version is newest
+const verNum=v=>parseFloat(String(v||'').replace(/^v/i,''))||0;
+let UPD=null;
+function updShow(){const old=$('#updb');if(old)old.remove();if(!UPD)return;let dm='';try{dm=LS.getItem('ed_upd_no')||''}catch(_){}if(dm==UPD.latest)return;
+ const d=document.createElement('div');d.id='updb';d.innerHTML=`<span><b>Update available</b> · ${esc(UPD.latest)} (you have ${esc(VER)})</span><a href="${esc(UPD.url)}" target="_blank" rel="noopener">Update</a><button id="updx" aria-label="Later">✕</button>`;document.body.appendChild(d);
+ $('#updx').onclick=()=>{try{LS.setItem('ed_upd_no',UPD.latest)}catch(_){}d.remove()}}
+async function updCheck(){const u=cloudUrl();if(!u)return;try{const r=await fetchT(u+'/',20000);const j=await r.json();if(j&&j.latest&&verNum(j.latest)>verNum(VER)){UPD={latest:j.latest,url:j.appUrl||'https://github.com'};updShow()}else{UPD=null;updShow()}}catch(_){}}
+setTimeout(updCheck,2500);setInterval(updCheck,6*3600e3);document.addEventListener('visibilitychange',()=>{if(!document.hidden&&Date.now()-(window.__updAt||0)>3600e3){window.__updAt=Date.now();updCheck()}});
+// test-mode help on the paywall (UPI apps and real cards can't be used with test keys)
+{const _P2=PAYW;PAYW=function(f){const h=_P2(f);const s=PAYM.srv;if(!s||s.pay!='test')return h;
+ return h.replace('<small class="mu">Each payment adds','<div class="card" id="tsthint" style="margin:8px 0;background:#1b2030"><b>Test mode: how to pay</b><p class="mu">With Razorpay test keys, PhonePe/Paytm/Google Pay can’t open and real cards fail. That is normal. Use: <b>UPI</b> <code>success@razorpay</code> (or <code>failure@razorpay</code> to see a failure) · <b>Card</b> <code>4111 1111 1111 1111</code>, any future date, any CVV, then press <b>Success</b> on the bank page. Real apps work only with live keys.</p></div><small class="mu">Each payment adds')}}
 
 ui();panel();tick();boot();if('serviceWorker' in navigator&&location.protocol.startsWith('http'))navigator.serviceWorker.register('sw.js').catch(()=>{});
 </script></body></html>
