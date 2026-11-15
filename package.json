@@ -4,7 +4,8 @@
   "private": true,
   "scripts": {
     "sync": "cap sync",
-    "capacitor:sync:after": "node setup.js"
+    "capacitor:sync:after": "node setup.js",
+    "start": "node server.js"
   },
   "dependencies": {
     "@capacitor/core": "^7.0.0",

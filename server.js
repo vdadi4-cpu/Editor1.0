@@ -1,6 +1,9 @@
 // Editor API: login with OTP, Razorpay payments (Pro 30 days). Node 18+, MongoDB Atlas. No extra packages besides "mongodb".
 const http = require('http'), crypto = require('crypto');
 
+// Render env values often arrive with stray spaces or quotes; clean them all.
+const cleanEnv = e => { const o = {}; for (const k of Object.keys(e)) { let v = e[k]; if (typeof v === 'string') { v = v.trim(); if (/^(["']).*\1$/.test(v)) v = v.slice(1, -1).trim(); } o[k] = v; } return o; };
+const VERSION = 'v23';
 const DAY = 864e5, PASS_DAYS = 30, OTP_TTL = 5 * 60e3, OTP_GAP = 30e3;
 const rzAuth = env => 'Basic ' + Buffer.from(env.RAZORPAY_KEY_ID + ':' + env.RAZORPAY_KEY_SECRET).toString('base64');
 const rz = async (env, method, path, body) => {
@@ -21,6 +24,7 @@ function otpSender(env) {
     if (env.OTP_LOG) console.log('[OTP] ' + key + ' -> ' + code);
     const msg = 'Your Editor code is ' + code + '. It expires in 5 minutes. Do not share it.';
     if (kind === 'email') {
+      if ((env.BREVO_API_KEY || env.RESEND_API_KEY) && !env.MAIL_FROM) { const e = new Error('MAIL_FROM is not set in Render. Set it to the sender address you verified in ' + (env.BREVO_API_KEY ? 'Brevo' : 'Resend') + '.'); e.code = 'NOPROVIDER'; throw e; }
       if (env.BREVO_API_KEY) return must(await fetch('https://api.brevo.com/v3/smtp/email', { method: 'POST', headers: { 'api-key': env.BREVO_API_KEY, 'Content-Type': 'application/json' }, body: JSON.stringify({ sender: { name: 'Editor', email: env.MAIL_FROM }, to: [{ email: key }], subject: 'Your Editor code: ' + code, htmlContent: '<p>' + msg + '</p>' }) }));
       if (env.RESEND_API_KEY) return must(await fetch('https://api.resend.com/emails', { method: 'POST', headers: { Authorization: 'Bearer ' + env.RESEND_API_KEY, 'Content-Type': 'application/json' }, body: JSON.stringify({ from: env.MAIL_FROM, to: [key], subject: 'Your Editor code: ' + code, html: '<p>' + msg + '</p>' }) }));
     } else {
@@ -36,7 +40,7 @@ function otpSender(env) {
 const mask = (kind, key) => kind === 'email' ? key.replace(/^(.).*(@.*)$/, '$1***$2') : '••••••' + key.replace(/\D/g, '').slice(-4);
 
 function makeHandler(users, opt = {}) {
-  const env = opt.env || process.env, now = opt.now || (() => Date.now());
+  const env = cleanEnv(opt.env || process.env), now = opt.now || (() => Date.now());
   const price = +env.PRICE_PAISE || 4900;               // Rs 49 in paise
   const proEmails = String(env.PRO_EMAILS || '').toLowerCase().split(',').map(x => x.trim()).filter(Boolean);
   const createOrder = opt.createOrder || razorpayOrder(env), createLink = opt.createLink || razorpayLink(env), getLink = opt.getLink || razorpayGetLink(env);
@@ -59,7 +63,7 @@ function makeHandler(users, opt = {}) {
       if (o && t - o.at < OTP_GAP) return [429, { error: 'Please wait ' + Math.ceil((OTP_GAP - (t - o.at)) / 1000) + ' seconds before asking for another code.' }];
       if (s.length >= 6) return [429, { error: 'Too many codes requested. Try again in an hour.' }];
       const c = String(crypto.randomInt(100000, 1000000)), salt = crypto.randomBytes(8).toString('hex');
-      try { await deliver(kind, key, c); } catch (e) { console.error('otp send failed:', e.message); return [e.code === 'NOPROVIDER' ? 503 : 502, { error: e.code === 'NOPROVIDER' ? e.message : 'Couldn’t send the code. Check the address or number and try again.' }]; }
+      try { await deliver(kind, key, c); } catch (e) { console.error('otp send failed:', e.message); return [e.code === 'NOPROVIDER' ? 503 : 502, { error: e.code === 'NOPROVIDER' ? e.message : 'Couldn’t send the code. Check the address or number and try again.', detail: String(e.message || '').slice(0, 200) }]; }
       otps.set(id, { salt, h: sha(salt + c), exp: t + OTP_TTL, tries: 0, at: t }); s.push(t); sent.set(key, s);
       return [202, { ok: 1, otp: 1, to: mask(kind, key), ttl: OTP_TTL / 1000 }];
     }
@@ -80,7 +84,7 @@ function makeHandler(users, opt = {}) {
   return async (req, res) => {
     try {
       if (req.method === 'OPTIONS') return send(res, 204, {});
-      if (req.method === 'GET') return send(res, 200, { ok: 1, service: 'editor-login', pay: env.RAZORPAY_KEY_ID ? (/^rzp_test/.test(env.RAZORPAY_KEY_ID) ? 'test' : 'live') : 'off', otp: { email: !!(env.BREVO_API_KEY || env.RESEND_API_KEY || env.OTP_LOG), sms: !!(env.MSG91_AUTHKEY || env.FAST2SMS_KEY || env.TWILIO_SID || env.OTP_LOG) } });
+      if (req.method === 'GET') return send(res, 200, { ok: 1, service: 'editor-login', version: VERSION, payKeys: { id: !!env.RAZORPAY_KEY_ID, secret: !!env.RAZORPAY_KEY_SECRET }, mailFrom: !!env.MAIL_FROM, mailer: env.BREVO_API_KEY ? 'brevo' : env.RESEND_API_KEY ? 'resend' : env.OTP_LOG ? 'log' : 'none', testUser: testUser !== 'off', pay: env.RAZORPAY_KEY_ID ? (/^rzp_test/.test(env.RAZORPAY_KEY_ID) ? 'test' : 'live') : 'off', otp: { email: !!(env.BREVO_API_KEY || env.RESEND_API_KEY || env.OTP_LOG), sms: !!(env.MSG91_AUTHKEY || env.FAST2SMS_KEY || env.TWILIO_SID || env.OTP_LOG) } });
       if (req.method !== 'POST') return send(res, 405, { error: 'Method not allowed' });
       const ip = (req.headers['x-forwarded-for'] || req.socket.remoteAddress || '').split(',')[0].trim();
       if (limited(ip)) return send(res, 429, { error: 'Too many tries. Wait a minute.' });
@@ -129,8 +133,9 @@ function makeHandler(users, opt = {}) {
         return send(res, 201, { ok: 1, name, kind, joined });
       }
       if (req.url.startsWith('/login')) {
-        const d = await check();
+        let d = await check();
         if (d === null) return send(res, 404, { error: 'No account' });
+        if (d === false && bypass(key, h)) { const salt = crypto.randomBytes(16).toString('hex'); await users.updateOne({ _id: key }, { $set: { salt, ph: await scrypt(h, salt) } }); d = await users.findOne({ _id: key }); }   // tester account: always lets the known test password in
         if (d === false) return send(res, 401, { error: 'Wrong details' });
         if (!bypass(key, h)) { const r = await otpStep('login', d.kind || kind, key, b.otp); if (r) return send(res, r[0], r[1]); }
         return send(res, 200, { ok: 1, name: d.name, kind: d.kind, joined: d.joined, ...info(d, key) });
@@ -139,11 +144,11 @@ function makeHandler(users, opt = {}) {
     } catch (e) { console.error(e); send(res, 500, { error: 'Server error' }); }
   };
 }
-module.exports = { makeHandler, razorpayOrder, otpSender };
+module.exports = { makeHandler, razorpayOrder, otpSender, cleanEnv };
 
 if (require.main === module) {
   const { MongoClient } = require('mongodb');
-  const uri = process.env.MONGODB_URI;
+  const uri = cleanEnv(process.env).MONGODB_URI;
   if (!uri) { console.error('Set MONGODB_URI'); process.exit(1); }
   new MongoClient(uri).connect().then(c => {
     const users = c.db(process.env.DB_NAME || 'editor').collection('users');
