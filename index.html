@@ -2500,7 +2500,7 @@ for(const[k,l]of[...OBJ3,...BRK]){VX[k]=()=>{};VXL.push([k,l])}
 $('#pn').addEventListener('click',e=>{const b=e.target.closest('[data-brk]');if(!b)return;const k=b.dataset.brk,n=(BRK.find(a=>a[0]==k)||[0,k])[1];snap();fxl.push({type:k,name:n,st:t,dur:FRDEF[k]||3,amt:55,spd:1,sz:1,col:'#ffffff',lane:-1,hid:0});chg();toast(n+' added at the playhead. Press Play to see it; trim it in the Motion lane.')});
 
 // ===================== v19: cloud login (MongoDB) + backup before uninstall =====================
-const CLOUD_DEFAULT='';   // paste your API address here, e.g. 'https://editor-api.onrender.com'
+const CLOUD_DEFAULT='https://editor1-0-2.onrender.com';   // paste your API address here, e.g. 'https://xxxxapi.onrender.com'
 const cloudUrl=()=>String(CLOUD_DEFAULT||LS.getItem('ed_cloud')||'').trim().replace(/\/+$/,'');
 async function cloudCall(path,body){const u=cloudUrl();if(!u)return{off:1};const ctl=new AbortController(),to=setTimeout(()=>ctl.abort(),15000);try{const r=await fetch(u+path,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body),signal:ctl.signal});const j=await r.json().catch(()=>({}));return{...j,status:r.status}}catch(e){return{net:1}}finally{clearTimeout(to)}}
 {const _dl=doLogin;doLogin=async function(){const idEl=$('#lid'),pwEl=$('#lpw');if(!idEl||!pwEl||!cloudUrl())return _dl();
