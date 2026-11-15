@@ -211,8 +211,12 @@ body.pnbig #tl{height:84px!important}
 #updb{position:fixed;left:8px;right:8px;top:calc(8px + env(safe-area-inset-top,0px));z-index:60;display:flex;align-items:center;gap:10px;background:#5b6cff;color:#fff;border-radius:12px;padding:9px 12px;box-shadow:0 6px 20px rgba(0,0,0,.45);font-size:14px}
 #updb span{flex:1}#updb a{background:#fff;color:#2a2f8f;font-weight:700;border-radius:8px;padding:6px 12px;text-decoration:none}#updb button{background:transparent;border:0;color:#fff;font-size:16px;padding:4px 6px}
 #akf.lk::after{content:'🔒';font-size:10px;margin-left:3px}
+.aar{margin:0 0 8px;padding:6px 10px;border-radius:12px;background:rgba(127,127,160,.12);display:flex;flex-direction:row;flex-wrap:wrap;align-items:center;gap:4px 10px}#trall{flex-direction:column;align-items:stretch;margin-top:8px}
+.aar .aal{display:flex;align-items:center;gap:8px;font-weight:700}.aar .aal input{width:20px;height:20px}
+.aar .chips{margin:0}
+.spf input{display:block;width:100%;box-sizing:border-box;margin:6px 0}.spf .chips input{flex:1;min-width:0;margin:0}
 </style></head><body>
-<header><div style="display:flex;align-items:center;gap:8px"><button id="mn" aria-label="Menu">☰</button><h1>Editor</h1><span class="mu" style="margin:0;font-size:11px">v24</span></div><div style="display:flex;gap:6px"><button id="un">Undo</button><button class="ac" id="ex">Export</button></div></header>
+<header><div style="display:flex;align-items:center;gap:8px"><button id="mn" aria-label="Menu">☰</button><h1>Editor</h1><span class="mu" style="margin:0;font-size:11px">v25</span></div><div style="display:flex;gap:6px"><button id="un">Undo</button><button class="ac" id="ex">Export</button></div></header>
 <div id="stage"><canvas id="cv"></canvas><div id="fsc"><button id="fsp" class="ac">Play</button><span id="fst"></span><button id="fsx">Exit</button></div>
 <div id="empty"><div style="font-size:18px;font-weight:700">Start a new project</div><div class="mu">Pick one or more videos from your device.</div><button class="ac" id="ad0">Add videos</button></div></div>
 <div class="row"><button id="pl" class="ac" style="min-width:74px">Play</button><button id="pv">Preview</button><div id="tm">00:00.0 / 00:00.0</div><button id="zo">−</button><button id="zi">+</button></div>
@@ -270,7 +274,7 @@ function mask(m,W,H,s){const r=Math.min(W,H)*s/2,X=W/2,Y=H/2,P=cx;P.beginPath();
 if(m=='circle')P.arc(X,Y,r,0,7);else if(m=='ellipse')P.ellipse(X,Y,W*s/2,H*s/2,0,0,7);else if(m=='box')P.rect(X-r,Y-r*.7,r*2,r*1.4);else if(m=='line')P.rect(-W,Y-4*H,3*W,4*H);else if(m=='mirror')P.rect(-W,Y-r*.5,3*W,r);
 else if(m=='heart'){P.moveTo(X,Y+r*.9);P.bezierCurveTo(X-r*1.6,Y-r*.2,X-r*.7,Y-r*1.2,X,Y-r*.4);P.bezierCurveTo(X+r*.7,Y-r*1.2,X+r*1.6,Y-r*.2,X,Y+r*.9)}
 else if(m=='star'){for(let i=0;i<10;i++){const a=-Math.PI/2+i*Math.PI/5,q=i%2?r*.45:r;P[i?'lineTo':'moveTo'](X+q*Math.cos(a),Y+q*Math.sin(a))}P.closePath()}}
-const VER='v24',LS=makeLS(),uid=()=>Math.random().toString(36).slice(2,9)+Date.now().toString(36);
+const VER='v25',LS=makeLS(),uid=()=>Math.random().toString(36).slice(2,9)+Date.now().toString(36);
 let me=null,pid=null,pname='Untitled',pst='pending',saveT,mus=null,progUntil=0,ESon=false,ES=720,EF=30,EFm='mp4',scrN='',pfI,lm='in',lk='email',an,mg,duck=1;
 const RES=[['480p',480],['720p HD',720],['1080p FHD',1080],['2K',1440],['4K',2160]],OWN=()=>me||'guest';
 const SW=['#ffffff','#0b0f19','#ff5c7a','#ff8a5c','#ffc857','#ffe66d','#b8f55b','#3ddc97','#2ee6a6','#22d3ee','#4da3ff','#6c7bff','#8b5cf6','#c084fc','#f472b6','#fb7185','#f97316','#eab308','#84cc16','#14b8a6','#0ea5e9','#6366f1','#a3a3a3','#525252'];
@@ -2819,10 +2823,14 @@ async function srcOV(q,creator,n){const u='https://api.openverse.org/v1/audio/?p
 async function srcAR(expr,n){const u='https://archive.org/advancedsearch.php?q='+encodeURIComponent('('+expr+') AND mediatype:(audio) AND (licenseurl:(*creativecommons*) OR licenseurl:(*publicdomain*) OR collection:(opensource_audio) OR collection:(audio_music))')+'&fl%5B%5D=identifier&fl%5B%5D=title&fl%5B%5D=creator&fl%5B%5D=licenseurl&rows='+n+'&sort%5B%5D=downloads+desc&output=json';const j=await jget(u);return((j.response&&j.response.docs)||[]).map(d=>({title:d.title||d.identifier,artist:[].concat(d.creator||[]).join(', ')||'Unknown',id:d.identifier,license:d.licenseurl?licUrl(d.licenseurl):'Public domain / open',src:'Archive',dur:0}))}
 async function srcWC(q,n){const u='https://commons.wikimedia.org/w/api.php?action=query&generator=search&gsrnamespace=6&gsrlimit='+n+'&gsrsearch='+encodeURIComponent(q+' filetype:audio')+'&prop=imageinfo&iiprop=url|mime|extmetadata&format=json&origin=*';const j=await jget(u),p=Object.values((j.query&&j.query.pages)||{});return p.filter(x=>x.imageinfo&&x.imageinfo[0]&&x.imageinfo[0].url).map(x=>{const i=x.imageinfo[0],em=i.extmetadata||{},sp=h=>String(h&&h.value||'').replace(/<[^>]*>/g,'').trim();return{title:x.title.replace(/^File:/,'').replace(/\.[a-z0-9]+$/i,'').replace(/_/g,' '),artist:sp(em.Artist)||'Unknown',url:i.url,dur:0,license:sp(em.LicenseShortName)||'Open licence',page:i.descriptionurl||'',src:'Commons'}})}
 async function srcJM(q,artist,tags,n){const k=mkey();if(!k)return null;const u='https://api.jamendo.com/v3.0/tracks/?client_id='+encodeURIComponent(k)+'&format=json&limit='+n+'&include=musicinfo&audioformat=mp32&order=popularity_total'+(q?'&search='+encodeURIComponent(q):'')+(artist?'&artist_name='+encodeURIComponent(artist):'')+(tags?'&tags='+encodeURIComponent(tags):'');const j=await jget(u);return((j&&j.results)||[]).filter(r=>r.audio).map(r=>({title:r.name,artist:r.artist_name,url:r.audio,dur:+r.duration||0,license:licUrl(r.license_ccurl),page:r.shareurl||'',src:'Jamendo'}))}
+const ARTX={arijit:'Arijit Singh',rahman:'A. R. Rahman',anirudh:'Anirudh Ravichander',ilayaraja:'Ilaiyaraaja',ilaiyaraaja:'Ilaiyaraaja',sriram:'Sid Sriram',thaman:'S. Thaman',dsp:'Devi Sri Prasad','sonu nigam':'Sonu Nigam',shreya:'Shreya Ghoshal',kishore:'Kishore Kumar',lata:'Lata Mangeshkar',rafi:'Mohammed Rafi',spb:'S. P. Balasubrahmanyam',yesudas:'K. J. Yesudas',chitra:'K. S. Chithra',pritam:'Pritam',vishal:'Vishal-Shekhar',jubin:'Jubin Nautiyal',atif:'Atif Aslam',badshah:'Badshah',honey:'Yo Yo Honey Singh',diljit:'Diljit Dosanjh',karthik:'Karthik',hariharan:'Hariharan',sid:'Sid Sriram'};
+async function srcSV(q,tag){const u=cloudUrl();if(!u)return null;const r=await fetchT(u+'/music?q='+encodeURIComponent(q)+(tag?'&tag='+encodeURIComponent(tag):'')+(MSS.com?'&com=1':''),25000),j=await r.json().catch(()=>({}));if(!r.ok)throw new Error(j.error||'HTTP '+r.status);return(j.res||[]).map(x=>({title:x.title||'Untitled',artist:x.artist||'Unknown',url:x.url,dur:x.dur||0,license:x.license||'Creative Commons',src:(x.src||'Web')+' ✓'}))}
 async function msSearch(){const q=MSS.q.trim(),T=mlTerms(),jobs=[],use=s=>MSS.src=='all'||MSS.src==s,add=(name,p)=>jobs.push(p.then(v=>({name,v}),e=>({name,e})));
  // text queries: what the person typed combined with the language words, then each alone
  const qs=[];if(q&&T.length){qs.push(q+' '+T[0]);qs.push(q)}else if(q)qs.push(q);else if(T.length){qs.push(T[0]);if(T[1])qs.push(T[1])}
+ if(q){const l0=q.toLowerCase();for(const k in ARTX)if(l0.includes(k)&&!l0.includes(ARTX[k].toLowerCase())&&!qs.includes(ARTX[k]))qs.push(ARTX[k])}
  if(!qs.length)return{res:[],warn:''};
+ if(use('sv')&&cloudUrl()){const tg=T.length?T[0]:'';qs.slice(0,3).forEach(x=>add('Server',srcSV(x,tg)))}
  if(use('ov')){qs.forEach(x=>add('Openverse',srcOV(x,'',10)));if(q)add('Openverse',srcOV('',q,10))}
  if(use('ar')){qs.forEach(x=>add('Archive',srcAR(x,10)));if(q)add('Archive',srcAR('creator:('+q+')',8))}
  if(use('wc'))qs.forEach(x=>add('Commons',srcWC(x,10)));
@@ -2841,7 +2849,7 @@ async function msSave(i,add){const r=MSS.res[i];if(!r)return;if(pause)pause();ms
   const url=URL.createObjectURL(b),dur=await new Promise(k=>{const a=new Audio();a.preload='metadata';a.onloadedmetadata=()=>k(a.duration);a.onerror=()=>k(0);a.src=url});if(!dur||!isFinite(dur))throw new Error('That file isn’t playable audio');
   const nm=(r.title+' – '+r.artist).slice(0,60);await smSave({url,name:nm,dur,src:dur},nm);MSS.msg='Saved “'+r.title.slice(0,24)+'” ('+r.license+'). Credit '+r.artist+' if you publish.';if(add){const L=smList();if(L[0])await smAdd(L[0].id)}}catch(e){MSS.msg='Couldn’t save it: '+(e&&e.message||e)}panel()}
 function msHTML(){const rs=MSS.res.map((r,i)=>`<div class="msr"><div class="msi"><b>${esc(r.title.slice(0,46))}</b><small>${esc(r.artist.slice(0,30))} · ${r.dur?Math.floor(r.dur/60)+':'+String(Math.round(r.dur%60)).padStart(2,'0')+' · ':''}${esc(r.license)} · ${esc(r.src)}</small></div><button data-msp="${i}" class="${MSS.play==i?'on':''}">${MSS.play==i?'■':'▶'}</button><button data-mssv="${i}">Save</button><button data-msad="${i}" class="ac">Add</button></div>`).join('');
- const SR=[['all','All sources'],['ov','Openverse'],['ar','Internet Archive'],['wc','Wikimedia'],['jm','Jamendo']];
+ const SR=[['all','All sources'],['sv','Server search'],['ov','Openverse'],['ar','Internet Archive'],['wc','Wikimedia'],['jm','Jamendo']];
  return`<div class="card msb"><b>Search music on the web</b><div class="msq"><input id="msq" placeholder="Song or artist name" value="${esc(MSS.q)}"><button class="ac" id="msgo">${MSS.busy?'…':'Search'}</button></div><div class="chips" style="flex-wrap:nowrap;overflow-x:auto">${MLANG.map(l=>`<button data-mslang="${l[0]}" class="${MSS.lang==l[0]?'on':''}">${l[1]}</button>`).join('')}</div><div class="chips" style="flex-wrap:nowrap;overflow-x:auto">${SR.map(s=>`<button data-mssrc="${s[0]}" class="${MSS.src==s[0]?'on':''}">${s[1]}</button>`).join('')}<button data-mscom="1" class="${MSS.com?'on':''}">Monetised-safe only</button></div>${(MSS.src=='jm'||MSS.src=='all')&&!mkey()?`<div class="msq"><input id="msjk" placeholder="Jamendo key (free, developer.jamendo.com) – optional"><button id="msjs">Save key</button></div>`:''}${MSS.msg?`<p class="mu">${esc(MSS.msg)}</p>`:''}${rs}<p class="mu">Finds music that is openly licensed (Creative Commons / public domain) in Hindi, Telugu, Tamil, Kannada, Malayalam, Marathi, Bengali and more, and by artist name. Popular film and chart songs are copyrighted, so they can’t be offered here. Save keeps a track under Saved music; credit the artist if you publish. “Monetised-safe” hides non-commercial licences.</p></div>`}
 {const _M=MUSP;MUSP=function(){return msHTML()+_M()}}
 $('#pn').addEventListener('input',e=>{if(e.target.id=='msq')MSS.q=e.target.value});
@@ -2873,15 +2881,16 @@ function PAYW(feat){const p=proData(),f=GFEAT[feat]||'This feature';let a;
 {const _p=panel;panel=function(){if(GATED.includes(tab)&&!isPro()){$('#pn').innerHTML=PAYW(tab);if(!PAYM.srv&&!PAYM.pinging){PAYM.pinging=1;srvPing().finally(()=>PAYM.pinging=0)}return}return _p.apply(this,arguments)}}
 {const _k=addKf;addKf=function(){if(!isPro()){tab='kf';ui();panel();return}return _k.apply(this,arguments)}}
 const loadRzp=()=>window.Razorpay?Promise.resolve():new Promise((ok,no)=>{const s=document.createElement('script');s.src='https://checkout.razorpay.com/v1/checkout.js';s.onload=ok;s.onerror=()=>no(new Error('Couldn’t load the payment window. Check your internet.'));document.head.appendChild(s)});
+function fitRzp(){let n=0;const t=setInterval(()=>{const c=document.querySelector('.razorpay-container');if(c){c.style.setProperty('top','env(safe-area-inset-top,0px)','important');c.style.setProperty('bottom','auto','important');c.style.setProperty('height','calc(100% - env(safe-area-inset-top,0px) - env(safe-area-inset-bottom,0px))','important')}if(++n>60)clearInterval(t)},250)}
 function proDone(until){LS.setItem('ed_pro',JSON.stringify({key:me,until}));PAYM.msg='';PAYM.choose=0;PAYM.url='';ui();panel();toast('Pro unlocked until '+new Date(until).toLocaleDateString())}
 async function payStart(method){if(PAYM.busy)return;const u=users()[me];if(!u)return;PAYM.busy=1;PAYM.msg='';PAYM.choose=0;PAYM.url='';repaint();
  try{
   if(method=='browser'){const r=await cloudCall('/pay/link',{key:me,h:u.h});if(r.net)throw new Error('Couldn’t reach the server. Check your internet.');if(!r.url)throw new Error(r.error||'Payment page couldn’t be created.');PAYM.url=r.url;PAYM.msg='Pay on the page that opens, then come back here. Pro unlocks by itself, or tap “I already paid”.';try{window.open(r.url,'_blank')}catch(_){}}
   else{const o=await cloudCall('/pay/order',{key:me,h:u.h});if(o.net)throw new Error('Couldn’t reach the server. Check your internet.');if(!o.orderId)throw new Error(o.error||'Payment couldn’t be started.');await loadRzp();
    const M={upi:false,card:false,netbanking:false,wallet:false,emi:false,paylater:false};if(method)M[method]=true;else Object.keys(M).forEach(k=>M[k]=true);
-   await new Promise((ok,no)=>{const z=new Razorpay({key:o.keyId,amount:o.amount,currency:o.currency||'INR',name:'Editor',description:'Pro · 30 days',order_id:o.orderId,prefill:me.includes('@')?{email:me}:{contact:me},method:M,theme:{color:'#5b6cff'},
+   await new Promise((ok,no)=>{const z=new Razorpay({key:o.keyId,amount:o.amount,currency:o.currency||'INR',name:'Editor',description:'Pro · 30 days',order_id:o.orderId,prefill:me.includes('@')?{email:me}:{},remember_customer:false,method:M,theme:{color:'#5b6cff'},
     handler:async r=>{const v=await cloudCall('/pay/verify',{key:me,h:u.h,orderId:r.razorpay_order_id,paymentId:r.razorpay_payment_id,signature:r.razorpay_signature});if(v.ok&&v.pro){proDone(v.until);ok()}else no(new Error(v.error||'We couldn’t confirm the payment. If money was taken, tap “I already paid”.'))},
-    modal:{ondismiss:()=>ok()}});z.on&&z.on('payment.failed',r=>no(new Error((r.error&&r.error.description)||'Payment failed.')));z.open();setTimeout(()=>{if(!document.querySelector('.razorpay-container,.razorpay-checkout-frame'))no(new Error('The payment window didn’t open on this device. Choose “Pay on payment page” instead.'))},7000)})}}
+    modal:{ondismiss:()=>ok()}});z.on&&z.on('payment.failed',r=>no(new Error((r.error&&r.error.description)||'Payment failed.')));z.open();fitRzp();setTimeout(()=>{if(!document.querySelector('.razorpay-container,.razorpay-checkout-frame'))no(new Error('The payment window didn’t open on this device. Choose “Pay on payment page” instead.'))},7000)})}}
  catch(e){PAYM.msg=String(e&&e.message||e);if(method!='browser'){PAYM.choose=1;if(!/payment page/.test(PAYM.msg))PAYM.msg+=' You can also choose “Pay on payment page”.'}}PAYM.busy=0;repaint()}
 function repaint(){if(scrN=='pro'&&!$('#sc').hidden)proUI();else panel()}
 function pay_click(e){const b=e.target.closest&&e.target.closest('button');if(!b)return false;const d=b.dataset;
@@ -3102,7 +3111,73 @@ async function updCheck(){const u=cloudUrl();if(!u)return;try{const r=await fetc
 setTimeout(updCheck,2500);setInterval(updCheck,6*3600e3);document.addEventListener('visibilitychange',()=>{if(!document.hidden&&Date.now()-(window.__updAt||0)>3600e3){window.__updAt=Date.now();updCheck()}});
 // test-mode help on the paywall (UPI apps and real cards can't be used with test keys)
 {const _P2=PAYW;PAYW=function(f){const h=_P2(f);const s=PAYM.srv;if(!s||s.pay!='test')return h;
- return h.replace('<small class="mu">Each payment adds','<div class="card" id="tsthint" style="margin:8px 0;background:#1b2030"><b>Test mode: how to pay</b><p class="mu">With Razorpay test keys, PhonePe/Paytm/Google Pay can’t open and real cards fail. That is normal. Use: <b>UPI</b> <code>success@razorpay</code> (or <code>failure@razorpay</code> to see a failure) · <b>Card</b> <code>4111 1111 1111 1111</code>, any future date, any CVV, then press <b>Success</b> on the bank page. Real apps work only with live keys.</p></div><small class="mu">Each payment adds')}}
+ return h.replace('<small class="mu">Each payment adds','<div id="tsthint" style="margin:8px 0;padding:10px;border:1px dashed currentColor;border-radius:10px;opacity:.85"><b>Test mode</b><p class="mu" style="margin:4px 0 0">'+(isTester()?'Tap Subscribe → <b>Test payment</b>: enter <code>success@razorpay</code> (UPI) or any card, then an OTP. No real money.':'Razorpay test keys: PhonePe/Paytm/Google Pay cannot open and real cards fail. Real apps work with live keys.')+'</p></div><small class="mu">Each payment adds')}}
+
+// ===================== v25: per-tab "Apply to all", Trim all, tester test-payment screen =====================
+// --- top bar: the global "Apply to all" switch and the "Nothing selected" label are gone ---
+{const a=$('#aall');if(a&&a.parentElement)a.parentElement.style.display='none';const g=$('#tgt');if(g)g.style.display='none'}
+ALL=false;try{LS.setItem('ed_all',0)}catch(_){}
+function tglRow(){const g=$('#tgl');if(!g)return;const vis=['eye','spk'].some(i=>{const e=$('#'+i);return e&&e.style.display!='none'});g.style.display=vis?'':'none'}
+{const _t=tgl;tgl=function(){const r=_t.apply(this,arguments);tglRow();return r}}
+// --- per-tab Apply to all ---
+const AAT=(()=>{try{return JSON.parse(LS.getItem('ed_aat')||'{}')}catch(_){return{}}})();
+const AAH={tf:'Opacity, size, position, rotation → every clip',kf:'Keyframes → every clip',an:'Animation → every clip',tr:'Transition → every clip',fx:'Effect → every clip',ck:'Chroma key → every clip',cut:'Cutout → every clip',mk:'Mask → every clip',cr:'Crop → every clip',cg:'Colour grade → every clip',fil:'Filter → every clip',ln:'Lens → every clip',mus:'Music volume → all music tracks',vol:'Volume and fades → every layer',speed:'Speed → every clip',text:'Text style → every text',trim:'Clip length → every clip',cvs:''};
+const AAK=['lay','trim','tf','kf','an','tr','fx','ck','cut','mk','cr','cg','fil','ln','mus','vol','speed','text','cvs'];
+BK.kf=['kf'];
+const TRN=n=>`<button data-tra="${n}">${n}s</button>`;
+function trimAll(n,ex){let k=0;clips.forEach(c=>{if(c===ex)return;const sp=c.sp||1,base=c.in||0,src=n*sp;if(c.img||!c.url){c.out=base+src;if(c.dur<c.out)c.dur=c.out;k++}else if(base+src<c.out-.001){c.out=base+src;k++}});return k}
+function aaInject(){let tr='';const P=$('#pn');if(!P||!AAK.includes(tab)||P.querySelector('.paywall')||P.querySelector('#aar'))return;let h;
+ if(tab=='lay')h='<div class="aar" id="aar"><b>Apply to all layers</b><div class="chips"><button data-aab="show">Show all</button><button data-aab="hide">Hide all</button><button data-aab="mute">Mute all</button><button data-aab="unmute">Unmute all</button></div></div>';
+ else if(tab=='cvs')h='<div class="aar" id="aar"><small class="mu">✓ Canvas size and Fit / Fill already apply to every clip in the project.</small></div>';
+ else{h=`<div class="aar" id="aar"><label class="aal"><input type="checkbox" id="aat"${AAT[tab]?' checked':''}><span>Apply to all</span></label><small class="mu">${AAH[tab]||''}</small></div>`;
+  if(tab=='trim')tr=`<div class="aar" id="trall"><b>Trim all clips</b><div class="chips">${[2,3,4,5,8,10].map(TRN).join('')}</div><div class="chips"><input id="trn" type="number" min="0.5" step="0.5" inputmode="decimal" placeholder="Custom seconds" style="width:140px"><button class="ac" id="trg">Trim all</button></div><small class="mu">Photos get this length. Videos longer than this are cut to it; shorter videos stay as they are. Undo brings it back.</small></div>`}
+ P.insertAdjacentHTML('afterbegin',h);if(tr)P.insertAdjacentHTML('beforeend',tr)}
+{const _p=panel;panel=function(){ALL=!!AAT[tab];const r=_p.apply(this,arguments);try{aaInject()}catch(_){}return r}}
+{const _b=bcast;bcast=function(){if(!ALL)return;
+ if(tab=='trim'){const c=cur();if(c&&tmode=='main'){trimAll(len(c),c);try{renderTL()}catch(_){}}return}
+ if(tab=='kf'&&kfT&&texts[selT]){const x=texts[selT];texts.forEach(o=>{if(o!==x)o.kf=cl1(x.kf)});return}
+ return _b.apply(this,arguments)}}
+$('#pn').addEventListener('change',e=>{if(e.target.id!='aat')return;AAT[tab]=e.target.checked;try{LS.setItem('ed_aat',JSON.stringify(AAT))}catch(_){}ALL=e.target.checked;if(ALL){snap();bcast();try{draw()}catch(_){}toast('Changes in this tab now apply to all')}else toast('Apply to all is off')});
+$('#pn').addEventListener('click',e=>{const b=e.target.closest&&e.target.closest('button');if(!b)return;const d=b.dataset;
+ if(d.aab){e.stopImmediatePropagation();snap();const on=d.aab=='hide',m=d.aab=='mute';if(d.aab=='show'||on)[...clips,...ovs,...texts,...fxl].forEach(o=>o.hid=on);else[...clips,...ovs,...mtr,...sfx,...fxl].forEach(o=>o.mut=m);chg();toast(({show:'All layers shown',hide:'All layers hidden',mute:'All layers muted',unmute:'All layers unmuted'})[d.aab]);return}
+ if(d.tra||b.id=='trg'){e.stopImmediatePropagation();const n=d.tra?+d.tra:parseFloat(($('#trn')||{}).value);if(!(n>=.2&&n<=3600)){toast('Enter the length in seconds');return}if(!clips.length){toast('Add videos or photos first');return}snap();const k=trimAll(n);chg();toast(k?k+' clip'+(k==1?'':'s')+' trimmed to '+n+'s':'Nothing to trim: every clip is already '+n+'s or shorter')}},true);
+$('#pn').addEventListener('click',()=>{if(ALL)setTimeout(()=>{if(ALL){bcast();try{draw()}catch(_){}}},80)});
+// --- tester: simulated checkout (UPI ID / card + OTP). The server only allows it for the tester while Razorpay is in test mode ---
+const SIM={step:'upi',msg:'',busy:0,until:0};
+const simHead=t=>`<div class="row" style="padding:0"><button id="smb">${SIM.step=='done'?'Close':'Cancel'}</button><b style="flex:1;text-align:center;font-size:18px">${t}</b></div><div class="card"><b>Editor Pro · 30 days</b><div style="font-size:28px;font-weight:800;margin:4px 0">₹49</div><small class="mu">TEST MODE · no real money is charged</small></div>`;
+function simUI(){scrN='sim';const s=SIM.step,safe='<div style="height:calc(40px + env(safe-area-inset-bottom,0px))"></div>';let h;
+ const msg=SIM.msg?`<p style="color:#e5484d;margin:8px 0">${esc(SIM.msg)}</p>`:'';
+ if(s=='done')h=simHead('Payment done')+`<div class="card" style="text-align:center"><div style="font-size:54px;color:#2fb26a">✓</div><b style="font-size:18px">Payment successful</b><p class="mu">₹49 paid (test). Pro is active until <b>${new Date(SIM.until).toLocaleDateString()}</b>.</p><button class="ac" id="smd">Done</button></div>`;
+ else if(s=='fail')h=simHead('Payment failed')+`<div class="card" style="text-align:center"><div style="font-size:54px;color:#e5484d">✗</div><b>${esc(SIM.msg||'Payment failed (test)')}</b><p class="mu">Nothing was charged.</p><button class="ac" id="smr">Try again</button></div>`;
+ else if(s=='otp')h=simHead('Bank OTP')+`<div class="card"><p>Enter the OTP sent by your bank. In test mode <b>any 4 to 6 digits</b> work (for example <b>123456</b>).</p><input id="spo" type="text" inputmode="numeric" maxlength="6" placeholder="OTP" autocomplete="one-time-code" style="font-size:22px;letter-spacing:6px;text-align:center">${msg}<div class="chips" style="margin-top:8px"><button class="ac" id="smo">${SIM.busy?'Please wait…':'Confirm and pay'}</button><button id="smq">Back</button></div></div>`;
+ else h=simHead('Test payment')+`<div class="chips"><button id="smu" class="${s=='upi'?'on':''}">UPI</button><button id="smc" class="${s=='card'?'on':''}">Card</button></div>`+(s=='upi'
+  ?`<div class="card spf"><b>UPI ID</b><input id="spu" type="text" inputmode="email" autocapitalize="off" autocomplete="off" placeholder="success@razorpay" value="${esc(SIM.upi||'')}" style="margin-top:6px"><div class="chips" style="margin-top:6px"><button data-smf="success@razorpay">success@razorpay</button><button data-smf="failure@razorpay">failure@razorpay</button></div>${msg}<button class="ac" id="smp" style="margin-top:8px;width:100%">${SIM.busy?'Please wait…':'Pay ₹49'}</button></div>`
+  :`<div class="card spf"><b>Card details</b><input id="spn" type="text" inputmode="numeric" placeholder="Card number" autocomplete="off" value="${esc(SIM.cn||'')}" style="margin-top:6px"><div class="chips" style="flex-wrap:nowrap"><input id="spe" type="text" inputmode="numeric" placeholder="MM/YY" value="${esc(SIM.ce||'')}" style="min-width:0"><input id="spc" type="password" inputmode="numeric" maxlength="4" placeholder="CVV" value="${esc(SIM.cc||'')}" style="min-width:0"></div><input id="spm" type="text" placeholder="Name on card" value="${esc(SIM.cm||'')}"><div class="chips" style="margin-top:6px"><button data-smf="card">Fill test card</button></div><small class="mu">Test card 4111 1111 1111 1111. A card ending 0002 shows a declined payment.</small>${msg}<button class="ac" id="smp" style="margin-top:8px;width:100%">${SIM.busy?'Please wait…':'Pay ₹49'}</button></div>`);
+ scr(`<div class="pg">${h}${safe}</div>`)}
+function simOpen(){SIM.step='upi';SIM.msg='';SIM.busy=0;SIM.upi='';SIM.cn=SIM.ce=SIM.cc=SIM.cm='';simUI()}
+function simRead(){const g=i=>($('#'+i)||{}).value;if(SIM.step=='upi'&&$('#spu'))SIM.upi=g('spu').trim();if(SIM.step=='card'&&$('#spn')){SIM.cn=g('spn');SIM.ce=g('spe');SIM.cc=g('spc');SIM.cm=g('spm')}}
+async function simFinish(){SIM.busy=1;simUI();const u=users()[me],r=await cloudCall('/pay/test',{key:me,h:u.h});SIM.busy=0;
+ if(r&&r.ok&&r.pro){SIM.until=r.until;SIM.step='done';SIM.msg='';proDone(r.until);scrN='sim';return simUI()}
+ SIM.msg=r.net?'Couldn’t reach the server.':(r.error||'The test payment could not be recorded.');SIM.step=SIM.step=='otp'?'otp':SIM.step;simUI()}
+$('#sc').addEventListener('click',e=>{const b=e.target.closest&&e.target.closest('button');if(!b||scrN!='sim')return;e.stopImmediatePropagation();simRead();const d=b.dataset;
+ if(b.id=='smb'||b.id=='smd'){closeS();ui();panel();return}
+ if(b.id=='smu'){SIM.step='upi';SIM.msg='';return simUI()}
+ if(b.id=='smc'){SIM.step='card';SIM.msg='';return simUI()}
+ if(b.id=='smr'||b.id=='smq'){SIM.step=SIM.cn&&!SIM.upi?'card':'upi';SIM.msg='';return simUI()}
+ if(d.smf){if(d.smf=='card'){SIM.cn='4111 1111 1111 1111';SIM.ce='12/30';SIM.cc='123';SIM.cm='Test User'}else SIM.upi=d.smf;SIM.msg='';return simUI()}
+ if(b.id=='smp'&&!SIM.busy){
+  if(SIM.step=='upi'){if(!/^[\w.\-]{2,}@[a-z]{2,}$/i.test(SIM.upi||'')){SIM.msg='Enter a valid UPI ID, for example success@razorpay';return simUI()}
+   if(/^failure@/i.test(SIM.upi)){SIM.step='fail';SIM.msg='Payment failed (test UPI failure@razorpay)';return simUI()}return simFinish()}
+  const n=(SIM.cn||'').replace(/\D/g,''),m=/^(\d{2})\s*\/\s*(\d{2})$/.exec(SIM.ce||'');
+  if(n.length<13||n.length>19){SIM.msg='Enter a valid card number.';return simUI()}
+  if(!m||+m[1]<1||+m[1]>12||(2000+ +m[2])*12+ +m[1]<new Date().getFullYear()*12+new Date().getMonth()+1){SIM.msg='Enter a valid future expiry (MM/YY).';return simUI()}
+  if(!/^\d{3,4}$/.test(SIM.cc||'')){SIM.msg='Enter the CVV.';return simUI()}
+  SIM.msg='';SIM.step='otp';return simUI()}
+ if(b.id=='smo'&&!SIM.busy){const o=(($('#spo')||{}).value||'').trim();if(!/^\d{4,6}$/.test(o)){SIM.msg='Enter 4 to 6 digits.';return simUI()}
+  if(/0002$/.test((SIM.cn||'').replace(/\D/g,''))){SIM.step='fail';SIM.msg='Card declined (test card ending 0002)';return simUI()}
+  return simFinish()}},true);
+{const _ps=payStart;payStart=function(m){if(m=='sim')return simOpen();return _ps.apply(this,arguments)}}
+{const _P=PAYW;PAYW=function(f){let h=_P(f);if(PAYM.choose&&isTester()&&!(PAYM.srv&&PAYM.srv.pay=='live'))h=h.replace('<div class="pml">','<div class="pml"><button data-pm="sim"><b>Test payment (tester)</b><small>In-app: UPI ID success@razorpay or a test card + OTP. No real money</small></button>');return h}}
 
 ui();panel();tick();boot();if('serviceWorker' in navigator&&location.protocol.startsWith('http'))navigator.serviceWorker.register('sw.js').catch(()=>{});
 </script></body></html>
