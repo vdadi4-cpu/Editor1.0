@@ -3,7 +3,7 @@ const http = require('http'), crypto = require('crypto');
 
 // Render env values often arrive with stray spaces or quotes; clean them all.
 const cleanEnv = e => { const o = {}; for (const k of Object.keys(e)) { let v = e[k]; if (typeof v === 'string') { v = v.trim(); if (/^(["']).*\1$/.test(v)) v = v.slice(1, -1).trim(); } o[k] = v; } return o; };
-const VERSION = 'v27';
+const VERSION = 'v28';
 // Latest app version: APP_LATEST env, else read `const VER='vNN'` from index.html in your GitHub repo (cached 10 min).
 const ghLatest = env => async () => {
   const repo = env.GITHUB_REPO || 'vdadi4-cpu/Editor1.0', hd = env.GITHUB_TOKEN ? { Authorization: 'token ' + env.GITHUB_TOKEN } : {};
@@ -27,6 +27,18 @@ const razorpayGetLink = env => id => rz(env, 'GET', '/payment_links/' + encodeUR
 
 // ---- music search on the server (open-licence catalogues only: Jamendo [needs JAMENDO_CLIENT_ID], Openverse, ccMixter) ----
 const licOf = u => { const m = /licenses\/([a-z-]+)\/([\d.]+)/i.exec(u || ''); return m ? 'CC ' + m[1].toUpperCase() + ' ' + m[2] : /publicdomain|zero/i.test(u || '') ? 'Public domain' : 'Creative Commons'; };
+// v28: a result must really match what was typed
+const MSTOP = new Set(['song','songs','music','mp3','the','a','an','from','movie','film','full','video','new','audio','free','download','lyrics','by','of','and']);
+const normS = s => String(s || '').toLowerCase().replace(/[\u0300-\u036f]/g, '');
+const wordsOf = s => normS(s).split(/[^\p{L}\p{M}\p{N}]+/u).filter(Boolean);
+const relScore = (r, q) => {
+  const T = wordsOf(q).filter(x => !MSTOP.has(x)); if (!T.length) return 1;
+  const req = T.filter(x => !/^\d+$/.test(x)), nums = T.filter(x => /^\d+$/.test(x)), H = normS((r.title || '') + ' ' + (r.artist || '')), W = wordsOf(H);
+  const hit = x => W.some(w => w === x || w.startsWith(x)) || (x.length >= 4 && H.includes(x));
+  const R0 = req.length ? req : T, m = R0.filter(hit).length, need = R0.length >= 4 ? R0.length - 1 : R0.length;
+  if (m < need) return 0;
+  let s = m * 2 + nums.filter(hit).length; if (normS(r.title).includes(normS(q).trim())) s += 3; return s;
+};
 const musicSearch = env => async (q, tag, com) => {
   const out = [], failed = [], e = encodeURIComponent, lq = e(q), tg = tag ? ' ' + tag : '';
   const J = async (name, u, map) => { try { const r = await fetch(u, { signal: AbortSignal.timeout(9000) }); if (!r.ok) throw new Error('HTTP ' + r.status); out.push(...map(await r.json())); } catch (x) { failed.push(name); } };
@@ -40,9 +52,11 @@ const musicSearch = env => async (q, tag, com) => {
   const ovb = 'https://api.openverse.org/v1/audio/?page_size=15&mature=false' + (com ? '&license_type=commercial' : '');
   jobs.push(J('Openverse', ovb + '&q=' + e(q + tg), ov), J('Openverse', ovb + '&creator=' + lq, ov));
   jobs.push(J('ccMixter', 'https://ccmixter.org/api/query?f=json&limit=12&sort=rank&search=' + lq, j => (Array.isArray(j) ? j : []).map(r => { const f = (r.files || []).find(x => /mp3/i.test((x.file_format_info || {})['default-ext'] || x.download_url || '')) || (r.files || [])[0]; return f && f.download_url ? { title: r.upload_name, artist: r.user_real_name || r.user_name, url: f.download_url, dur: 0, license: licOf(r.license_url), src: 'ccMixter' } : null; }).filter(Boolean)));
+  if (!com) jobs.push(J('Licensed', 'https://itunes.apple.com/search?media=music&entity=song&country=IN&limit=15&term=' + lq, j => (j.results || []).filter(r => r.previewUrl).map(r => ({ title: r.trackName || 'Untitled', artist: r.artistName || 'Unknown', url: r.previewUrl, dur: 30, license: 'Licensed · 30s preview only', src: 'Licensed', licensed: 1 }))));
   await Promise.all(jobs);
   const seen = new Set(), res = []; for (const r of out) { if (!r.url || seen.has(r.url)) continue; seen.add(r.url); if (com && /\b(NC|ND)\b/i.test(r.license)) continue; res.push(r); }
-  return { res: res.slice(0, 40), failed: [...new Set(failed)] };
+  const sc = res.map(r => ({ r, s: relScore(r, q) })).filter(x => x.s > 0).sort((a, b) => b.s - a.s || (a.r.licensed ? 1 : 0) - (b.r.licensed ? 1 : 0)).map(x => x.r);
+  return { res: sc.filter(r => !r.licensed).slice(0, 30).concat(sc.filter(r => r.licensed).slice(0, 12)), failed: [...new Set(failed)] };
 };
 
 // ---- AI video (fal.ai text-to-video) and script planner (Anthropic). Keys live only in Render: FAL_KEY, ANTHROPIC_API_KEY ----
