@@ -219,8 +219,29 @@ body.pnbig #tl{height:84px!important}
 /* v28 */
 .mhead>div:last-child{display:flex;flex-direction:column;gap:2px;min-width:0}.mhead b{display:block;overflow-wrap:anywhere}.mhead span{display:block;overflow-wrap:anywhere;font-size:13px}
 .mslic{font-size:10px;line-height:1.2;text-align:center;opacity:.75;padding:0 6px;white-space:nowrap}
+/* v1.1 */
+.rstrow [data-lmv]{display:none!important}
+#amu{display:none!important}
+#wmrow{display:none!important}
+.otpb{margin-top:28px!important;gap:12px!important;justify-content:center}.otpb button{min-width:130px;padding:12px 18px}
+.prohd{margin:2px 2px 10px;padding:10px 12px;border-radius:14px;background:linear-gradient(135deg,rgba(124,92,255,.22),rgba(34,211,238,.14));border:1px solid rgba(124,92,255,.35);display:grid;grid-template-columns:1fr 1fr;gap:6px 10px}
+.prohd .prot{grid-column:1/-1;display:flex;align-items:center;justify-content:space-between}.pro-b{font-size:11px;font-weight:800;letter-spacing:.12em;color:#fff;background:linear-gradient(135deg,#7c5cff,#22d3ee);padding:3px 9px;border-radius:999px}
+.prod{font-size:15px}.pror{display:flex;flex-direction:column;font-size:11px;color:var(--mu)}.pror b{font-size:13px;color:var(--tx);font-weight:700}
+.wmfr{display:flex;justify-content:center;margin:10px 0}.wmfr canvas{max-width:100%;border-radius:14px;box-shadow:0 2px 14px rgba(0,0,0,.25);background:#f3f4f8}
+.wmgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:8px 0}.wmgrid button{padding:12px 6px;border-radius:12px;font-size:13px}.wmgrid button.on{background:linear-gradient(135deg,#7c5cff,#22d3ee);color:#fff}
+#mrs{position:fixed;left:0;right:0;bottom:0;z-index:400;background:var(--pn);color:var(--tx);border-radius:22px 22px 0 0;padding:14px 16px calc(16px + env(safe-area-inset-bottom,0px));box-shadow:0 -10px 34px rgba(0,0,0,.45);display:flex;flex-direction:column;gap:8px}
+#mrs .mrh{display:flex;align-items:center;justify-content:space-between;gap:10px}#mrs .mrh b{font-size:15px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}#mrs .mrn{margin:0;font-size:12px}
+.mrw{position:relative;height:84px;border-radius:10px;overflow:hidden;background:rgba(128,128,150,.12);touch-action:none}.mrw canvas{display:block;width:100%}
+.mrwin{position:absolute;top:0;bottom:0;border:2px solid var(--ac);border-radius:8px;background:rgba(124,92,255,.12);pointer-events:none}.mrwin i{position:absolute;top:30%;bottom:30%;width:4px;border-radius:2px;background:var(--ac)}.mrwin i:first-child{left:3px}.mrwin i:last-child{right:3px}
+.mrph{position:absolute;top:0;bottom:0;width:2px;background:#fff;left:0;pointer-events:none}
+.mrt{display:flex;justify-content:space-between;font-size:12px;color:var(--mu)}#mrr{width:100%}.mrb{display:flex;gap:10px;justify-content:flex-end}.mrb button{padding:12px 18px}
+/* thin, bezel-less tab bar */
+#tabs{background:var(--pn);padding:0 6px;gap:0;border-top:1px solid rgba(139,147,168,.3);border-bottom:1px solid rgba(139,147,168,.3)}
+#tabs button{border-radius:0;border:0;border-bottom:1.5px solid transparent;background:transparent!important;min-width:60px;padding:7px 6px 6px;font-weight:500}
+#tabs button .ic{stroke-width:1.25}
+#tabs button.on{background:transparent!important;color:var(--tx);border-bottom-color:var(--ac)}#tabs button.on .ic{stroke:var(--ac2)}
 </style></head><body>
-<header><div style="display:flex;align-items:center;gap:8px"><button id="mn" aria-label="Menu">☰</button><h1>Editor</h1><span class="mu" style="margin:0;font-size:11px">v28</span></div><div style="display:flex;gap:6px"><button id="un">Undo</button><button class="ac" id="ex">Export</button></div></header>
+<header><div style="display:flex;align-items:center;gap:8px"><button id="mn" aria-label="Menu">☰</button><h1>Editor</h1><span class="mu" style="margin:0;font-size:11px">v1.1</span></div><div style="display:flex;gap:6px"><button id="un">Undo</button><button class="ac" id="ex">Export</button></div></header>
 <div id="stage"><canvas id="cv"></canvas><div id="fsc"><button id="fsp" class="ac">Play</button><span id="fst"></span><button id="fsx">Exit</button></div>
 <div id="empty"><div style="font-size:18px;font-weight:700">Start a new project</div><div class="mu">Pick one or more videos from your device.</div><button class="ac" id="ad0">Add videos</button></div></div>
 <div class="row"><button id="pl" class="ac" style="min-width:74px">Play</button><button id="pv">Preview</button><div id="tm">00:00.0 / 00:00.0</div><button id="zo">−</button><button id="zi">+</button></div>
@@ -278,7 +299,7 @@ function mask(m,W,H,s){const r=Math.min(W,H)*s/2,X=W/2,Y=H/2,P=cx;P.beginPath();
 if(m=='circle')P.arc(X,Y,r,0,7);else if(m=='ellipse')P.ellipse(X,Y,W*s/2,H*s/2,0,0,7);else if(m=='box')P.rect(X-r,Y-r*.7,r*2,r*1.4);else if(m=='line')P.rect(-W,Y-4*H,3*W,4*H);else if(m=='mirror')P.rect(-W,Y-r*.5,3*W,r);
 else if(m=='heart'){P.moveTo(X,Y+r*.9);P.bezierCurveTo(X-r*1.6,Y-r*.2,X-r*.7,Y-r*1.2,X,Y-r*.4);P.bezierCurveTo(X+r*.7,Y-r*1.2,X+r*1.6,Y-r*.2,X,Y+r*.9)}
 else if(m=='star'){for(let i=0;i<10;i++){const a=-Math.PI/2+i*Math.PI/5,q=i%2?r*.45:r;P[i?'lineTo':'moveTo'](X+q*Math.cos(a),Y+q*Math.sin(a))}P.closePath()}}
-const VER='v28',LS=makeLS(),uid=()=>Math.random().toString(36).slice(2,9)+Date.now().toString(36);
+const VER='v1.1',LS=makeLS(),uid=()=>Math.random().toString(36).slice(2,9)+Date.now().toString(36);
 let me=null,pid=null,pname='Untitled',pst='pending',saveT,mus=null,progUntil=0,ESon=false,ES=720,EF=30,EFm='mp4',scrN='',pfI,lm='in',lk='email',an,mg,duck=1;
 const RES=[['480p',480],['720p HD',720],['1080p FHD',1080],['2K',1440],['4K',2160]],OWN=()=>me||'guest';
 const SW=['#ffffff','#0b0f19','#ff5c7a','#ff8a5c','#ffc857','#ffe66d','#b8f55b','#3ddc97','#2ee6a6','#22d3ee','#4da3ff','#6c7bff','#8b5cf6','#c084fc','#f472b6','#fb7185','#f97316','#eab308','#84cc16','#14b8a6','#0ea5e9','#6366f1','#a3a3a3','#525252'];
@@ -1149,14 +1170,14 @@ try{$('#mo').hidden=false;$('#mb').innerHTML='<div style="font-size:16px;font-we
 const END=projEnd(),N=Math.max(1,Math.ceil(END*EF));await preloadImgs();t=0;draw();const src=OUTc||cv,vs=[],as=[];let vdesc=null,adesc=null,err=null;
 const venc=new VideoEncoder({output:(c,m)=>{const d=new Uint8Array(c.byteLength);c.copyTo(d);vs.push({d,key:c.type=='key',ts:c.timestamp});if(!vdesc&&m&&m.decoderConfig&&m.decoderConfig.description)vdesc=bytes(m.decoderConfig.description)},error:e=>{err=e}});
 venc.configure({codec:sup.vc,width:src.width,height:src.height,bitrate:Math.min(4e7,Math.round(src.width*src.height*EF*.09)),framerate:EF,latencyMode:'realtime',avc:{format:'avc'}});
-for(let i=0;i<N;i++){if(xcan)break;if(err)throw err;await prep(Math.min(i/EF,END));draw();outCopy();const f=new VideoFrame(src,{timestamp:Math.round(i*1e6/EF),duration:Math.round(1e6/EF)});venc.encode(f,{keyFrame:i%Math.max(1,EF*2)==0});f.close();while(venc.encodeQueueSize>4)await sleep(4);if(i%2==0){const pc=$('#pc');if(pc)pc.textContent=Math.round(i/N*85)+'%';await sleep(0)}}
+for(let i=0;i<N;i++){if(xcan)break;if(err)throw err;await prep(Math.min(i/EF,END));draw();outCopy();const f=new VideoFrame(src,{timestamp:Math.round(i*1e6/EF),duration:Math.round(1e6/EF)});venc.encode(f,{keyFrame:i%Math.max(1,EF*2)==0});f.close();while(venc.encodeQueueSize>4)await sleep(4);if(i%2==0){const pc=$('#pc');if(pc)pc.textContent=Math.round(i/N*90)+'%';await sleep(0)}}
 if(xcan)throw'cancel';await venc.flush();venc.close();if(err)throw err;if(!vdesc)throw new Error('The phone encoder gave no video settings');
-const px=$('#px');if(px)px.textContent='Mixing sound…';$('#pc').textContent='90%';await sleep(0);const ab=await renderAudio(END);
+const px=$('#px');if(px)px.textContent='Mixing sound…';$('#pc').textContent='90%';await sleep(0);let _ap=90;const _ai=setInterval(()=>{_ap=Math.min(98,_ap+1);const q=$('#pc');if(q)q.textContent=_ap+'%'},500);let ab;try{ab=await renderAudio(END)}finally{clearInterval(_ai)}
 const aenc=new AudioEncoder({output:(c,m)=>{const d=new Uint8Array(c.byteLength);c.copyTo(d);as.push({d});if(!adesc&&m&&m.decoderConfig&&m.decoderConfig.description)adesc=bytes(m.decoderConfig.description)},error:e=>{err=e}});
 aenc.configure({codec:'mp4a.40.2',sampleRate:48000,numberOfChannels:2,bitrate:128000});const c0=ab.getChannelData(0),c1=ab.getChannelData(1);
 for(let p=0;p<c0.length;p+=4800){const n=Math.min(4800,c0.length-p),d=new Float32Array(n*2);d.set(c0.subarray(p,p+n),0);d.set(c1.subarray(p,p+n),n);const ad=new AudioData({format:'f32-planar',sampleRate:48000,numberOfFrames:n,numberOfChannels:2,timestamp:Math.round(p/48000*1e6),data:d});aenc.encode(ad);ad.close();if((p/4800)%25==0)await sleep(0)}
-await aenc.flush();aenc.close();if(err)throw err;if(!adesc)throw new Error('The phone encoder gave no audio settings');$('#pc').textContent='98%';
-const parts=muxMp4({w:src.width,h:src.height,fps:EF,vs,vdesc,as,adesc,sr:48000,ch:2});stop();result(new Blob(parts,{type:'video/mp4'}),'mp4');markExported()}
+await aenc.flush();aenc.close();if(err)throw err;if(!adesc)throw new Error('The phone encoder gave no audio settings');$('#pc').textContent='99%';
+const parts=muxMp4({w:src.width,h:src.height,fps:EF,vs,vdesc,as,adesc,sr:48000,ch:2});$('#pc').textContent='100%';await sleep(500);stop();result(new Blob(parts,{type:'video/mp4'}),'mp4');markExported()}
 catch(e){stop();if(e==='cancel'){$('#mo').hidden=true;return}$('#mb').innerHTML=`<p>Smooth export failed: ${esc(e&&e.message||e)}</p><div class="chips" style="justify-content:center"><button class="ac" id="xlg">Try basic export</button><button id="cl">Close</button></div>`}}
 async function exp(){const sup=await wcSupport();if(sup)return expWC(sup);toast('Smooth export isn’t available on this phone. Using basic export.');ES=Math.min(ES,720);return expLegacy()}
 $('#mb').addEventListener('click',e=>{const b=e.target.closest('button');if(b&&b.id=='xlg')expLegacy().catch(x=>{$('#mb').innerHTML='<p>Export failed: '+esc(x&&x.message||x)+'</p><button id="cl">Close</button>'})});
@@ -2881,7 +2902,7 @@ function isPro(){if(isTester()&&LS.getItem('ed_testfree')=='1')return true;const
 function proLabels(){GATED.forEach(k=>{TABN[k]=BASEN[k]+(isPro()?'':' 🔒')})}
 {const _ui=ui;ui=function(){proLabels();return _ui.apply(this,arguments)}}
 {const _l=logout;logout=async function(){LS.removeItem('ed_tester');LS.removeItem('ed_pro');LS.removeItem('ed_testfree');return _l.apply(this,arguments)}}
-async function proRefresh(){if(!me)return;const u=users()[me];if(!u||!cloudUrl())return;const r=await cloudCall('/status',{key:me,h:u.h});if(r&&r.ok){LS.setItem('ed_pro',JSON.stringify({key:me,until:r.pro?r.until:0}));ui();if(GATED.includes(tab))panel()}return r}
+async function proRefresh(){if(!me)return;const u=users()[me];if(!u||!cloudUrl())return;const r=await cloudCall('/status',{key:me,h:u.h});if(r&&r.ok){LS.setItem('ed_pro',JSON.stringify({key:me,until:r.pro?r.until:0,at:r.at||0}));ui();if(GATED.includes(tab))panel()}return r}
 setTimeout(()=>{proRefresh()},1500);document.addEventListener('visibilitychange',()=>{if(!document.hidden)proRefresh()});
 const PAYM={msg:'',busy:0,choose:0,url:'',srv:null};
 async function srvPing(){const u=cloudUrl();if(!u){PAYM.srv={off:1};return}try{const r=await fetchT(u+'/',9000);PAYM.srv=await r.json()}catch(_){PAYM.srv={down:1}}if(GATED.includes(tab)&&!isPro())panel();else if(scrN=='pro')proUI()}
@@ -2897,7 +2918,7 @@ function PAYW(feat){const p=proData(),f=GFEAT[feat]||'This feature';let a;
 {const _k=addKf;addKf=function(){if(!isPro()){tab='kf';ui();panel();return}return _k.apply(this,arguments)}}
 const loadRzp=()=>window.Razorpay?Promise.resolve():new Promise((ok,no)=>{const s=document.createElement('script');s.src='https://checkout.razorpay.com/v1/checkout.js';s.onload=ok;s.onerror=()=>no(new Error('Couldn’t load the payment window. Check your internet.'));document.head.appendChild(s)});
 function fitRzp(){let n=0;const t=setInterval(()=>{const c=document.querySelector('.razorpay-container');if(c){c.style.setProperty('top','env(safe-area-inset-top,0px)','important');c.style.setProperty('bottom','auto','important');c.style.setProperty('height','calc(100% - env(safe-area-inset-top,0px) - env(safe-area-inset-bottom,0px))','important')}if(++n>60)clearInterval(t)},250)}
-function proDone(until){LS.setItem('ed_pro',JSON.stringify({key:me,until}));PAYM.msg='';PAYM.choose=0;PAYM.url='';ui();panel();toast('Pro unlocked until '+new Date(until).toLocaleDateString())}
+function proDone(until){LS.setItem('ed_pro',JSON.stringify({key:me,until,at:Date.now()}));PAYM.msg='';PAYM.choose=0;PAYM.url='';ui();panel();toast('Pro unlocked until '+new Date(until).toLocaleDateString())}
 async function payStart(method){if(PAYM.busy)return;const u=users()[me];if(!u)return;PAYM.busy=1;PAYM.msg='';PAYM.choose=0;PAYM.url='';repaint();
  try{
   if(method=='browser'){const r=await cloudCall('/pay/link',{key:me,h:u.h});if(r.net)throw new Error('Couldn’t reach the server. Check your internet.');if(!r.url)throw new Error(r.error||'Payment page couldn’t be created.');PAYM.url=r.url;PAYM.msg='Pay on the page that opens, then come back here. Pro unlocks by itself, or tap “I already paid”.';try{window.open(r.url,'_blank')}catch(_){}}
@@ -3118,7 +3139,7 @@ $('#dr').addEventListener('click',e=>{if(e.target.closest&&e.target.closest('#m_
 {const b=$('#akf');if(b)b.onclick=()=>addKf()}
 {const _u=ui;ui=function(){const r=_u.apply(this,arguments);const b=$('#akf');if(b)b.classList.toggle('lk',!isPro());return r}}
 // update banner: asks the server which version is newest
-const verNum=v=>parseFloat(String(v||'').replace(/^v/i,''))||0;
+const verNum=v=>{const m=/^v?(\d+)(?:\.(\d+))?/i.exec(String(v||'').trim());if(!m)return 0;const a=+m[1],b=m[2]===undefined?null:+m[2];return b!==null&&a<10?1000+a*100+b:a+(b||0)/100};   // legacy 'v28' < 'v1.1' (1101) < 'v1.2'
 let UPD=null;
 function updShow(){const old=$('#updb');if(old)old.remove();if(!UPD)return;let dm='';try{dm=LS.getItem('ed_upd_no')||''}catch(_){}if(dm==UPD.latest)return;
  const d=document.createElement('div');d.id='updb';d.innerHTML=`<span><b>Update available</b> · ${esc(UPD.latest)} (you have ${esc(VER)})</span><a href="${esc(UPD.url)}" target="_blank" rel="noopener">Update</a><button id="updx" aria-label="Later">✕</button>`;document.body.appendChild(d);
@@ -3266,11 +3287,55 @@ function emptyFix(){const e=$('#empty');if(!e)return;const w=hasWork();e.style.d
 setInterval(emptyFix,400);emptyFix();
 // 2) Saved music in the menu (replaces Import music): lists every saved track by name
 {const _m=menuUI;menuUI=function(){_m.apply(this,arguments);const b=$('#m_mu');if(b){b.id='m_sm';b.innerHTML='♪ Saved music'+(smList().length?' <span class="mu">('+smList().length+')</span>':'')}}}
-function savedUI(msg){scrN='saved';const L=smList();scr(`<div class="pg"><div class="row" style="padding:0"><button id="smb">Back</button><b style="flex:1;text-align:center;font-size:18px">Saved music</b><span style="width:56px"></span></div>${msg?`<p class="mu">${esc(msg)}</p>`:''}${L.length?L.map(x=>`<div class="card"><b>${esc(x.name)}</b><div class="mu">${(x.dur||0).toFixed(0)}s${x.bpm?' · '+Math.round(x.bpm)+' BPM':''}</div><div class="chips"><button data-smx="pl|${x.id}">${SMP==x.id?'■ Stop':'▶ Play'}</button><button class="ac" data-smx="ad|${x.id}">＋ Add to project</button><button data-smx="rn|${x.id}">Rename</button><button data-smx="dl|${x.id}">Delete</button></div></div>`).join(''):'<p class="mu">Nothing saved yet. In the Music tab, search a song and tap Save (or select a music track and tap “Save this music”). Whatever you save appears here with its name.</p>'}</div>`)}
+function savedUI(msg){scrN='saved';const L=smList();scr(`<div class="pg"><div class="row" style="padding:0"><button id="smb">Back</button><b style="flex:1;text-align:center;font-size:18px">Saved music</b><span style="width:56px"></span></div><div class="chips"><button data-smx="vd|0">Save sound of selected video</button><button data-smx="tr|0">Save selected music track</button></div>${msg?`<p class="mu">${esc(msg)}</p>`:''}${L.length?L.map(x=>`<div class="card"><b>${esc(x.name)}</b><div class="mu">${(x.dur||0).toFixed(0)}s${x.bpm?' · '+Math.round(x.bpm)+' BPM':''}</div><div class="chips"><button data-smx="pl|${x.id}">${SMP==x.id?'■ Stop':'▶ Play'}</button><button class="ac" data-smx="ad|${x.id}">＋ Use in project</button><button data-smx="rn|${x.id}">Rename</button><button data-smx="dl|${x.id}">Delete</button></div></div>`).join(''):'<p class="mu">Nothing saved yet. In the Music tab, search a song and tap Save. Saved music appears here with its name; open it and tap Use in project to choose which part of the song to add.</p>'}</div>`)}
 document.addEventListener('click',async e=>{const b=e.target.closest('button');if(!b)return;if(b.id=='m_sm'){$('#dr').hidden=true;savedUI();return}if(scrN!='saved')return;if(b.id=='smb'){if(SMA){SMA.pause();SMA=null;SMP=''}closeS();return}const x=b.dataset.smx;if(!x)return;const[k,id]=x.split('|');
- if(k=='pl'){await smPlay(id);savedUI()}else if(k=='ad'){if(SMA){SMA.pause();SMA=null;SMP=''}await smAdd(id);closeS();ui();panel()}else if(k=='rn'){smRen(id);savedUI()}else if(k=='dl'){await smDel(id);savedUI('Deleted.')}},true);
+ if(k=='pl'){await smPlay(id);savedUI()}else if(k=='ad'){if(SMA){SMA.pause();SMA=null;SMP=''}await musRange(id)}else if(k=='rn'){smRen(id);savedUI()}else if(k=='vd'){await smFromVideo();savedUI()}else if(k=='tr'){const m=mtr[selM];if(!m)toast('Add or select a music track first');else await smSave(m);savedUI()}else if(k=='dl'){await smDel(id);savedUI('Deleted.')}},true);
 // 3) Email-only sign in (no mobile number option)
 {const _l=loginUI;loginUI=function(m){lk='email';_l(m);const c=document.querySelector('#sc [data-lk]');if(c&&c.parentElement)c.parentElement.remove();const p=$('#sc .pg>p.mu:last-child');if(p&&/SMS/.test(p.textContent))p.textContent='Accounts are stored on this device. Cloud sync needs the server.'}}
+
+// ===================== v1.1 =====================
+// menu button always opens the newest menu (it used to be bound to an old copy of the menu, so Saved music / Pro / Server check were missing)
+$('#mn').onclick=()=>menuUI();
+// Pro edition header, Watermark entry
+function proHeader(){const p=proData(),tf=isTester()&&LS.getItem('ed_testfree')=='1',act=isPro();if(!act)return'';const until=p.key==me&&p.until>Date.now()?p.until:0;
+ if(!until)return tf?'<div class="prohd"><div class="prot"><span class="pro-b">PRO EDITION</span><b class="prod">Test account</b></div><div class="pror"><span>Status</span><b>Pro unlocked (free)</b></div></div>':'';
+ const at=p.at&&p.at<=Date.now()?p.at:Math.min(Date.now(),until-30*864e5),left=Math.max(0,Math.ceil((until-Date.now())/864e5)),f=d=>new Date(d).toLocaleDateString(undefined,{day:'numeric',month:'short',year:'numeric'});
+ return`<div class="prohd"><div class="prot"><span class="pro-b">PRO EDITION</span><b class="prod">${left} day${left==1?'':'s'} left</b></div><div class="pror"><span>Purchased on</span><b>${f(at)}</b></div><div class="pror"><span>Valid until</span><b>${f(until)}</b></div></div>`}
+LM['Watermark']='bg';
+{const _m=menuUI;menuUI=function(){_m.apply(this,arguments);const h=document.querySelector('#dp .mhead');if(h&&!$('#dp .prohd'))h.insertAdjacentHTML('afterend',proHeader());const th=$('#m_th');if(th&&!$('#m_wm'))th.insertAdjacentHTML('beforebegin','<button id="m_wm">Watermark</button>');try{iconify($('#dp'))}catch(_){}}}
+// Watermark screen (moved out of the export box)
+const WMZ=[['tl','Top left'],['tc','Top centre'],['tr','Top right'],['bl','Bottom left'],['bc','Bottom centre'],['br','Bottom right']];
+function wmDraw(){const c=$('#wmc');if(!c)return;const g=c.getContext('2d'),[RW,RH]=R[ratio]||[1080,1920],k=Math.min(c.width/RW,c.height/RH),dw=RW*k,dh=RH*k,ox=(c.width-dw)/2,oy=(c.height-dh)/2;g.clearRect(0,0,c.width,c.height);g.save();g.translate(ox,oy);g.fillStyle='#fff';g.fillRect(0,0,dw,dh);g.strokeStyle='rgba(120,130,150,.35)';g.setLineDash([4,4]);g.strokeRect(.5,.5,dw-1,dh-1);g.setLineDash([]);
+ // the mark itself, same size/position rule as in the export (drawn in the app colour so it shows on white)
+ const W=1080,H=Math.round(1080*RH/RW),s=Math.max(11,Math.round(W*.034)),pad=Math.round(W*.03),ic=Math.round(s*1.55);g.scale(dw/W,dh/H);g.font=`700 ${s}px system-ui,sans-serif`;const tw=g.measureText('Editor').width,w=ic+s*.45+tw,x=WMP.includes('l')?pad:WMP.includes('r')?W-pad-w:(W-w)/2,y=WMP[0]=='t'?pad:H-pad-ic;
+ g.fillStyle='rgba(124,92,255,.14)';g.strokeStyle='#7c5cff';g.lineWidth=5;g.setLineDash([14,10]);const r=14;g.beginPath();g.roundRect?g.roundRect(x-r,y-r,w+2*r,ic+2*r,18):g.rect(x-r,y-r,w+2*r,ic+2*r);g.fill();g.stroke();g.setLineDash([]);
+ try{g.drawImage(WMI,x,y,ic,ic)}catch(_){}g.fillStyle='#4b3bb0';g.textBaseline='middle';g.fillText('Editor',x+ic+s*.45,y+ic/2);g.restore()}
+function wmUI(){scrN='wm';scr(`<div class="pg"><div class="row" style="padding:0"><button id="wmb">Back</button><b style="flex:1;text-align:center;font-size:18px">Watermark</b><span style="width:56px"></span></div><p class="mu">Every exported video carries a small see-through “Editor” mark. Pick where it sits. The white screen shows your video frame.</p><div class="wmfr"><canvas id="wmc" width="300" height="400"></canvas></div><div class="wmgrid">${WMZ.map(([k,l])=>`<button data-wmq="${k}" class="${WMP==k?'on':''}">${l}</button>`).join('')}</div></div>`);wmDraw()}
+document.addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;if(b.id=='m_wm'){$('#dr').hidden=true;wmUI();return}if(scrN!='wm')return;if(b.id=='wmb'){closeS();return}if(b.dataset.wmq){WMP=b.dataset.wmq;try{LS.setItem('ed_wm',WMP)}catch(_){}document.querySelectorAll('[data-wmq]').forEach(x=>x.classList.toggle('on',x===b));wmDraw();try{draw()}catch(_){}}},true);
+// Music tab: no saved list here any more, just a button to use saved music
+{const _M=MUSP;MUSP=function(){let h=_M.apply(this,arguments);const i=h.indexOf('<b class="sec">Saved music</b>');if(i>=0)h=h.slice(0,i);const n=smList().length;return h+`<div class="chips"><button class="ac" id="smuse">♪ Use saved music${n?' ('+n+')':''}</button></div>`}}
+document.addEventListener('click',e=>{const b=e.target.closest('#smuse');if(b){e.stopPropagation();savedUI()}},true);
+// choose which part of a song to use (window = length of the video in the editor)
+let MR=null;const mrT=s=>Math.floor(s/60)+':'+String(Math.floor(s%60)).padStart(2,'0');
+function mrClose(){if(!MR)return;try{MR.aud.pause()}catch(_){}clearInterval(MR.iv);try{URL.revokeObjectURL(MR.url)}catch(_){}const e=$('#mrs');e&&e.remove();MR=null}
+function mrPaint(){if(!MR)return;const c=$('#mrc'),w=$('#mrw');if(!c||!w)return;const dpr=Math.min(2,window.devicePixelRatio||1),W=w.clientWidth||300,H=84;if(c.width!=Math.round(W*dpr)){c.width=Math.round(W*dpr);c.height=H*dpr}c.style.height=H+'px';const g=c.getContext('2d');g.clearRect(0,0,c.width,c.height);const P=MR.peaks,n=P?P.length:90,bw=c.width/n,a=MR.start/MR.dur*n,b=(MR.start+MR.len)/MR.dur*n;
+ for(let i=0;i<n;i++){const v=P?P[i]:.18,h=Math.max(2*dpr,v*c.height*.92),on=i+1>a&&i<b;g.fillStyle=on?'#22d3ee':'rgba(150,160,180,.45)';g.fillRect(i*bw+bw*.18,(c.height-h)/2,bw*.64,h)}
+ const wn=$('#mrwin');wn.style.left=(MR.start/MR.dur*100)+'%';wn.style.width=(MR.len/MR.dur*100)+'%';$('#mrst').textContent=mrT(MR.start);$('#mrnd').textContent=mrT(MR.start+MR.len);const r=$('#mrr');if(r&&+r.value!=MR.start)r.value=MR.start}
+function mrSet(s){MR.start=Math.max(0,Math.min(MR.dur-MR.len,s));if(MR.aud&&!MR.aud.paused&&(MR.aud.currentTime<MR.start||MR.aud.currentTime>MR.start+MR.len))MR.aud.currentTime=MR.start;mrPaint()}
+function mrPlay(){if(!MR)return;const a=MR.aud,p=$('#mrp');if(!a.paused){a.pause();clearInterval(MR.iv);p.textContent='▶ Preview';return}a.currentTime=MR.start;a.play().then(()=>{p.textContent='■ Stop';MR.iv=setInterval(()=>{if(!MR)return;const ph=$('#mrph');if(ph)ph.style.left=(a.currentTime/MR.dur*100)+'%';if(a.currentTime>=MR.start+MR.len-.05||a.ended){a.pause();clearInterval(MR.iv);p.textContent='▶ Preview';if(ph)ph.style.left=(MR.start/MR.dur*100)+'%'}},60)}).catch(()=>toast('That preview can’t be played'))}
+async function musRange(id){const it=smList().find(x=>x.id==id);if(!it)return;const b=await idb('media','readonly',s=>s.get('sm:'+id)).catch(()=>null);if(!b)return toast('That saved sound is missing');if(pause)pause();if(SMA){SMA.pause();SMA=null;SMP=''}mrClose();
+ const dur=+(it.src||it.dur)||0;if(!dur)return toast('That sound has no length');const P=projEnd(),len=Math.min(dur,P>.2?P:Math.min(dur,30)),url=URL.createObjectURL(b);MR={id,it,b,url,aud:new Audio(url),start:0,len,dur,peaks:null,iv:0};
+ document.body.insertAdjacentHTML('beforeend',`<div id="mrs"><div class="mrh"><b>${esc(it.name)}</b><button id="mrx" aria-label="Cancel">✕</button></div><p class="mu mrn">${dur>len+.2?'Your video is '+len.toFixed(1)+'s. Drag the highlighted part to choose where in the song to start.':'The whole song fits in your video ('+dur.toFixed(1)+'s).'}</p><div class="mrw" id="mrw"><canvas id="mrc"></canvas><div class="mrwin" id="mrwin"><i></i><i></i></div><div class="mrph" id="mrph"></div></div><div class="mrt"><span id="mrst">0:00</span><span>${len.toFixed(1)}s selected</span><span id="mrnd"></span></div><input type="range" id="mrr" min="0" max="${Math.max(0,dur-len).toFixed(2)}" step="0.1" value="0" aria-label="Start of the part to use" ${dur<=len+.2?'disabled':''}><div class="mrb"><button id="mrp">▶ Preview</button><button class="ac" id="mrok">✓ Use this part</button></div></div>`);mrPaint();
+ try{const AC=window.AudioContext||window.webkitAudioContext,ac=new AC(),buf=await ac.decodeAudioData(await b.arrayBuffer());ac.close&&ac.close();const ch=buf.getChannelData(0),n=120,step=Math.floor(ch.length/n)||1,pk=[];let mx=0;for(let i=0;i<n;i++){let m=0;for(let j=i*step;j<Math.min(ch.length,(i+1)*step);j+=Math.max(1,step>>6))m=Math.max(m,Math.abs(ch[j]));pk.push(m);mx=Math.max(mx,m)}if(MR&&MR.id==id){MR.peaks=pk.map(v=>.1+.9*v/(mx||1));mrPaint()}}catch(_){}}
+async function mrUse(){if(!MR)return;const{it,b,start,len,dur}=MR;mrClose();closeS();snap();const f=new File([b],it.name+'.wav',{type:b.type||'audio/wav'}),url=URL.createObjectURL(f),m={url,mid:keep(f),name:it.name,src:dur,in:start,dur:len,st:Math.min(t,Math.max(0,projEnd()-len)),vol:.8,duck:60,fi:0,fo:0,lane:newLaneM()};if(start==0&&it.bpm){m.bpm=it.bpm;m.beats=it.beats}if(it.gen)m.gen=it.gen;mtr.push(m);selM=mtr.length-1;mus=m;tmode='mus';kfT=false;tab='mus';chg();toast('Added '+len.toFixed(0)+'s of “'+it.name.slice(0,28)+'”')}
+document.addEventListener('click',e=>{const b=e.target.closest('#mrs button');if(!b)return;if(b.id=='mrx')mrClose();else if(b.id=='mrp')mrPlay();else if(b.id=='mrok')mrUse()},true);
+document.addEventListener('input',e=>{if(MR&&e.target.id=='mrr')mrSet(+e.target.value)},true);
+{let dg=null;document.addEventListener('pointerdown',e=>{const w=e.target.closest&&e.target.closest('#mrw');if(!w||!MR)return;const r=w.getBoundingClientRect(),x=(e.clientX-r.left)/r.width*MR.dur;dg={r,off:x>=MR.start&&x<=MR.start+MR.len?x-MR.start:MR.len/2};mrSet(x-dg.off);try{w.setPointerCapture(e.pointerId)}catch(_){}e.preventDefault()},true);
+ document.addEventListener('pointermove',e=>{if(!dg||!MR)return;mrSet((e.clientX-dg.r.left)/dg.r.width*MR.dur-dg.off)},true);document.addEventListener('pointerup',()=>{dg=null},true);window.addEventListener('resize',mrPaint)}
+// OTP screen: the buttons sit a little below the code box
+{const _o=otpUI;otpUI=function(){const r=_o.apply(this,arguments);const b=$('#otok');if(b&&b.parentElement){const p=b.parentElement;p.classList.add('otpb')}return r}}
+// export: always show 100% before the finished screen (both export engines)
+{const _r=result;result=function(){const a=arguments,p=$('#pc');if(p&&p.textContent!='100%'){p.textContent='100%';return setTimeout(()=>_r.apply(this,a),450)}return _r.apply(this,a)}}
 
 ui();panel();tick();boot();if('serviceWorker' in navigator&&location.protocol.startsWith('http'))navigator.serviceWorker.register('sw.js').catch(()=>{});
 </script></body></html>
