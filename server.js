@@ -3,7 +3,7 @@ const http = require('http'), crypto = require('crypto');
 
 // Render env values often arrive with stray spaces or quotes; clean them all.
 const cleanEnv = e => { const o = {}; for (const k of Object.keys(e)) { let v = e[k]; if (typeof v === 'string') { v = v.trim(); if (/^(["']).*\1$/.test(v)) v = v.slice(1, -1).trim(); } o[k] = v; } return o; };
-const VERSION = 'v28';
+const VERSION = 'v1.1';
 // Latest app version: APP_LATEST env, else read `const VER='vNN'` from index.html in your GitHub repo (cached 10 min).
 const ghLatest = env => async () => {
   const repo = env.GITHUB_REPO || 'vdadi4-cpu/Editor1.0', hd = env.GITHUB_TOKEN ? { Authorization: 'token ' + env.GITHUB_TOKEN } : {};
@@ -127,7 +127,7 @@ function makeHandler(users, opt = {}) {
   // test account: skips the OTP step (only with the matching password hash). Set OTP_TEST_USER=off to disable.
   const testUser = String(env.OTP_TEST_USER || 'vdadi4@gmail.com').toLowerCase(), testH = env.OTP_TEST_H || '07578b1591c4ef755fc9410219f502b8dfe8e16997662bcc7c84682965dfab1a';
   const bypass = (key, h) => testUser !== 'off' && key === testUser && h === testH;
-  const info = (d, key) => { const until = Math.max(+d.premiumUntil || 0, proEmails.includes(key) ? now() + PASS_DAYS * DAY : 0); return { pro: until > now(), until }; };
+  const info = (d, key) => { const until = Math.max(+d.premiumUntil || 0, proEmails.includes(key) ? now() + PASS_DAYS * DAY : 0); return { pro: until > now(), until, at: +d.premiumAt || 0 }; };
   let latest = { at: 0, v: '' };
   const getLatest = async () => { if (env.APP_LATEST) return env.APP_LATEST; const t = Date.now(); if (latest.v && t - latest.at < 600e3) return latest.v; try { const v = await (opt.fetchLatest || ghLatest(env))(); if (v) latest = { at: t, v }; else latest.at = t - 540e3; } catch (e) { latest.at = t - 540e3; } return latest.v; };
   const aiModel = env.AI_VIDEO_MODEL || 'fal-ai/kling-video/v2.5-turbo/pro/text-to-video', aiClip = +env.AI_CLIP_SECONDS === 10 ? 10 : 5, aiMonthCap = +env.AI_MONTH_CLIPS || 6, aiTestCap = +env.AI_TESTER_CLIPS || 60;
@@ -160,8 +160,8 @@ function makeHandler(users, opt = {}) {
   }
   async function grant(key, d, ref) {                    // add 30 days; ref makes it idempotent
     const until = Math.max(now(), +d.premiumUntil || 0) + PASS_DAYS * DAY;
-    await users.updateOne({ _id: key }, { $set: { premiumUntil: until }, $addToSet: ref });
-    d.premiumUntil = until; return until;
+    await users.updateOne({ _id: key }, { $set: { premiumUntil: until, premiumAt: now() }, $addToSet: ref });
+    d.premiumUntil = until; d.premiumAt = now(); return until;
   }
   async function settleLinks(d, key) {                   // pick up payments made on the hosted payment page
     const pend = (d.links || []).filter(id => !(d.paidLinks || []).includes(id)).slice(-5);
