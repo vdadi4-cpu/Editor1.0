@@ -252,7 +252,7 @@ body.pnbig #tl{height:84px!important}
 .stkg{max-height:34vh;overflow-y:auto}
 body.pnbig.tall #tw{height:190px}body.pnbig.tall #tl{height:190px!important}body.pnbig.tall #pn{height:24vh}
 </style></head><body>
-<header><div style="display:flex;align-items:center;gap:8px"><button id="mn" aria-label="Menu">☰</button><h1>Editor</h1><span class="mu" style="margin:0;font-size:11px">v1.3</span></div><div style="display:flex;gap:6px"><button id="un">Undo</button><button class="ac" id="ex">Export</button></div></header>
+<header><div style="display:flex;align-items:center;gap:8px"><button id="mn" aria-label="Menu">☰</button><h1>Editor</h1><span class="mu" style="margin:0;font-size:11px">v1.4</span></div><div style="display:flex;gap:6px"><button id="un">Undo</button><button class="ac" id="ex">Export</button></div></header>
 <div id="stage"><canvas id="cv"></canvas><div id="fsc"><button id="fsp" class="ac">Play</button><span id="fst"></span><button id="fsx">Exit</button></div>
 <div id="empty"><div style="font-size:18px;font-weight:700">Start a new project</div><div class="mu">Pick one or more videos from your device.</div><button class="ac" id="ad0">Add videos</button></div></div>
 <div class="row"><button id="pl" class="ac" style="min-width:74px">Play</button><button id="pv">Preview</button><div id="tm">00:00.0 / 00:00.0</div><button id="zo">−</button><button id="zi">+</button></div>
@@ -310,7 +310,7 @@ function mask(m,W,H,s){const r=Math.min(W,H)*s/2,X=W/2,Y=H/2,P=cx;P.beginPath();
 if(m=='circle')P.arc(X,Y,r,0,7);else if(m=='ellipse')P.ellipse(X,Y,W*s/2,H*s/2,0,0,7);else if(m=='box')P.rect(X-r,Y-r*.7,r*2,r*1.4);else if(m=='line')P.rect(-W,Y-4*H,3*W,4*H);else if(m=='mirror')P.rect(-W,Y-r*.5,3*W,r);
 else if(m=='heart'){P.moveTo(X,Y+r*.9);P.bezierCurveTo(X-r*1.6,Y-r*.2,X-r*.7,Y-r*1.2,X,Y-r*.4);P.bezierCurveTo(X+r*.7,Y-r*1.2,X+r*1.6,Y-r*.2,X,Y+r*.9)}
 else if(m=='star'){for(let i=0;i<10;i++){const a=-Math.PI/2+i*Math.PI/5,q=i%2?r*.45:r;P[i?'lineTo':'moveTo'](X+q*Math.cos(a),Y+q*Math.sin(a))}P.closePath()}}
-const VER='v1.3',LS=makeLS(),uid=()=>Math.random().toString(36).slice(2,9)+Date.now().toString(36);
+const VER='v1.4',LS=makeLS(),uid=()=>Math.random().toString(36).slice(2,9)+Date.now().toString(36);
 let me=null,pid=null,pname='Untitled',pst='pending',saveT,mus=null,progUntil=0,ESon=false,ES=720,EF=30,EFm='mp4',scrN='',pfI,lm='in',lk='email',an,mg,duck=1;
 const RES=[['480p',480],['720p HD',720],['1080p FHD',1080],['2K',1440],['4K',2160]],OWN=()=>me||'guest';
 const SW=['#ffffff','#0b0f19','#ff5c7a','#ff8a5c','#ffc857','#ffe66d','#b8f55b','#3ddc97','#2ee6a6','#22d3ee','#4da3ff','#6c7bff','#8b5cf6','#c084fc','#f472b6','#fb7185','#f97316','#eab308','#84cc16','#14b8a6','#0ea5e9','#6366f1','#a3a3a3','#525252'];
@@ -879,7 +879,7 @@ function splitObj(c,l){const a=cl(c),b=cl(c),K=c.kf||[],m=kv(c,l);if(c.txt!==und
 if(K.length){const pe=(K.filter(k=>k.t<=l).slice(-1)[0]||{}).e||'io';a.kf=[...K.filter(k=>k.t<l-.02).map(cl),{...m,t:l,e:'lin'}];b.kf=[{...m,t:0,e:pe},...K.filter(k=>k.t>l+.02).map(k=>({...cl(k),t:k.t-l}))]}else{a.kf=[];b.kf=[]}return[a,b]}
 function shiftKf(o,d){if(o.kf&&o.kf.length)o.kf=o.kf.map(k=>({...k,t:k.t+d})).filter(k=>k.t>=-1e-6)}
 function insertMain(k){if(!clips.length){clips.push(k);sel=0;return}const p=at(t),c=clips[p.i],L=len(c);let i;if(t>=total()-.001)i=clips.length;else if(p.l<=.1)i=p.i;else if(p.l>=L-.1)i=p.i+1;else{const[a,b]=splitObj(c,p.l);clips.splice(p.i,1,a,b);i=p.i+1}clips.splice(i,0,k);sel=i}
-const toMain=o=>{const n=D({...cl(o),kf:[]});delete n.st;n.sc=1;n.px=0;n.py=0;n.lane=0;n.tr={type:'none',d:.6};return n};
+const toMain=o=>{const n=D({...cl(o)});delete n.st;if(!(n.kf&&n.kf.length)){n.sc=1;n.px=0;n.py=0}n.lane=0;n.tr={type:'none',d:.6};return n};
 const toLayer=(o,lane)=>{const n=D({...cl(o)});n.st=t;if(o.st===undefined){n.sc=.5;n.py=-.2}n.lane=lane;n.tr={type:'none',d:.6};n.kf=n.kf||[];return n};
 function addColor(col){snap();insertMain(D({url:null,name:'Colour',dur:60,in:0,out:2,sp:1,vol:1,col,f:{b:100,c:100,s:100,x:''}}));tmode='main';kfT=false;tab='trim';chg()}
 function tObj(){if(kfT&&texts[selT])return texts[selT];if(tmode=='ov'&&ovs[selO])return ovs[selO];if(tmode=='mus'&&mtr[selM])return mtr[selM];if(tmode=='sfx'&&sfx[selS])return sfx[selS];return tmode=='main'?clips[sel]:null}
@@ -2248,7 +2248,7 @@ const TPLD=[
 ['f12','festival','Ganesh Chaturthi','diwali',5,[['{1}',.46,'Extrude Gold','zoom',64],['{2}',.6,'Plain','fade',32]],['sparkle','fireflies'],['Ganpati Bappa Morya','Happy Ganesh Chaturthi','']],
 ['f13','festival','Navratri','fire',5,[['{1}',.46,'Fire','pop',72],['{2}',.6,'Plain','fade',32]],['sparkle','embers'],['Happy Navratri','Nine nights of joy','']],
 ['f14','festival','Graduation','night',4.5,[['{1}',.46,'Chrome','flipx',70],['{2}',.6,'Plain','fade',32]],['confetti','sparkle'],['Congratulations','Class of 2027','']]];
-let TPX={cat:'pro',sel:null,v:['','',''],bt:null};
+let TPX={cat:'new',sel:null,v:['','',''],bt:null};
 const TBLD={bg:'night',dur:4,items:[],tps:'Extrude Gold',ain:'fly3d',sz:70};
 const myTpl=()=>{try{return JSON.parse(LS.getItem('ed_mytpl')||'[]')}catch(_){return[]}};
 const defOf=id=>{const d=TPLD.find(x=>x[0]==id);if(d)return{name:d[2],bg:d[3],dur:d[4],texts:d[5].map(([txt,y,tps,ain,size,ex],i)=>({txt,y,tps,ain,size,mask:ex=='mask',ex,delay:i*.5})),vfx:d[6],words:d[7]};const m=myTpl().find(x=>x.id==id);return m?{name:m.name,bg:m.bg,dur:m.dur,texts:m.items.filter(i=>i.k=='text').map((i,j)=>({txt:i.txt,y:i.y,tps:i.tps,ain:i.ain,size:i.size,ex:i.ex,delay:j*.5})),vfx:m.items.filter(i=>i.k=='vfx').map(i=>i.id),words:null}:null};
@@ -2261,7 +2261,7 @@ const c=D({url,mid:keep(f),name:def.name,dur:60,in:0,out:d,img:true,sp:1,vol:0,f
 def.texts.forEach((tx,i)=>{const txt=(tx.txt||'').replace(/\{(\d)\}/g,(m,n)=>(words&&words[n-1]!==undefined?words[n-1]:''));if(!txt.trim())return;const x=newText(pos+.2+(tx.delay||0));x.txt=txt;x.s=pos+.2+(tx.delay||0);x.e=pos+d-.2;x.tpl=1;if(TPS[tx.tps])Object.assign(x,TPS[tx.tps]);x.x=.5;x.y=tx.y;x.z=tx.size||60;x.ain=tx.ain||'fade';x.aout='fade';x.ad=.7;TPEX(x,tx.ex,d);if(tx.mask){x.zmode='reveal';x.zs=100;x.ze=1500;x.zd=Math.min(2.6,d*.55);x.zbg='#05060a';x.zf=0;x.c='#000000';x.sw=0;x.ex=0;x.shb=0;x.glow=0;x.grad=0;x.bgo=0;x.ain='none'}texts.push(x)});
 def.vfx.forEach(v=>{const n=(VXL.find(q=>q[0]==v)||[0,v])[1];fxl.push({type:v,name:n,st:pos,dur:d,amt:55,spd:1,sz:1,col:'#ffffff',lane:-1,hid:0,tpl:1})});
 sel=idx;tmode='main';kfT=false;t=pos;chg();toast('Added “'+def.name+'” '+(where=='start'?'at the start':where=='end'?'at the end':'here'));res()},'image/png'))}
-function TPLP(){const X=TPX,tabs=[['pro','Pro intros'],['intro','Intros'],['epic','Epic credits'],['credits','End credits'],['festival','Festivals'],['my','Mine'],['build','Build']];let h=`<div class="cgtop"><div class="seg">${tabs.map(([k,l])=>`<button data-tpc="${k}" class="${X.cat==k?'on':''}">${l}</button>`).join('')}</div></div>`;
+function TPLP(){const X=TPX,tabs=[['new','Trending now'],['pro','Pro intros'],['intro','Intros'],['epic','Epic credits'],['credits','End credits'],['festival','Festivals'],['my','Mine'],['build','Build']];let h=`<div class="cgtop"><div class="seg">${tabs.map(([k,l])=>`<button data-tpc="${k}" class="${X.cat==k?'on':''}">${l}</button>`).join('')}</div></div>`;
 if(X.cat=='build'){const B=TBLD;h+=`<b class="sec">1 · Background</b><div class="chips tbg">${Object.keys(TBG).map(k=>`<button data-tbg="${k}" class="${B.bg==k?'on':''}" style="background:linear-gradient(135deg,${TBG[k][0]},${TBG[k][1]});color:#fff;min-width:46px">${k}</button>`).join('')}</div>`+rg('tb_dur','Length',2,12,.5,B.dur,v=>v+'s')+`<b class="sec">2 · Add elements</b><b style="font-size:12px">Text style</b><div class="chips">${['Extrude Gold','Isometric','Long Shadow','Neon 3D','Chrome','Glossy Red','Emerald 3D','Block Pink','Neon Blue','Sticker','Gold','Fire','Retro Wave','Cinema','Marker','Plain'].map(k=>`<button data-tbs="${k}" class="${B.tps==k?'on':''}">${k}</button>`).join('')}</div><b style="font-size:12px">Animation</b><div class="chips">${['fade','pop','up','zoom','bounce','slam','flipy','flipx','tumble','fly3d','swing3d','type'].map(k=>`<button data-tba="${k}" class="${B.ain==k?'on':''}">${k}</button>`).join('')}</div><div class="chips"><button class="ac" data-tbt="1">＋ Add text</button></div><b style="font-size:12px">Motion effects (tap to add)</b><div class="chips">${VXL.map(([k,l])=>`<button data-tbv="${k}">${l}</button>`).join('')}</div>`;
 h+=`<b class="sec">3 · Your template</b>${B.items.length?B.items.map((it,i)=>`<div class="lyr"><span style="flex:1">${it.k=='text'?'T · “'+esc(it.txt)+'” · '+it.tps:'✦ '+(VXL.find(q=>q[0]==it.id)||[0,it.id])[1]}</span><button data-tbx="${i}">Remove</button></div>`).join(''):'<p class="mu">Nothing yet. Add a text or a motion effect above.</p>'}<div class="chips"><button class="ac" data-tbadd="start">Add to start</button><button data-tbadd="here">Add here</button><button data-tbadd="end">Add to end</button><button data-tbsave="1">Save as my template</button></div>`;return h}
 if(X.cat=='my'){const L=myTpl();h+=L.length?TG(L.map(m=>TILE(`data-tps="${m.id}"`,'tpl|'+m.id,m.name,X.sel==m.id)).join(''))+(X.sel&&L.some(m=>m.id==X.sel)?`<div class="chips"><button class="ac" data-tpa="start">Add to start</button><button data-tpa="here">Add here</button><button data-tpa="end">Add to end</button><button data-tpdel="${X.sel}">Delete</button></div>`:''):'<p class="mu">Your saved templates appear here. Open Build, make one, and tap Save as my template.</p>';return h}
@@ -2366,7 +2366,7 @@ function ovLaneMove(i,dir){const o=ovs[i];if(!o)return false;const cur=o.lane>=0
 if(dir>0)placeOv(o,cur+1);else{const tg=cur-1;ovs.filter(x=>x!==o&&(x.lane||0)===tg&&ovOverlap(o,x)).forEach(x=>{x.lane=cur});o.lane=tg}
 selO=ovs.indexOf(o);tmode='ov';kfT=false;chg();toast('Layer '+((o.lane||0)+1));return true}
 function blackClip(L){return new Promise(res=>{const c=document.createElement('canvas');c.width=c.height=32;c.getContext('2d').fillRect(0,0,32,32);c.toBlob(b=>{const f=new File([b],'Black.png',{type:'image/png'});res(D({url:URL.createObjectURL(f),mid:keep(f),name:'Black',dur:60,in:0,out:L,img:true,sp:1,vol:0,f:{b:100,c:100,s:100,x:''}}))})})}
-async function mainToOverlay(i){const c=clips[i];if(!c)return toast('Select a main-track video first');snap();const st=off(i),L=len(c),n=D({...cl(c),kf:[],st,lane:0,sc:.5,py:-.2,px:0,tr:{type:'none',d:.5}});placeOv(n,0);clips.splice(i,1);if(!clips.length){clips.push(await blackClip(L))}ovs.push(n);selO=ovs.length-1;sel=Math.min(i,clips.length-1);tmode='ov';kfT=false;chg();seek(st);toast('Sent to Overlay Layer 1. Press Overlay again to move it to the next layer.')}
+async function mainToOverlay(i){const c=clips[i];if(!c)return toast('Select a main-track video first');snap();const st=off(i),L=len(c),n=D({...cl(c),st,lane:0,...(c.kf&&c.kf.length?{}:{sc:.5,py:-.2,px:0}),tr:{type:'none',d:.5}});placeOv(n,0);clips.splice(i,1);if(!clips.length){clips.push(await blackClip(L))}ovs.push(n);selO=ovs.length-1;sel=Math.min(i,clips.length-1);tmode='ov';kfT=false;chg();seek(st);toast('Sent to Overlay Layer 1. Press Overlay again to move it to the next layer.')}
 function overlayToMain(i){const o=ovs[i];if(!o)return;snap();const n=toMain(o);ovs.splice(i,1);selO=-1;insertMain(n);tmode='main';kfT=false;chg();toast('Sent to the main track')}
 function ovChip(){if(tmode=='ov'&&ovs[selO]&&!kfT)return void ovLaneMove(selO,1);if(tmode=='main'&&!kfT&&clips[sel])return void mainToOverlay(sel);toast('Select a main-track video to send it to an overlay layer, or select an overlay to move it to the next layer.')}
 $('#aov').onclick=ovChip;
@@ -2918,14 +2918,16 @@ async function msAddLic(i){const r=MSS.res[i];if(!r||!r.licensed)return;if(pause
 // ===================== v22: Pro plan (Rs 49 / 30 days): Mask, Keyframes, Templates, AI Studio =====================
 const TESTE='vdadi4@gmail.com';
 const GATED=['tmk','mk','kf','vfx','tpl','ai'],GFEAT={tmk:'Text mask',mk:'Mask',kf:'Keyframes',vfx:'Motion effects',tpl:'Templates',ai:'AI Studio'},BASEN={};GATED.forEach(k=>BASEN[k]=TABN[k]);
-const proData=()=>{try{return JSON.parse(LS.getItem('ed_pro')||'{}')}catch(_){return{}}};
+const proData=()=>{try{const p=JSON.parse(LS.getItem('ed_pro')||'{}');return p&&p.free?{}:p}catch(_){return{}}};
+const proNow=()=>Date.now()+(+proData().sk||0);
+const proLeftT=u=>{const ms=Math.max(0,u-proNow());return ms>=864e5?Math.ceil(ms/864e5)+' day'+(Math.ceil(ms/864e5)==1?'':'s')+' left':ms>=36e5?Math.ceil(ms/36e5)+' hour'+(Math.ceil(ms/36e5)==1?'':'s')+' left':ms>0?Math.max(1,Math.ceil(ms/6e4))+' min left':'Expired'};
 function isTester(){return me==TESTE&&LS.getItem('ed_tester')=='1'}
 // the tester account pays like everyone else unless "unlock free" is switched on (Pro screen)
-function isPro(){if(isTester()&&LS.getItem('ed_testfree')=='1')return true;const p=proData();return !!(me&&p.key==me&&p.until>Date.now())}
+function isPro(){if(isTester()&&LS.getItem('ed_testfree')=='1')return true;const p=proData();return !!(me&&p.key==me&&p.until>proNow())}
 function proLabels(){GATED.forEach(k=>{TABN[k]=BASEN[k]+(isPro()?'':' 🔒')})}
 {const _ui=ui;ui=function(){proLabels();return _ui.apply(this,arguments)}}
 {const _l=logout;logout=async function(){LS.removeItem('ed_tester');LS.removeItem('ed_pro');LS.removeItem('ed_testfree');return _l.apply(this,arguments)}}
-async function proRefresh(){if(!me)return;const u=users()[me];if(!u||!cloudUrl())return;const r=await cloudCall('/status',{key:me,h:u.h});if(r&&r.ok){LS.setItem('ed_pro',JSON.stringify({key:me,until:r.pro?r.until:0,at:r.at||0,free:r.free?1:0}));ui();if(GATED.includes(tab))panel()}return r}
+async function proRefresh(){if(!me)return;const u=users()[me];if(!u||!cloudUrl())return;const r=await cloudCall('/status',{key:me,h:u.h});if(r&&r.ok){LS.setItem('ed_pro',JSON.stringify({key:me,until:r.pro?r.until:0,at:r.at||0,free:0,sk:r.now?r.now-Date.now():0}));ui();if(GATED.includes(tab))panel()}return r}
 setTimeout(()=>{proRefresh()},1500);document.addEventListener('visibilitychange',()=>{if(!document.hidden)proRefresh()});
 const PAYM={msg:'',busy:0,choose:0,url:'',srv:null};
 async function srvPing(){const u=cloudUrl();if(!u){PAYM.srv={off:1};return}try{const r=await fetchT(u+'/',9000);PAYM.srv=await r.json()}catch(_){PAYM.srv={down:1}}if(GATED.includes(tab)&&!isPro())panel();else if(scrN=='pro')proUI()}
@@ -2941,7 +2943,7 @@ function PAYW(feat){const p=proData(),f=GFEAT[feat]||'This feature';let a;
 {const _k=addKf;addKf=function(){if(!isPro()){tab='kf';ui();panel();return}return _k.apply(this,arguments)}}
 const loadRzp=()=>window.Razorpay?Promise.resolve():new Promise((ok,no)=>{const s=document.createElement('script');s.src='https://checkout.razorpay.com/v1/checkout.js';s.onload=ok;s.onerror=()=>no(new Error('Couldn’t load the payment window. Check your internet.'));document.head.appendChild(s)});
 function fitRzp(){let n=0;const t=setInterval(()=>{const c=document.querySelector('.razorpay-container');if(c){c.style.setProperty('top','env(safe-area-inset-top,0px)','important');c.style.setProperty('bottom','auto','important');c.style.setProperty('height','calc(100% - env(safe-area-inset-top,0px) - env(safe-area-inset-bottom,0px))','important')}if(++n>60)clearInterval(t)},250)}
-function proDone(until){LS.setItem('ed_pro',JSON.stringify({key:me,until,at:Date.now()}));PAYM.msg='';PAYM.choose=0;PAYM.url='';ui();panel();toast('Pro unlocked until '+new Date(until).toLocaleDateString())}
+function proDone(until){LS.setItem('ed_pro',JSON.stringify({key:me,until,at:Date.now(),sk:0}));PAYM.msg='';PAYM.choose=0;PAYM.url='';ui();panel();toast('Pro unlocked until '+new Date(until).toLocaleDateString())}
 async function payStart(method){if(PAYM.busy)return;const u=users()[me];if(!u)return;PAYM.busy=1;PAYM.msg='';PAYM.choose=0;PAYM.url='';repaint();
  try{
   if(method=='browser'){const r=await cloudCall('/pay/link',{key:me,h:u.h});if(r.net)throw new Error('Couldn’t reach the server. Check your internet.');if(!r.url)throw new Error(r.error||'Payment page couldn’t be created.');PAYM.url=r.url;PAYM.msg='Pay on the page that opens, then come back here. Pro unlocks by itself, or tap “I already paid”.';try{window.open(r.url,'_blank')}catch(_){}}
@@ -2962,9 +2964,9 @@ function pay_click(e){const b=e.target.closest&&e.target.closest('button');if(!b
  return false}
 $('#pn').addEventListener('click',e=>{if(pay_click(e))e.stopImmediatePropagation()},true);
 $('#sc').addEventListener('click',e=>{if(scrN=='pro'&&pay_click(e))e.stopImmediatePropagation()},true);
-function proUI(){scrN='pro';const p=proData(),on=isPro(),left=p.until>Date.now()?Math.ceil((p.until-Date.now())/864e5):0;if(!PAYM.srv&&!PAYM.pinging){PAYM.pinging=1;srvPing().finally(()=>PAYM.pinging=0)}
- scr(`<div class="pg"><div class="row" style="padding:0"><button id="bkb">Back</button><b style="flex:1;text-align:center;font-size:18px">Pro plan</b></div>${on?`<div class="card"><b>✓ Pro is active</b><p class="mu">${left?'Valid until '+new Date(p.until).toLocaleDateString()+' ('+left+' day'+(left==1?'':'s')+' left). You can add another 30 days at any time.':'Unlocked for testing.'}</p></div>`:''}${isTester()?`<div class="card"><b>Tester options</b><p class="mu">This account can test the real payment. Switch on to unlock everything without paying (for trying features only).</p><div class="chips"><button id="tfree" class="${LS.getItem('ed_testfree')=='1'?'on':''}">Unlock all features free: ${LS.getItem('ed_testfree')=='1'?'ON':'OFF'}</button></div></div>`:''}${PAYW('')}</div>`)}
-{const _m=menuUI;menuUI=function(){_m.apply(this,arguments);const b=$('#m_lo');const p=proData(),left=p.until>Date.now()?Math.ceil((p.until-Date.now())/864e5):0;if(b)b.insertAdjacentHTML('beforebegin','<button id="m_pro">'+(isPro()?'✓ Pro active'+(left?' · '+left+'d left':''):'🔒 Get Pro · ₹49/month')+'</button>')}}
+function proUI(){scrN='pro';const p=proData(),on=isPro(),left=p.until>proNow()?proLeftT(p.until):'';if(!PAYM.srv&&!PAYM.pinging){PAYM.pinging=1;srvPing().finally(()=>PAYM.pinging=0)}
+ scr(`<div class="pg"><div class="row" style="padding:0"><button id="bkb">Back</button><b style="flex:1;text-align:center;font-size:18px">Pro plan</b></div>${on?`<div class="card"><b>✓ Pro is active</b><p class="mu">${left?'Valid until '+new Date(p.until).toLocaleDateString(undefined,{day:'numeric',month:'short',year:'numeric'})+' ('+left+'). When it ends, the Pro features lock until you subscribe again. You can add more time at any time.':'Unlocked for testing.'}</p></div>`:''}${isTester()?`<div class="card"><b>Tester options</b><p class="mu">This account can test the real payment. Switch on to unlock everything without paying (for trying features only).</p><div class="chips"><button id="tfree" class="${LS.getItem('ed_testfree')=='1'?'on':''}">Unlock all features free: ${LS.getItem('ed_testfree')=='1'?'ON':'OFF'}</button></div></div>`:''}${PAYW('')}</div>`)}
+{const _m=menuUI;menuUI=function(){_m.apply(this,arguments);const b=$('#m_lo');const p=proData(),left=p.until>proNow()?proLeftT(p.until):'';if(b)b.insertAdjacentHTML('beforebegin','<button id="m_pro">'+(isPro()?'✓ Pro active'+(left?' · '+left:''):'🔒 Get Pro · ₹49/month')+'</button>')}}
 $('#dr').addEventListener('click',e=>{if(e.target.closest&&e.target.closest('#m_pro')){$('#dr').hidden=true;PAYM.srv=null;proUI()}});
 
 // ===================== v22: one-time code (OTP) check on sign-up and login =====================
@@ -3320,10 +3322,10 @@ document.addEventListener('click',async e=>{const b=e.target.closest('button');i
 // menu button always opens the newest menu (it used to be bound to an old copy of the menu, so Saved music / Pro / Server check were missing)
 $('#mn').onclick=()=>menuUI();
 // Pro edition header, Watermark entry
-function proHeader(){const p=proData(),tf=isTester()&&LS.getItem('ed_testfree')=='1',act=isPro();if(!act)return'';const until=p.key==me&&p.until>Date.now()?p.until:0;
+function proHeader(){const p=proData(),tf=isTester()&&LS.getItem('ed_testfree')=='1',act=isPro();if(!act)return'';const until=p.key==me&&p.until>proNow()?p.until:0;
  if(!until)return tf?'<div class="prohd"><div class="prot"><span class="pro-b">PRO EDITION</span><b class="prod">Test account</b></div><div class="pror"><span>Status</span><b>Pro unlocked (free)</b></div></div>':'';
- const at=p.at&&p.at<=Date.now()?p.at:Math.min(Date.now(),until-30*864e5),left=Math.max(0,Math.ceil((until-Date.now())/864e5)),f=d=>new Date(d).toLocaleDateString(undefined,{day:'numeric',month:'short',year:'numeric'});
- return`<div class="prohd"><div class="prot"><span class="pro-b">PRO EDITION</span><b class="prod">${left} day${left==1?'':'s'} left</b></div><div class="pror"><span>Purchased on</span><b>${f(at)}</b></div><div class="pror"><span>Valid until</span><b>${f(until)}</b></div></div>`}
+ const at=p.at&&p.at<=proNow()?p.at:Math.min(proNow(),until-30*864e5),left=proLeftT(until),f=d=>new Date(d).toLocaleDateString(undefined,{day:'numeric',month:'short',year:'numeric'});
+ return`<div class="prohd"><div class="prot"><span class="pro-b">PRO EDITION</span><b class="prod">${left}</b></div><div class="pror"><span>Purchased on</span><b>${f(at)}</b></div><div class="pror"><span>Valid until</span><b>${f(until)}</b></div></div>`}
 LM['Watermark']='bg';
 {const _m=menuUI;menuUI=function(){_m.apply(this,arguments);const h=document.querySelector('#dp .mhead');if(h&&!$('#dp .prohd'))h.insertAdjacentHTML('afterend',proHeader());const th=$('#m_th');if(th&&!$('#m_wm'))th.insertAdjacentHTML('beforebegin','<button id="m_wm">Watermark</button>');try{iconify($('#dp'))}catch(_){}}}
 // Watermark screen (moved out of the export box)
@@ -3638,7 +3640,7 @@ document.addEventListener('input',e=>{if(e.target&&e.target.id=='lid'){const c=$
 {const _P=PAYW;PAYW=function(){let h=_P.apply(this,arguments);if(!isTester())h=h.replace(/<div class="chips"><button id="srvdiag">Check payment setup<\/button><\/div>/,'');return h}}
 {const _m=menuUI;menuUI=function(){_m.apply(this,arguments);if(!isTester()){const b=$('#m_diag');if(b)b.remove()}}}
 // ---- Pro: countdown from the purchase date, locks again at 0 days ----
-const proFree=()=>{const p=proData();return !!(p&&p.free&&p.key==me&&isPro())};
+const proFree=()=>false;
 {const _h=proHeader;proHeader=function(){if(proFree())return'<div class="prohd"><div class="prot"><span class="pro-b">PRO EDITION</span><b class="prod">Complimentary</b></div><div class="pror"><span>Status</span><b>Pro unlocked for this account</b></div></div>';return _h.apply(this,arguments)}}
 {const _m=menuUI;menuUI=function(){_m.apply(this,arguments);if(proFree()){const b=$('#m_pro');if(b)b.textContent='✓ Pro active (complimentary)'}}}
 {let was=isPro();const chk=()=>{const n=isPro();if(was&&!n){was=false;try{ui();panel();if(scrN=='pro')proUI();if(!$('#dr').hidden)menuUI();toast('Your Pro plan has ended. Pro features are locked again.')}catch(_){}}else if(n)was=true};
@@ -3782,6 +3784,280 @@ function stkSearchUI(){const toks=stkTok(stkQ),br=$('#stbrowse'),b2=$('#stbr2'),
  try{hydrateTiles()}catch(_){}}
 document.getElementById('pn').addEventListener('input',e=>{if(e.target.id=='stq'){setTimeout(stkSearchUI,0)}});
 {const _p=panelHook;panelHook=function(){_p.apply(this,arguments);if(tab=='stk'&&stkQ)stkSearchUI()}}
+// ===================== v1.4a: Pro countdown tick, licensed music rules =====================
+// Pro: refresh the "N days left" text every minute and fetch the real server date, so the countdown always runs from the purchase date.
+setInterval(()=>{try{const p=proData(),h=$('#dp .prohd .prod');if(h&&p.until>proNow())h.textContent=proLeftT(p.until);const b=$('#m_pro');if(b&&isPro()&&p.until>proNow())b.textContent='✓ Pro active · '+proLeftT(p.until)}catch(_){}},60000);
+// ---- licensed (30 s preview) music: warn, and leave it out of the exported video (the test account keeps it) ----
+const LICW='⚠️ This music is licensed. It will be removed when you export the video, so the exported video will have no sound from it.';
+const hasLic=()=>mtr.some(m=>m.lic);
+{const _m=msAddLic;msAddLic=async function(i){const n=mtr.length;await _m.apply(this,arguments);if(mtr.length>n&&mtr[mtr.length-1].lic&&!isTester()){MSS.msg=LICW+' '+(MSS.msg||'');toast(LICW);setTimeout(()=>toast(LICW),2400);try{panel()}catch(_){}}}}
+{const _M=MUSP;MUSP=function(){const h=_M.apply(this,arguments);if(isTester()||!hasLic())return h;return `<div class="card" style="border:1.5px solid #f59e0b;background:rgba(245,158,11,.12)"><b>⚠️ Licensed music in this project</b><p class="mu" style="margin:4px 0 0">It is only for previewing here. It will be removed when you export the video, and its audio will not be in the exported file. Use free (open-licence) music or your own file to keep music in the export.</p></div>`+h}}
+{const wrapX=fn=>async function(){const L=isTester()?[]:mtr.filter(m=>m.lic&&!m.mut);if(L.length){L.forEach(m=>m.mut=1);toast('Licensed music is left out of the export.')}
+  const back=()=>{L.forEach(m=>{m.mut=0})};let r;try{r=await fn.apply(this,arguments)}catch(e){back();throw e}
+  if(!L.length)return r;const iv=setInterval(()=>{if(!(typeof ESon!='undefined'&&ESon)&&!exporting&&!(typeof XBUSY!='undefined'&&XBUSY)){clearInterval(iv);back()}},300);setTimeout(()=>{clearInterval(iv);back()},600000);return r};
+ {const _e=exp;exp=wrapX(_e)}{const _l=expLegacy;expLegacy=wrapX(_l)}}
+// ---- main <-> overlay: keep the picture looking the same. Main clips fill the screen, overlays fit inside it, so the keyframe sizes are rescaled by the difference ----
+async function fitRatio(c){try{if(typeof fit!='undefined'&&fit=='fit')return 1;let sw=0,sh=0;if(c.img){const im=await new Promise(r=>{const i=new Image();i.onload=()=>r(i);i.onerror=()=>r(null);i.src=c.url});if(im){sw=im.naturalWidth;sh=im.naturalHeight}}else{const m=await new Promise(r=>{const e=document.createElement('video');e.preload='metadata';e.muted=true;const to=setTimeout(()=>r(null),2500);e.onloadedmetadata=()=>{clearTimeout(to);r(e)};e.onerror=()=>{clearTimeout(to);r(null)};e.src=c.url});if(m){sw=m.videoWidth;sh=m.videoHeight}}
+ if(!sw||!sh)return 1;const[W,H]=R[ratio],a=W/sw,b=H/sh;return Math.max(a,b)/Math.min(a,b)}catch(_){return 1}}
+{const _m=mainToOverlay;mainToOverlay=async function(i){const c=clips[i],rho=c&&c.url&&c.kf&&c.kf.length?await fitRatio(c):1;const n0=ovs.length;await _m.apply(this,arguments);if(rho!=1&&ovs.length>n0){const n=ovs[ovs.length-1];if(n&&n.kf)n.kf.forEach(k=>{k.s=+(k.s*rho).toFixed(4)});try{chg()}catch(_){}}}}
+{const _o=overlayToMain;overlayToMain=async function(i){const o=ovs[i],rho=o&&o.url&&o.kf&&o.kf.length?await fitRatio(o):1,n0=clips.length;_o.apply(this,arguments);if(rho!=1&&clips.length>n0-0){const c=clips[sel];if(c&&c.kf&&c.url==o.url)c.kf.forEach(k=>{k.s=+(k.s/rho).toFixed(4)});try{chg()}catch(_){}}}}
+// ===================== v1.4b: AI Studio — add to existing project, AI video soon, more looks, intros, auto/manual, camera angles =====================
+Object.assign(AI2,{mm:{music:'auto',col:'auto',vx:'auto',cam:'auto'},cam:{},camAll:'',intro:'none',introT:'',lfx:[],flow:null});
+// ---- AI video is coming soon (test account keeps it) ----
+{const _p=aiPick;aiPick=function(k){if(k=='vid'&&!isTester()){toast('AI video is coming soon');return}return _p.apply(this,arguments)}}
+{const _g=aiGenVideos;aiGenVideos=function(){if(!isTester()){toast('AI video is coming soon');return}return _g.apply(this,arguments)}}
+// ---- more looks (each has its own colour grade, music style, transitions, text style and motion effects) ----
+Object.assign(PG,{'Neon City':{tp:-22,sa:26,ct:32,vb:40,hl:-12,sh:8},'Noir':{sa:-100,ct:48,ex:-8,sh:-18,fd:6},'Warm Luxury':{tp:26,ct:20,sh:-10,tn:10,sa:-4,hl:-8},'Summer Pop':{vb:46,sa:26,ex:8,tp:16,ct:10},'Retro VHS':{fd:32,tp:12,sa:-12,ct:-6,tn:12},'Winter Frost':{tp:-36,ex:10,sa:-12,wh:16,vb:8},'Anime Pop':{sa:42,ct:26,vb:32,ex:5},'Soft Wedding':{ex:16,ct:-18,sa:-8,tp:10,fd:12,hl:-10},'Fresh Green':{tn:-18,sa:20,vb:26,ex:6},'Sunset Glow':{tp:40,tn:12,ex:6,sa:14,ct:12}});
+Object.assign(AIST,{
+neon:{n:'Neon Night',gen:'edm',grade:'Neon City',tr:['gl','sp','zm'],td:.25,seg:[1.4,2.4],beats:2,fx:'glitch',kb:.08},
+retro:{n:'Retro VHS',gen:'lofi',grade:'Retro VHS',tr:['gl','fade'],td:.35,seg:[2,3.5],beats:4,fx:'vhs',kb:.05},
+golden:{n:'Golden Hour',gen:'pia',grade:'Sunset Glow',tr:['fade','sl'],td:.6,seg:[3,4.5],beats:4,fx:'none',kb:.07},
+noir:{n:'Noir',gen:'cine',grade:'Noir',tr:['dip','fade'],td:.7,seg:[3,5],beats:4,fx:'oldfilm',kb:.06},
+luxury:{n:'Luxury',gen:'cine',grade:'Warm Luxury',tr:['fade','dip'],td:.7,seg:[3,4.5],beats:4,fx:'bars',kb:.07},
+summer:{n:'Summer Pop',gen:'up',grade:'Summer Pop',tr:['zm','sl','sp'],td:.3,seg:[1.6,2.8],beats:2,fx:'none',kb:.09},
+winter:{n:'Winter Frost',gen:'amb',grade:'Winter Frost',tr:['fade','bl'],td:.8,seg:[3.5,5],beats:4,fx:'dreamy',kb:.05},
+anime:{n:'Anime Pop',gen:'up',grade:'Anime Pop',tr:['zm','fw','sp'],td:.25,seg:[1.4,2.4],beats:2,fx:'none',kb:.1},
+wedding:{n:'Wedding',gen:'pia',grade:'Soft Wedding',tr:['fade','dip'],td:.9,seg:[3.5,5],beats:4,fx:'dreamy',kb:.05},
+nature:{n:'Fresh Nature',gen:'amb',grade:'Fresh Green',tr:['fade','sl'],td:.6,seg:[3,5],beats:4,fx:'none',kb:.06}});
+Object.assign(AIX,{
+neon:{vfx:[['nring','all',45],['sparkle','beats',45]],tps:'Neon Sign',tin:'pop',titles:['Night Vibes','After Dark'],endt:'Stay glowing'},
+retro:{vfx:[['dust','all',40]],tps:'Retro 3D FX',tin:'slam',titles:['Rewind','Play ▶'],endt:'Be kind, rewind'},
+golden:{vfx:[['flare','start',50],['goldr','all',35]],tps:'Elegant',tin:'fade',titles:['Golden Hour','Chasing light'],endt:'Until tomorrow'},
+noir:{vfx:[['dust','all',45]],tps:'Cinema',tin:'fade',titles:['Noir','After midnight'],endt:'Fin'},
+luxury:{vfx:[['goldr','all',40],['sparkle','all',30]],tps:'Gold Foil',tin:'fade',titles:['Luxury','The Collection'],endt:'Thank you'},
+summer:{vfx:[['bubbl','all',40],['sparkle','beats',40]],tps:'Yellow',tin:'bounce',titles:['Summer Vibes','Sun is out'],endt:'See you next summer'},
+winter:{vfx:[['snow','all',50],['sparkle','all',25]],tps:'Ice FX',tin:'fade',titles:['Winter Tales','Cosy season'],endt:'Stay warm'},
+anime:{vfx:[['speed','beats',50],['sparkle','all',45]],tps:'Comic',tin:'slam',titles:['Episode 1','The adventure begins'],endt:'To be continued'},
+wedding:{vfx:[['petals','all',40],['hearts','all',30]],tps:'Elegant',tin:'fade',titles:['Save the Date','Forever starts now'],endt:'Happily ever after'},
+nature:{vfx:[['petals','all',30],['fireflies','all',30]],tps:'Plain',tin:'up',titles:['Into the Wild','Breathe'],endt:'Stay wild'}});
+{const _t=TD.ais,C={neon:['#240046','#ff00c8'],retro:['#3a0ca3','#f72585'],golden:['#ff9e00','#ffd60a'],noir:['#111','#555'],luxury:['#1b1405','#c9961a'],summer:['#00c6ff','#fddb3a'],winter:['#a1c4fd','#e0f4ff'],anime:['#ff5ea8','#6a5cff'],wedding:['#fdf6ec','#f3c6d6'],nature:['#134e2a','#7ed957']};
+ TD.ais=function(g,w,h,a){if(!C[a])return _t.apply(this,arguments);const q=g.createLinearGradient(0,0,w,h);q.addColorStop(0,C[a][0]);q.addColorStop(1,C[a][1]);g.fillStyle=q;g.fillRect(0,0,w,h);g.fillStyle='rgba(255,255,255,.85)';const wd=(w-20)/3;for(let i=0;i<3;i++){rr(g,10+i*wd+2,26,wd-4,34,6);g.fill()}if(a=='noir'||a=='luxury'){g.fillStyle='#000';g.fillRect(0,0,w,14);g.fillRect(0,h-14,w,14)}}}
+// ---- look effects and creative intros ----
+const LFX=[['oldfilm','Film grain','fx'],['vhs','VHS glitch','fx'],['dreamy','Dreamy glow','fx'],['bars','Cinema bars','fx'],['glitch','Glitch','fx'],['leak','Light leaks','v'],['dust','Dust','v'],['bokeh','Bokeh','v'],['sparkle','Sparkle','v'],['cinevig','Cinema vignette','v'],['holo','Hologram','v'],['nring','Neon rings','v']];
+const INTROS=[['none','None'],['neon','Neon flicker','Neon Sign','pop','','nring'],['glitch','Glitch open','Glitch FX','slam','','crtscan'],['cinema','Cinema titles','Cinema','fade','','cinevig'],['leak','Light-leak reveal','Elegant','fade','','leak'],['hyper','Hyperspace jump','Sticker','zoom','','hyper'],['gold','Gold sparkle','Gold Foil','fade','','goldr'],['spot','Spotlight reveal','Gold Foil','none','spot','dust'],['iris','Iris open','Neon Blue','none','iris','starfield'],['bolt','Lightning strike','Fire FX','slam','','bolt'],['grid','Techno grid','Retro 3D FX','fly3d','','pgrid'],['comet','Comet storm','Ice FX','up','','comets'],['wipe','Cinematic wipe','Pro Sans','none','wipe','sparkle']];
+// ---- 20 camera angles (simulated on your footage with zoom, tilt and movement) ----
+const K0=(t,o)=>({o:1,s:1,x:0,y:0,r:0,rx:0,ry:0,ms:.6,mx:0,my:0,mr:0,e:'io',t,...o});
+const CAMA=[
+['wide','Wide shot','Whole scene, gentle pull-back',L=>[K0(0,{s:1.1}),K0(L,{s:1})]],
+['medium','Medium shot','Slightly closer, steady',L=>[K0(0,{s:1.12}),K0(L,{s:1.16})]],
+['close','Close-up','Close on the subject, slow push',L=>[K0(0,{s:1.35}),K0(L,{s:1.5})]],
+['xclose','Extreme close-up','Very tight detail',L=>[K0(0,{s:1.8}),K0(L,{s:2})]],
+['front','Front shot','Straight on, steady',L=>[K0(0,{s:1.05}),K0(L,{s:1.05})]],
+['narrow','Narrow shot','Tight, narrow framing',L=>[K0(0,{s:1.5,y:.02}),K0(L,{s:1.45,y:.02})]],
+['top','Top angle (bird’s-eye)','Looking down from above',L=>[K0(0,{rx:34,s:1.2,y:.03}),K0(L,{rx:24,s:1.2,y:.03})]],
+['high','High angle','Slightly above the subject',L=>[K0(0,{rx:18,s:1.12}),K0(L,{rx:12,s:1.14})]],
+['low','Low angle','Looking up, subject looks powerful',L=>[K0(0,{rx:-26,s:1.22,y:-.03}),K0(L,{rx:-18,s:1.26,y:-.03})]],
+['sidel','Side angle (left)','Seen from the left side',L=>[K0(0,{ry:26,x:-.03,s:1.18}),K0(L,{ry:18,x:.03,s:1.18})]],
+['sider','Side angle (right)','Seen from the right side',L=>[K0(0,{ry:-26,x:.03,s:1.18}),K0(L,{ry:-18,x:-.03,s:1.18})]],
+['back','Back / over-the-shoulder','Follows from behind',L=>[K0(0,{ry:10,x:-.05,s:1.22}),K0(L,{ry:6,x:-.03,s:1.32})]],
+['dutch','Dutch tilt','Tilted frame for tension',L=>[K0(0,{r:12,s:1.22}),K0(L,{r:6,s:1.22})]],
+['orbit','Circular orbit','Camera circles the subject in the middle',L=>Array.from({length:9},(_,k)=>{const a=k/8*Math.PI*2;return K0(L*k/8,{x:.035*Math.cos(a),y:.02*Math.sin(a),ry:14*Math.sin(a),r:2*Math.cos(a),s:1.3,e:'lin'})})],
+['trolley','Trolley / dolly track','Slides sideways on a track',L=>[K0(0,{x:-.07,s:1.2,e:'lin'}),K0(L,{x:.07,s:1.2})]],
+['push','Push in','Moves towards the subject',L=>[K0(0,{s:1}),K0(L,{s:1.3})]],
+['pull','Pull out reveal','Moves away to reveal the scene',L=>[K0(0,{s:1.4}),K0(L,{s:1})]],
+['pan','Pan','Turns slowly left to right',L=>[K0(0,{x:.09,s:1.22,e:'lin'}),K0(L,{x:-.09,s:1.22})]],
+['crane','Crane / tilt up','Rises up and tilts',L=>[K0(0,{y:.07,s:1.12,rx:14}),K0(L,{y:-.07,s:1.24,rx:0})]],
+['hand','Handheld','Natural hand-held shake',L=>{const n=Math.max(3,Math.round(L/.35)),o=[];for(let k=0;k<=n;k++)o.push(K0(L*k/n,{x:(hsh(k*3+1)-.5)*.014,y:(hsh(k*3+2)-.5)*.014,r:(hsh(k*3+3)-.5)*1.4,s:1.1,e:'io'}));return o}]];
+const camKF=(id,L)=>{const a=CAMA.find(q=>q[0]==id);return a?a[3](Math.max(.3,L)):null};
+const aiItems=()=>{if(AI2.mode=='script')return AI2.scenes.map((s,i)=>({key:'sc'+i,name:'Scene '+(i+1)+' · '+String(s.cap||s.line||'').slice(0,22)}));const seen=new Set(),out=[],add=o=>{if(!o||!o.url||seen.has(o.url))return;seen.add(o.url);out.push({key:o.mid||o.url,name:String(o.name||'Clip').slice(0,28)})};AI2.media.forEach(add);if(!AI2.media.length){clips.forEach(add);ovs.forEach(add)}return out};
+// ---- panel ----
+{const _A=AIP2;AIP2=function(){if(!isTester()&&AI2.pic=='vid')AI2.pic='ai';let h=_A.apply(this,arguments);const M=AI2.mm,seg=(k,opts)=>`<div class="chips" data-aimm="${k}">${opts.map(([v,l])=>`<button data-aimv="${k}|${v}" class="${M[k]==v?'on':''}">${l}</button>`).join('')}</div>`,
+  nm=mtr.filter(m=>!m.ai).length;
+ if(!isTester())h=h.replace(/(<button data-ai2p="vid"[^>]*)>[^<]*<\/button>/,'$1 style="opacity:.55">🎬 AI video · Coming soon</button>');
+ const look=`<b class="sec">Look effects <small class="mu">(optional, tap several)</small></b><div class="chips">${LFX.filter(([k,,ty])=>ty=='fx'||VX[k]).map(([k,l])=>`<button data-ailfx="${k}" class="${AI2.lfx.includes(k)?'on':''}">${l}</button>`).join('')}</div>`
+  +`<b class="sec">Creative intro</b><div class="chips">${INTROS.filter(q=>q[0]=='none'||VX[q[5]]||!q[5]).map(q=>`<button data-aiintro="${q[0]}" class="${AI2.intro==q[0]?'on':''}">${q[1]}</button>`).join('')}</div>`+(AI2.intro!='none'?`<input id="aiintrot" placeholder="Intro title (optional)" value="${esc(AI2.introT)}" style="width:100%;box-sizing:border-box;margin:3px 0;padding:10px;border-radius:10px;border:1.5px solid var(--pn2);background:var(--bg);color:var(--tx);font:inherit">`:'');
+ const steps=(k,lbl,have)=>M[k]=='manual'?`<div class="chips"><button class="ac" data-aigo="${k}">${lbl} →</button><span class="mu" style="align-self:center">${have}</span></div>`:'';
+ const items=aiItems(),camList=M.cam=='manual'?`<div class="card"><b>Camera angle for each clip</b><p class="mu" style="margin:4px 0 8px">Pick the camera angle you want for every clip. The angle is created on your footage with zoom, tilt and movement, so it can’t show parts of a subject that were not filmed.</p>${items.length?`<div class="rw"><select id="aicamall" style="flex:1;min-width:0;padding:8px;border-radius:10px;background:var(--bg);color:var(--tx);border:1.5px solid var(--pn2)"><option value="">Same angle for all…</option>${CAMA.map(a=>`<option value="${a[0]}">${a[1]}</option>`).join('')}</select><button data-aicamapply="1">Apply</button></div>`+items.map(it=>`<div class="rw" style="gap:6px"><span style="flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${esc(it.name)}</span><select data-aicam="${esc(it.key)}" style="width:52%;padding:8px;border-radius:10px;background:var(--bg);color:var(--tx);border:1.5px solid var(--pn2)"><option value="">Auto</option>${CAMA.map(a=>`<option value="${a[0]}" ${AI2.cam[it.key]==a[0]?'selected':''}>${a[1]}</option>`).join('')}</select></div>`).join(''):'<p class="mu">Add your clips (or write the script and generate scenes) and they will be listed here.</p>'}</div>`:'';
+ const auto=`<b class="sec">Music</b>${seg('music',[['auto','Auto'],['manual','Manual'],['off','Off']])}${steps('music','Choose music',nm?'✓ '+nm+' track(s) in your project':'Opens the Music tab')}<b class="sec">Colour look</b>${seg('col',[['auto','Auto'],['manual','Manual'],['off','Off']])}${steps('col','Choose colour','Opens the Colour tab')}<b class="sec">Motion effects</b>${seg('vx',[['auto','Auto'],['manual','Manual'],['off','Off']])}${steps('vx','Choose motion effects',fxl.length?'✓ '+fxl.length+' effect(s) in your project':'Tap again to add more')}<b class="sec">Camera angles</b>${seg('cam',[['auto','Auto'],['manual','Manual'],['off','Off']])}${camList}<b class="sec">Captions</b><div class="chips"><button data-ai2f="tx" class="${AI2.tx?'on':''}">${AI2.tx?'On':'Off'}</button></div>`;
+ h=h.replace(/<b class="sec">Add automatically<\/b><div class="chips">[\s\S]*?<\/div>/,auto);
+ h=h.replace('<b class="sec">Length</b>',look+'<b class="sec">Length</b>');
+ if(AI2.pic!='vid'&&AI2.scenes.some(s=>s.blob&&s.state=='ok'))h=h.replace('<div class="chips"><button class="ac" id="ai2go">','<div class="chips"><button id="aipics">➕ Add the pictures to my video</button></div><div class="chips"><button class="ac" id="ai2go">');
+ return h}}
+// ---- place picker (existing project / new project; yellow line / start / end) ----
+const projHas=()=>clips.some(c=>c.url)||ovs.length>0||texts.length>0;
+let AIGO=0,AIPEND=null;
+const aiAsk=kind=>{AIPEND={kind};scr(`<div class="pg"><h1 style="font-size:23px">${kind=='pics'?'Add the AI pictures to…':'Add this AI video to…'}</h1><p class="mu">You already have a video in the editor. Choose where the new ${kind=='pics'?'pictures':'AI scenes'} should go. Nothing in your video is deleted.</p><button class="ac" id="aip-add">Add to my current project</button>${kind=='pics'?'':'<button id="aip-new">Open in a new project</button>'}<button id="aip-x">Cancel</button></div>`)};
+const aiWhere=()=>scr(`<div class="pg"><h1 style="font-size:23px">Where in your video?</h1><p class="mu">Layers that start after that point move along so everything stays in sync.</p><button class="ac" id="aip-here">At the yellow line (${t.toFixed(1)}s)</button><button id="aip-start">At the start</button><button id="aip-end">At the end</button><button id="aip-x">Cancel</button></div>`);
+$('#sc').addEventListener('click',async e=>{const b=e.target.closest('button');if(!b||!/^aip-/.test(b.id))return;const id=b.id,P=AIPEND;if(id=='aip-x'){AIPEND=null;closeS();return}if(!P)return;
+ if(id=='aip-add'){aiWhere();return}
+ if(id=='aip-new'){AIPEND=null;closeS();try{await saveP();resetP()}catch(_){}tab='ai';ui();await aiCore(null);return}
+ const w=id.slice(4);if(!['here','start','end'].includes(w))return;AIPEND=null;closeS();if(P.kind=='pics')aiAddPics(w);else await aiCore(w)},true);
+function aiAddPics(where){const S=AI2.scenes.map((s,i)=>[s,i]).filter(([s])=>s.blob&&s.state=='ok');if(!S.length)return toast('Draw the pictures first');snap();const newC=S.map(([s,i])=>{const f=new File([s.blob],'AI picture '+(i+1)+'.png',{type:s.blob.type||'image/png'});return D({url:URL.createObjectURL(f),mid:keep(f),name:'AI picture '+(i+1),dur:60,in:0,out:Math.max(2,Math.min(8,s.L||4)),img:true,sp:1,vol:0,f:{b:100,c:100,s:100,x:''},tr:{type:'none',d:.5}})});insertMainAt(newC,where);AI2.msg=newC.length+' picture(s) added to your video. Your other clips are untouched.';toast(AI2.msg);panel()}
+// ---- build ----
+const _abCore=aiBuild;
+async function aiCore(where){if(AI2.busy)return;const O={clips,texts,ovs,mtr,sfx,fxl,t},M=AI2.mm,keep0={music:AI2.music,col:AI2.col,vx:AI2.vx,kfs:AI2.kfs};
+ AI2.music=M.music=='auto'&&!(where&&O.mtr.length)?1:0;AI2.col=M.col=='auto'?1:0;AI2.vx=M.vx=='auto'?1:0;AI2.kfs=M.cam=='auto'?1:0;
+ AIGO=1;try{await _abCore.call(null)}catch(e){console.error(e)}finally{AIGO=0}
+ Object.assign(AI2,keep0);if(clips===O.clips){panel();return false}
+ const newC=clips,tot=newC.reduce((a,c)=>a+len(c),0);
+ // camera angles (manual) — per clip
+ if(M.cam=='manual'){newC.forEach((c,i)=>{const key=AI2.mode=='script'?'sc'+i:(c.mid||c.url),a=AI2.cam[key];if(a){const k=camKF(a,len(c));if(k)c.kf=k}})}
+ // look effects
+ const fxs=AI2.lfx.filter(k=>LFX.find(q=>q[0]==k&&q[2]=='fx')),vs=AI2.lfx.filter(k=>LFX.find(q=>q[0]==k&&q[2]=='v')&&VX[k]);
+ if(fxs.length)newC.forEach(c=>{c.fx=fxs[0]});
+ vs.forEach(k=>fxl.push({type:k,name:(VXL.find(q=>q[0]==k)||[0,k])[1],st:0,dur:Math.max(.8,tot),amt:40,spd:1,sz:1,col:'#ffffff',lane:-1,hid:0,ai:1}));
+ // creative intro
+ const I=INTROS.find(q=>q[0]==AI2.intro);if(I&&I[0]!='none'){const st=AIST[AI2.style]||{},X=AIX[AI2.style]||{titles:['Video']},x=newText(.1),end=Math.min(3.2,Math.max(1.2,tot*.6));x.txt=(AI2.introT||(X.titles&&X.titles[0])||'Video').slice(0,40);x.s=.1;x.e=end;if(TPS[I[2]])Object.assign(x,TPS[I[2]]);x.x=.5;x.y=.45;x.z=70;x.ain=I[3]||'fade';x.aout='fade';x.ad=.6;x.ai=1;try{if(I[4])TPEX(x,I[4],end-.1)}catch(_){}texts.push(x);
+  if(I[5]&&VX[I[5]])fxl.push({type:I[5],name:(VXL.find(q=>q[0]==I[5])||[0,I[5]])[1],st:0,dur:Math.min(end+.6,tot),amt:60,spd:1,sz:1,col:'#ffffff',lane:-1,hid:0,ai:1})}
+ // merge into the current project instead of replacing it
+ if(where){const nT=texts.filter(x=>!O.texts.includes(x)),nF=fxl.filter(f=>!O.fxl.includes(f)),nM=mtr.filter(m=>!O.mtr.includes(m));
+  clips=O.clips;texts=O.texts;ovs=O.ovs;mtr=O.mtr;sfx=O.sfx;fxl=O.fxl;t=O.t;insertMainAt(newC,where);const pos=t;
+  nT.forEach(x=>{x.s+=pos;x.e+=pos});nF.forEach(f=>{f.st+=pos});nM.forEach(m=>{m.st+=pos});texts.push(...nT);fxl.push(...nF);mtr.push(...nM);chg();seek(pos);
+  AI2.msg='Added '+newC.length+' AI scene(s) '+(where=='here'?'at the yellow line':where=='start'?'at the start':'at the end')+'. Your existing video is kept. Use Undo to remove them.'}
+ // manual steps: go to the Music / Colour / Motion tab
+ const steps=[];if(M.col=='manual')steps.push('cg');if(M.vx=='manual')steps.push('vfx');if(M.music=='manual'&&!mtr.some(m=>!m.ai))steps.push('mus');
+ AI2.flow=steps.length?{steps,i:0,post:1}:null;if(AI2.flow)aiFlowGo(0);else{try{ui()}catch(_){}panel()}return true}
+aiBuild=async function(){if(AI2.busy)return;if(AIGO)return _abCore.apply(this,arguments);if(AI2.mode=='script'&&projHas())return aiAsk('build');return aiCore(null)};
+// ---- manual steps ----
+const STEPN={mus:'Music',cg:'Colour look',vfx:'Motion effects'};
+function aiFlowGo(i){const F=AI2.flow;if(!F||i>=F.steps.length){AI2.flow=null;tab='ai';ui();panel();return}F.i=i;const k=F.steps[i];if(k=='cg'){if(!clips.length){AI2.flow=null;return toast('Create the video first. You will be taken to the Colour tab after.')}sel=Math.min(Math.max(0,sel),clips.length-1);tmode='main';kfT=false}
+ if(k=='mus'){tmode='mus'}if(k=='vfx'){tmode='vfx'}tab=k;ui();panel();toast('Choose your '+STEPN[k].toLowerCase()+', then tap Next at the top')}
+{const _h=panelHook;panelHook=function(){_h.apply(this,arguments);const F=AI2.flow,P=$('#pn');if(!P||!F||tab=='ai'||$('#pn .aibn'))return;const last=F.i>=F.steps.length-1,nx=last?'Done, back to AI Studio':'Next: '+STEPN[F.steps[F.i+1]];
+ P.insertAdjacentHTML('afterbegin',`<div class="aibn card" style="border:1.5px solid var(--ac);background:rgba(124,92,255,.12)"><b>AI Studio · step ${F.i+1} of ${F.steps.length}: ${STEPN[F.steps[F.i]]}</b><p class="mu" style="margin:4px 0">${F.steps[F.i]=='vfx'?'Tap an effect to add it. Tap another to add more than one.':F.steps[F.i]=='cg'?'Pick a colour look for the selected clip, or use Apply to all.':'Pick or import the music you want.'}</p><div class="chips"><button class="ac" data-aibn="next">${nx}</button><button data-aibn="back">Back to AI Studio</button></div></div>`)}}
+$('#pn').addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;const d=b.dataset;
+ if(d.aibn){e.stopImmediatePropagation();const F=AI2.flow;if(d.aibn=='back'||!F){AI2.flow=null;tab='ai';ui();panel()}else aiFlowGo(F.i+1);return}
+ if(tab!='ai')return;
+ if(d.aimv){e.stopImmediatePropagation();const[k,v]=d.aimv.split('|');AI2.mm[k]=v;panel();return}
+ if(d.aigo){e.stopImmediatePropagation();const k={music:'mus',col:'cg',vx:'vfx'}[d.aigo];if(k!='mus'&&!clips.length)return toast('Create the video first. You will be taken there automatically.');AI2.flow={steps:[k],i:0};aiFlowGo(0);return}
+ if(d.ailfx){e.stopImmediatePropagation();const a=AI2.lfx,i=a.indexOf(d.ailfx);if(i>=0)a.splice(i,1);else a.push(d.ailfx);panel();return}
+ if(d.aiintro){e.stopImmediatePropagation();AI2.intro=d.aiintro;panel();return}
+ if(d.aicamapply){e.stopImmediatePropagation();const v=($('#aicamall')||{}).value;aiItems().forEach(it=>{if(v)AI2.cam[it.key]=v;else delete AI2.cam[it.key]});panel();return}
+ if(b.id=='aipics'){e.stopImmediatePropagation();if(projHas())aiAsk('pics');else aiAddPics('start');return}},true);
+$('#pn').addEventListener('change',e=>{const el=e.target;if(tab!='ai'||!el.dataset)return;if(el.dataset.aicam!==undefined){if(el.value)AI2.cam[el.dataset.aicam]=el.value;else delete AI2.cam[el.dataset.aicam]}});
+$('#pn').addEventListener('input',e=>{if(e.target.id=='aiintrot')AI2.introT=e.target.value.slice(0,40)});
+// ===================== v1.4c: 20 new templates for this season (Trending now) =====================
+TPN('n1','new','Black Friday Sale','noir',5,[['{1}',.44,'Fire FX','slam',88,'spot'],['{2}',.6,'Pro Sans','fade',28]],['sparkle','leak'],['BLACK FRIDAY','UP TO 70% OFF','']);
+TPN('n2','new','Cyber Monday','cosmic',4.5,[['{1}',.44,'Glitch FX','slam',84],['{2}',.6,'Neon Blue','fade',34]],['crtscan','sparkle'],['CYBER MONDAY','Deals end tonight','']);
+TPN('n3','new','Thanksgiving','ember',5,[['{1}',.44,'Elegant','fade',70],['{2}',.6,'Pro Sans','fade',26]],['dust','embers'],['Happy Thanksgiving','Grateful for you','']);
+TPN('n4','new','Christmas Countdown','xmas',5,[['{1}',.44,'Sticker','bounce',84],['{2}',.6,'Plain','fade',32]],['snow','sparkle'],['25 DAYS TO GO','Christmas is coming','']);
+TPN('n5','new','Merry Christmas Gold','velvet',5.5,[['{1}',.45,'Gold Foil','none',78,'wipe'],['{2}',.6,'Elegant','fade',32]],['snow','goldr'],['Merry Christmas','Peace, love and joy','']);
+TPN('n6','new','Santa Is Coming','xmas',4.5,[['{1}',.46,'Double','pop',74],['{2}',.6,'Plain','fade',30]],['snow','confetti'],['HO HO HO','Santa is on his way','']);
+TPN('n7','new','Winter Wonderland','steel',5,[['{1}',.45,'Ice FX','fade',82],['{2}',.6,'Pro Sans','fade',26]],['snow','sparkle'],['WINTER','wonderland','']);
+TPN('n8','new','New Year 2027','ny',5.5,[['{1}',.4,'Retro 3D FX','fly3d',74],['{2}',.58,'Gold Foil','fade',92]],['fireworks','goldr'],['Happy New Year','2027','']);
+TPN('n9','new','New Year Countdown','noir',5,[['{1}',.46,'Neon Sign','pop',96],['{2}',.62,'Pro Sans','fade',26]],['sparkle','nring'],['3 · 2 · 1','Countdown to 2027','']);
+TPN('n10','new','Year Recap 2026','aurora',5.5,[['{1}',.44,'Pro Sans','none',84,'wipe'],['{2}',.58,'Elegant','fade',32]],['dust','sparkle'],['2026 RECAP','Our year in moments','']);
+TPN('n11','new','Best Moments of 2026','lowpoly',5,[['{1}',.45,'Chrome','none',80,'iris'],['{2}',.6,'Pro Sans','fade',26]],['comets','sparkle'],['BEST OF 2026','moments that mattered','']);
+TPN('n12','new','New Year Resolutions','emerald',5,[['{1}',.45,'Elegant','fade',70],['{2}',.6,'Marker','up',44]],['sparkle','dust'],['2027 GOALS','New year, new me','']);
+TPN('n13','new','Winter Sale','aurora',4.5,[['{1}',.44,'Ice FX','pop',88],['{2}',.6,'Sticker','bounce',44]],['snow','sparkle'],['WINTER SALE','Flat 50% off','']);
+TPN('n14','new','Wedding Season','sakura',5.5,[['{1}',.45,'Elegant','none',68,'heart'],['{2}',.6,'Pro Sans','fade',26]],['petals','hearts'],['Save the Date','Name & Name','']);
+TPN('n15','new','NYE Party Night','cosmic',4.5,[['{1}',.44,'Neon Blue','slam',84],['{2}',.6,'Sticker','pop',40]],['confetti','nring'],['PARTY NIGHT','Dec 31 · Be there','']);
+TPN('n16','new','Lohri','fire',5,[['{1}',.45,'Fire FX','pop',84],['{2}',.6,'Plain','fade',30]],['embers','sparkle'],['Happy Lohri','Warmth and joy','']);
+TPN('n17','new','Makar Sankranti','sunset',5,[['{1}',.45,'Gold','zoom',68],['{2}',.6,'Plain','fade',30]],['sparkle','petals'],['Happy Makar Sankranti','Fly high with joy','']);
+TPN('n18','new','Republic Day','india',5,[['{1}',.45,'Sticker','zoom',66],['{2}',.6,'Plain','fade',32]],['confetti','sparkle'],['Happy Republic Day','Jai Hind','']);
+TPN('n19','new','Gurpurab','diwali',5.5,[['{1}',.45,'Gold Foil','none',70,'spot'],['{2}',.6,'Elegant','fade',30]],['sparkle','goldr'],['Happy Gurpurab','Blessings and peace','']);
+TPN('n20','new','Cosy Winter Vlog','tealwave',4.5,[['{1}',.46,'Marker','up',72],['{2}',.6,'Plain','fade',30]],['snow','bokeh'],['COSY DAYS','winter vlog','']);
+// ===================== v1.4d: Collage — more layouts, and Shapes & frames (photos fill objects, shapes and lines) =====================
+{const c=COL.custom;delete COL.custom;const g3=(n,m)=>Array.from({length:n*m},(_,i)=>[(i%m)/m,Math.floor(i/m)/n,1/m,1/n]);Object.assign(COL,{
+'7 mosaic':[[0,0,.6,.4],[.6,0,.4,.4],[0,.4,.35,.3],[.35,.4,.65,.3],[0,.7,.3,.3],[.3,.7,.35,.3],[.65,.7,.35,.3]],
+'Hero + 4':[[0,0,1,.55],[0,.55,.25,.45],[.25,.55,.25,.45],[.5,.55,.25,.45],[.75,.55,.25,.45]],
+'L shape':[[0,0,.65,.65],[.65,0,.35,.35],[.65,.35,.35,.3],[0,.65,.35,.35],[.35,.65,.65,.35]],
+'Pinwheel':[[0,0,.6,.4],[.6,0,.4,.6],[.4,.6,.6,.4],[0,.4,.4,.6],[.4,.4,.2,.2]],
+'Big centre':[[0,0,.3,.5],[.3,0,.4,1],[.7,0,.3,.5],[0,.5,.3,.5],[.7,.5,.3,.5]],
+'Staircase':[[0,0,.34,.34],[.34,.34,.33,.33],[.67,.67,.33,.33],[.34,0,.66,.34],[0,.34,.34,.66]],
+'4 columns':[0,1,2,3].map(i=>[i/4,0,1/4,1]),
+'12 grid':g3(4,3),'16 grid':g3(4,4),
+'Filmstrip':[0,1,2,3,4].map(i=>[.2,i/5,.6,1/5]),
+'Window':[[0,0,.5,.3],[.5,0,.5,.3],[0,.3,.5,.4],[.5,.3,.5,.4],[0,.7,.5,.3],[.5,.7,.5,.3]]});COL.custom=c}
+const FR={on:0,frame:'heart',cell:'rect',fmt:'proj',gap:5,lw:0,lcol:'#ffffff',bg:'#ffffff',round:0,seed:1,n:40,len:5,imgs:[],names:[],busy:0,msg:''};
+const FRFMT=[['proj','Same as video'],['sq','Square 1:1'],['p45','Portrait 4:5'],['p34','Poster 3:4'],['st','Story 9:16'],['wd','Wide 16:9'],['l43','Classic 4:3']];
+const FRASP={sq:1,p45:4/5,p34:3/4,st:9/16,wd:16/9,l43:4/3};
+const FRCELL=[['rect','Rectangles'],['square','Squares'],['circle','Circles'],['triangle','Triangles'],['diamond','Diamonds'],['hex','Hexagons']];
+const rng=s=>{let a=(s*2654435761)>>>0;return()=>{a=(a+0x6D2B79F5)>>>0;let t=a;t=Math.imul(t^t>>>15,t|1);t^=t+Math.imul(t^t>>>7,t|61);return((t^t>>>14)>>>0)/4294967296}};
+const FRPAL=['#7c5cff','#22d3ee','#f472b6','#fbbf24','#34d399','#fb7185','#60a5fa','#a78bfa','#f97316','#14b8a6','#e879f9','#facc15'];
+// --- object outlines (drawn in black on a w x h box; the photos show wherever it is filled) ---
+const poly=(g,P)=>{g.beginPath();P.forEach((p,i)=>i?g.lineTo(p[0],p[1]):g.moveTo(p[0],p[1]));g.closePath()};
+const FRM={
+heart:{n:'Heart',a:1.08,mask:(g,w,h)=>{g.beginPath();for(let i=0;i<=200;i++){const a=i/200*Math.PI*2,x=16*Math.pow(Math.sin(a),3),y=-(13*Math.cos(a)-5*Math.cos(2*a)-2*Math.cos(3*a)-Math.cos(4*a));const px=w/2+x/34*w,py=h*.46+y/33*h;i?g.lineTo(px,py):g.moveTo(px,py)}g.closePath();g.fill()}},
+bicycle:{n:'Cyclist',a:1.1,mask:(g,w,h)=>{const u=x=>x*w,v=y=>y*h,L=(a,b,c,d,k)=>{g.lineWidth=k*h;g.lineCap='round';g.lineJoin='round';g.beginPath();g.moveTo(u(a),v(b));g.lineTo(u(c),v(d));g.stroke()};g.fillStyle=g.strokeStyle='#000';
+ [[.21,.77],[.81,.77]].forEach(([x,y])=>{g.beginPath();g.arc(u(x),v(y),h*.225,0,7);g.fill()});
+ L(.21,.77,.46,.52,.085);L(.46,.52,.76,.52,.08);L(.76,.52,.81,.77,.085);L(.46,.52,.52,.77,.08);L(.52,.77,.21,.77,.08);L(.76,.52,.72,.3,.08);L(.66,.3,.82,.3,.07);
+ L(.43,.43,.6,.25,.17);L(.6,.25,.74,.31,.08);L(.44,.46,.6,.6,.11);L(.6,.6,.52,.77,.1);g.beginPath();g.arc(u(.64),v(.1),h*.1,0,7);g.fill()}},
+camera:{n:'Camera',a:1.25,mask:(g,w,h)=>{g.fillStyle='#000';rr(g,w*.04,h*.22,w*.92,h*.7,h*.08);g.fill();rr(g,w*.3,h*.08,w*.28,h*.2,h*.04);g.fill()}},
+star:{n:'Star',a:1,mask:(g,w,h)=>{const P=[];for(let i=0;i<10;i++){const r=i%2?.2:.5,a=-Math.PI/2+i*Math.PI/5;P.push([w/2+Math.cos(a)*r*w*1.0,h*.53+Math.sin(a)*r*h*1.0])}g.fillStyle='#000';poly(g,P);g.fill()}},
+circle:{n:'Circle',a:1,mask:(g,w,h)=>{g.fillStyle='#000';g.beginPath();g.arc(w/2,h/2,Math.min(w,h)/2,0,7);g.fill()}},
+triangle:{n:'Triangle',a:1.1,mask:(g,w,h)=>{g.fillStyle='#000';poly(g,[[w/2,0],[w,h],[0,h]]);g.fill()}},
+diamond:{n:'Diamond',a:.9,mask:(g,w,h)=>{g.fillStyle='#000';poly(g,[[w/2,0],[w,h/2],[w/2,h],[0,h/2]]);g.fill()}},
+hexagon:{n:'Hexagon',a:1.1,mask:(g,w,h)=>{g.fillStyle='#000';poly(g,[0,1,2,3,4,5].map(i=>[w/2+Math.cos(i*Math.PI/3)*w/2,h/2+Math.sin(i*Math.PI/3)*h/2]));g.fill()}},
+butterfly:{n:'Butterfly',a:1.2,mask:(g,w,h)=>{g.fillStyle=g.strokeStyle='#000';const E=(x,y,rx,ry,r)=>{g.beginPath();g.ellipse(w*x,h*y,w*rx,h*ry,r,0,7);g.fill()};E(.27,.33,.24,.3,-.5);E(.73,.33,.24,.3,.5);E(.3,.72,.17,.22,.4);E(.7,.72,.17,.22,-.4);E(.5,.5,.035,.34,0);g.lineWidth=h*.02;g.lineCap='round';g.beginPath();g.moveTo(w*.5,h*.2);g.quadraticCurveTo(w*.42,h*.05,w*.36,h*.04);g.moveTo(w*.5,h*.2);g.quadraticCurveTo(w*.58,h*.05,w*.64,h*.04);g.stroke()}},
+tree:{n:'Tree',a:.8,mask:(g,w,h)=>{g.fillStyle='#000';poly(g,[[w/2,0],[w*.82,h*.34],[w*.66,h*.34],[w*.92,h*.62],[w*.7,h*.62],[w,h*.86],[0,h*.86],[w*.3,h*.62],[w*.08,h*.62],[w*.34,h*.34],[w*.18,h*.34]]);g.fill();g.fillRect(w*.42,h*.85,w*.16,h*.15)}},
+rocket:{n:'Rocket',a:.6,mask:(g,w,h)=>{g.fillStyle='#000';g.beginPath();g.moveTo(w/2,0);g.bezierCurveTo(w*.95,h*.2,w*.85,h*.62,w*.78,h*.72);g.lineTo(w*.22,h*.72);g.bezierCurveTo(w*.15,h*.62,w*.05,h*.2,w/2,0);g.fill();poly(g,[[w*.22,h*.5],[0,h*.78],[w*.22,h*.74]]);g.fill();poly(g,[[w*.78,h*.5],[w,h*.78],[w*.78,h*.74]]);g.fill();poly(g,[[w*.3,h*.74],[w*.7,h*.74],[w/2,h]]);g.fill()}},
+house:{n:'House',a:1.1,mask:(g,w,h)=>{g.fillStyle='#000';poly(g,[[w/2,0],[w,h*.45],[w*.9,h*.45],[w*.9,h],[w*.1,h],[w*.1,h*.45],[0,h*.45]]);g.fill();g.fillRect(w*.7,h*.05,w*.1,h*.25)}}};
+// --- frames where every box of the object holds one photo ---
+const FRC={
+ferris:{n:'Giant wheel',a:.9,cells:(w,h)=>{const cx=w/2,cy=h*.4,R=Math.min(w*.4,h*.34),s=R*.34,N=12,C=[];for(let k=0;k<N;k++){const a=k/N*Math.PI*2-Math.PI/2,px=cx+Math.cos(a)*R,py=cy+Math.sin(a)*R;C.push({sq:[px-s/2,py+s*.12,s,s*.9,s*.12]})}C.push({ci:[cx,cy,R*.2]});return C},
+ under:(g,w,h,o)=>{const cx=w/2,cy=h*.4,R=Math.min(w*.4,h*.34);g.strokeStyle=o.lc;g.lineWidth=o.lw*1.3;g.lineCap='round';g.beginPath();g.arc(cx,cy,R,0,7);g.stroke();g.beginPath();g.arc(cx,cy,R*.62,0,7);g.stroke();for(let k=0;k<12;k++){const a=k/12*Math.PI*2-Math.PI/2;g.beginPath();g.moveTo(cx,cy);g.lineTo(cx+Math.cos(a)*R,cy+Math.sin(a)*R);g.stroke()}g.lineWidth=o.lw*2;g.beginPath();g.moveTo(cx,cy);g.lineTo(w*.2,h*.97);g.moveTo(cx,cy);g.lineTo(w*.8,h*.97);g.moveTo(w*.12,h*.97);g.lineTo(w*.88,h*.97);g.stroke()},over:(g,w,h,o)=>{g.strokeStyle=o.lc;g.lineWidth=o.lw;const cx=w/2,cy=h*.4,R=Math.min(w*.4,h*.34);for(let k=0;k<12;k++){const a=k/12*Math.PI*2-Math.PI/2,px=cx+Math.cos(a)*R,py=cy+Math.sin(a)*R,s=R*.34;g.beginPath();g.moveTo(px-s*.3,py+s*.12);g.lineTo(px,py);g.lineTo(px+s*.3,py+s*.12);g.stroke()}}},
+sunburst:{n:'Sun burst',a:1,cells:(w,h)=>{const cx=w/2,cy=h/2,C=[{ci:[cx,cy,Math.min(w,h)*.17]}],n=14,r0=Math.min(w,h)*.2,r1=Math.min(w,h)*.5;for(let k=0;k<n;k++){const a0=k/n*Math.PI*2,a1=(k+1)/n*Math.PI*2,am=(a0+a1)/2;C.push({tri:[[cx+Math.cos(a0)*r0,cy+Math.sin(a0)*r0],[cx+Math.cos(a1)*r0,cy+Math.sin(a1)*r0],[cx+Math.cos(am)*r1,cy+Math.sin(am)*r1]]})}return C}},
+flower:{n:'Flower',a:.8,cells:(w,h)=>{const cx=w/2,cy=h*.36,r=w*.16,C=[{ci:[cx,cy,r*.95]}];for(let k=0;k<8;k++){const a=k/8*Math.PI*2;C.push({ci:[cx+Math.cos(a)*r*1.9,cy+Math.sin(a)*r*1.9,r*.98]})}return C},
+ under:(g,w,h,o)=>{g.strokeStyle='#22c55e';g.lineWidth=o.lw*4;g.lineCap='round';g.beginPath();g.moveTo(w/2,h*.36);g.quadraticCurveTo(w*.46,h*.7,w/2,h*.98);g.stroke();g.fillStyle='#22c55e';[[.34,.78,-.6],[.66,.7,.6]].forEach(([x,y,r])=>{g.beginPath();g.ellipse(w*x,h*y,w*.12,h*.045,r,0,7);g.fill()})}},
+honeycomb:{n:'Honeycomb',a:1,cells:(w,h)=>{const r=Math.min(w/9.2,h/8.6),C=[],cx=w/2,cy=h/2,dx=r*Math.sqrt(3);for(let q=-2;q<=2;q++)for(let p=-2;p<=2;p++){const s=-q-p;if(Math.abs(s)>2)continue;const x=cx+dx*(q+p/2),y=cy+r*1.5*p;C.push({hex:[x,y,r*.97]})}return C}},
+film:{n:'Film strip',a:.5,cells:(w,h)=>{const n=5,pad=h*.025,fw=w*.64,fh=(h-pad*(n+1))/n,C=[];for(let i=0;i<n;i++)C.push({sq:[(w-fw)/2,pad+i*(fh+pad),fw,fh,w*.01]});return C},
+ under:(g,w,h,o)=>{g.fillStyle='#111827';g.fillRect(w*.08,0,w*.84,h);g.fillStyle='#e5e7eb';const n=14,hh=h/n;for(let i=0;i<n;i++){[w*.11,w*.855].forEach(x=>{rr(g,x,i*hh+hh*.25,w*.04,hh*.5,3);g.fill()})}}},
+polaroid:{n:'Polaroid wall',a:1,cells:(w,h,o)=>{const r=rng(o.seed*7+3),C=[],pos=[[.25,.2],[.75,.2],[.5,.48],[.22,.75],[.78,.75],[.5,.8],[.5,.16]].slice(0,6),cw=w*.3,ch=cw*1.18;pos.forEach(([x,y],i)=>{const ang=(r()-.5)*.38,cx=x*w,cy=y*h,rot=(px,py)=>[cx+px*Math.cos(ang)-py*Math.sin(ang),cy+px*Math.sin(ang)+py*Math.cos(ang)];C.push({tri:[[-1,-1],[1,-1],[1,1],[-1,1]].map(([a,b])=>rot(a*cw*.43,b*ch*.38-ch*.06)),back:g=>{g.save();g.shadowColor='rgba(0,0,0,.35)';g.shadowBlur=w*.02;g.fillStyle='#fff';poly(g,[[-1,-1],[1,-1],[1,1],[-1,1]].map(([a,b])=>rot(a*cw/2,b*ch/2)));g.fill();g.restore()}})});return C}},
+bubbles:{n:'Bubbles',a:1,cells:(w,h,o)=>{const r=rng(o.seed*11+5),C=[],R=[];for(let t=0;t<700&&C.length<17;t++){const rad=Math.min(w,h)*(.07+r()*.12),x=rad+r()*(w-2*rad),y=rad+r()*(h-2*rad);if(R.every(q=>Math.hypot(q[0]-x,q[1]-y)>q[2]+rad+Math.min(w,h)*.012)){R.push([x,y,rad]);C.push({ci:[x,y,rad]})}}return C}}};
+const FRALL=()=>[...Object.keys(FRM).map(k=>[k,FRM[k].n,'m']),...Object.keys(FRC).map(k=>[k,FRC[k].n,'c'])];
+// --- cell generators for the mask frames ---
+function frCells(shape,w,h,N,seed,gap,round){const r=rng(seed),C=[],A=w*h;
+ const add=(P,bb)=>C.push({P,bb});
+ if(shape=='rect'){let L=[{x:0,y:0,w,h}];while(L.length<N){let bi=0,ba=-1;L.forEach((c,i)=>{const a=c.w*c.h*(.6+r()*.8);if(a>ba){ba=a;bi=i}});const c=L[bi],k=.36+r()*.28;if(c.w>=c.h*(.8+r()*.3)){L.splice(bi,1,{x:c.x,y:c.y,w:c.w*k,h:c.h},{x:c.x+c.w*k,y:c.y,w:c.w*(1-k),h:c.h})}else L.splice(bi,1,{x:c.x,y:c.y,w:c.w,h:c.h*k},{x:c.x,y:c.y+c.h*k,w:c.w,h:c.h*(1-k)})}
+  L.forEach(c=>{const x=c.x+gap/2,y=c.y+gap/2,ww=Math.max(2,c.w-gap),hh=Math.max(2,c.h-gap);add(g=>{if(round>0)rr(g,x,y,ww,hh,Math.min(ww,hh)*round);else{g.beginPath();g.rect(x,y,ww,hh)}},[x,y,ww,hh])})}
+ else if(shape=='square'){const s=Math.sqrt(A/N);for(let y=0;y<h;y+=s)for(let x=0;x<w;x+=s){const x1=x+gap/2,y1=y+gap/2,ss=s-gap;add(g=>{if(round>0)rr(g,x1,y1,ss,ss,ss*round);else{g.beginPath();g.rect(x1,y1,ss,ss)}},[x1,y1,ss,ss])}}
+ else if(shape=='circle'){const s=Math.sqrt(A/N*1.15),rad=s/2-gap/2;for(let j=0,y=s/2;y<h+s/2;y+=s*.87,j++)for(let x=(j%2?s:s/2);x<w+s/2;x+=s){add(g=>{g.beginPath();g.arc(x,y,Math.max(2,rad),0,7)},[x-rad,y-rad,rad*2,rad*2])}}
+ else if(shape=='triangle'){const s=Math.sqrt(A/(N*.433)),th=s*.866,k=Math.max(.2,1-gap/s*2);for(let y0=0;y0<h+th;y0+=th)for(let c=-1;c<w/s+1;c++){const x=c*s,y1=y0+th,T=[[[x,y1],[x+s,y1],[x+s/2,y0]],[[x+s/2,y0],[x+s*1.5,y0],[x+s,y1]]];T.forEach(P=>{const cx=(P[0][0]+P[1][0]+P[2][0])/3,cy=(P[0][1]+P[1][1]+P[2][1])/3,Q=P.map(p=>[cx+(p[0]-cx)*k,cy+(p[1]-cy)*k]);add(g=>poly(g,Q),[Math.min(...Q.map(p=>p[0])),y0,s,th])})}}
+ else if(shape=='hex'){const rd=Math.sqrt(A/(N*2.598)),dx=rd*1.732,k=Math.max(.3,1-gap/rd);for(let j=0,y=0;y<h+rd;y+=rd*1.5,j++)for(let x=(j%2?dx/2:0);x<w+dx;x+=dx){const Q=[0,1,2,3,4,5].map(i=>[x+Math.cos(i*Math.PI/3+Math.PI/6)*rd*k,y+Math.sin(i*Math.PI/3+Math.PI/6)*rd*k]);add(g=>poly(g,Q),[x-dx/2,y-rd,dx,rd*2])}}
+ else if(shape=='diamond'){const d=Math.sqrt(A/(N*2)),k=Math.max(.3,1-gap/d);for(let j=0,y=0;y<h+d;y+=d,j++)for(let x=(j%2?d:0);x<w+d;x+=d*2){const Q=[[x,y-d*k],[x+d*k,y],[x,y+d*k],[x-d*k,y]];add(g=>poly(g,Q),[x-d,y-d,d*2,d*2])}}
+ return C}
+function frCover(g,im,bb){const iw=im.width||im.naturalWidth,ih=im.height||im.naturalHeight;if(!iw)return;const s=Math.max(bb[2]/iw,bb[3]/ih),w=iw*s,h=ih*s;g.drawImage(im,bb[0]+(bb[2]-w)/2,bb[1]+(bb[3]-h)/2,w,h)}
+const FRFIT=(a,aw,ah)=>aw/ah>a?{w:ah*a,h:ah}:{w:aw,h:aw/a};
+// draws the whole artwork onto a W x H canvas; imgs=null draws coloured placeholders
+function frRender(W,H,F,imgs,k){const cv0=document.createElement('canvas');cv0.width=W;cv0.height=H;const g=cv0.getContext('2d');g.fillStyle=F.bg;g.fillRect(0,0,W,H);
+ const mg=Math.min(W,H)*.04,pa=F.fmt=='proj'?W/H:FRASP[F.fmt]||1,box=FRFIT(pa,W-mg*2,H-mg*2),bx=(W-box.w)/2,by=(H-box.h)/2;
+ if(F.fmt!='proj'){g.fillStyle='rgba(0,0,0,.04)';g.fillRect(bx,by,box.w,box.h)}
+ const def=FRM[F.frame]||FRC[F.frame],kk=k||W/540,o={lc:F.lcol&&F.lcol!='#ffffff'?F.lcol:(F.bg=='#ffffff'||/^#f/i.test(F.bg)?'#374151':'#e5e7eb'),lw:Math.max(1.5,(F.lw||2.5)*kk),seed:F.seed},ob=FRFIT(def.a,box.w*.96,box.h*.96),ox=bx+(box.w-ob.w)/2,oy=by+(box.h-ob.h)/2,ow=Math.round(ob.w),oh=Math.round(ob.h);
+ const layer=document.createElement('canvas');layer.width=ow;layer.height=oh;const L=layer.getContext('2d'),gap=(F.gap||0)*kk,pick=i=>imgs&&imgs.length?imgs[i%imgs.length]:null;
+ const fillCell=(i,bb)=>{const im=pick(i);if(im)frCover(L,im,bb);else{const q=L.createLinearGradient(bb[0],bb[1],bb[0]+bb[2],bb[1]+bb[3]);q.addColorStop(0,FRPAL[i%12]);q.addColorStop(1,FRPAL[(i+5)%12]);L.fillStyle=q;L.fillRect(bb[0],bb[1],bb[2],bb[3])}};
+ const strokeIf=()=>{if(F.lw>0){L.strokeStyle=F.lcol;L.lineWidth=F.lw*kk;L.lineJoin='round';L.stroke()}};
+ if(FRM[F.frame]){const mc=document.createElement('canvas');mc.width=ow;mc.height=oh;const m=mc.getContext('2d');m.fillStyle='#000';m.strokeStyle='#000';FRM[F.frame].mask(m,ow,oh);const md=m.getImageData(0,0,ow,oh).data,cov=bb=>{let n=0,t=0;for(let a=0;a<5;a++)for(let b=0;b<5;b++){const x=Math.min(ow-1,Math.max(0,Math.round(bb[0]+bb[2]*(a+.5)/5))),y=Math.min(oh-1,Math.max(0,Math.round(bb[1]+bb[3]*(b+.5)/5)));t++;if(md[(y*ow+x)*4+3]>100)n++}return n/t};
+  const cells=frCells(F.cell,ow,oh,Math.max(6,F.n),F.seed,gap,F.round/100);let i=0;cells.forEach(c=>{if(cov(c.bb)<.18)return;L.save();c.P(L);L.clip();fillCell(i++,c.bb);L.restore();if(F.lw>0){L.save();c.P(L);strokeIf();L.restore()}});
+  L.globalCompositeOperation='destination-in';L.drawImage(mc,0,0);L.globalCompositeOperation='source-over';if(F.frame=='camera'){L.strokeStyle=o.lc;L.lineWidth=o.lw*1.6;L.beginPath();L.arc(ow*.5,oh*.58,oh*.26,0,7);L.stroke()}g.drawImage(layer,ox,oy)}
+ else{const D=FRC[F.frame],C=D.cells(ow,oh,o);const t2=document.createElement('canvas');t2.width=ow;t2.height=oh;const gg=t2.getContext('2d');if(D.under)D.under(gg,ow,oh,o);
+  C.forEach((c,i)=>{if(c.back)c.back(gg);gg.save();let bb;gg.beginPath();if(c.sq){const[x,y,w,h,r]=c.sq;rr(gg,x,y,w,h,r||0);bb=[x,y,w,h]}else if(c.ci){gg.arc(c.ci[0],c.ci[1],c.ci[2],0,7);bb=[c.ci[0]-c.ci[2],c.ci[1]-c.ci[2],c.ci[2]*2,c.ci[2]*2]}else if(c.tri){poly(gg,c.tri);const xs=c.tri.map(p=>p[0]),ys=c.tri.map(p=>p[1]);bb=[Math.min(...xs),Math.min(...ys),Math.max(...xs)-Math.min(...xs),Math.max(...ys)-Math.min(...ys)]}else if(c.hex){const[x,y,r]=c.hex,P=[0,1,2,3,4,5].map(j=>[x+Math.cos(j*Math.PI/3+Math.PI/6)*(r-gap/2),y+Math.sin(j*Math.PI/3+Math.PI/6)*(r-gap/2)]);poly(gg,P);bb=[x-r,y-r,r*2,r*2]}gg.clip();
+   const sv=L;fillCellOn(gg,i,bb);gg.restore();if(F.lw>0){gg.save();gg.beginPath();if(c.sq)rr(gg,...c.sq);else if(c.ci)gg.arc(c.ci[0],c.ci[1],c.ci[2],0,7);else if(c.tri)poly(gg,c.tri);else if(c.hex){const[x,y,r]=c.hex;poly(gg,[0,1,2,3,4,5].map(j=>[x+Math.cos(j*Math.PI/3+Math.PI/6)*(r-gap/2),y+Math.sin(j*Math.PI/3+Math.PI/6)*(r-gap/2)]))}gg.strokeStyle=F.lcol;gg.lineWidth=F.lw*kk;gg.stroke();gg.restore()}});
+  if(D.over)D.over(gg,ow,oh,o);g.drawImage(t2,ox,oy);function fillCellOn(G,i,bb){const im=pick(i);if(im)frCover(G,im,bb);else{const q=G.createLinearGradient(bb[0],bb[1],bb[0]+bb[2],bb[1]+bb[3]);q.addColorStop(0,FRPAL[i%12]);q.addColorStop(1,FRPAL[(i+5)%12]);G.fillStyle=q;G.fillRect(bb[0],bb[1],bb[2],bb[3])}}}
+ return cv0}
+const FRTC={};
+TD.frm=(g,w,h,a)=>{g.fillStyle='#232b3a';g.fillRect(0,0,w,h);let c=FRTC[a];if(!c){try{c=frRender(160,160,{...FR,frame:a,bg:'#232b3a',lcol:'#e5e7eb',lw:1,gap:3,n:18,fmt:'sq',round:0,cell:'rect'},null,.3)}catch(e){c=null}FRTC[a]=c}if(c)g.drawImage(c,6,6,w-12,h-12)};
+// --- panel ---
+const FRSL=(id,l,min,max,v,suf)=>`<label class="rw"><span>${l}</span><input type="range" data-frs="${id}" min="${min}" max="${max}" step="1" value="${v}"><output>${v}${suf||''}</output></label>`;
+function FRP(){const isM=!!FRM[FR.frame];let h=`<b class="sec">Frame</b>`+TG(FRALL().map(([k,n])=>TILE(`data-frk="${k}"`,'frm|'+k,n,FR.frame==k)).join(''))
+ +`<b class="sec">Photos</b><div class="chips"><button class="ac" id="frph">${FR.imgs.length?'Add more photos':'Add photos'}</button>${FR.imgs.length?'<button id="frclr">Clear ('+FR.imgs.length+')</button>':''}<button id="frsh">🔀 Shuffle</button></div><p class="mu">${FR.busy?'Loading photos…':FR.imgs.length?FR.imgs.length+' photo(s). They fill every box of the frame, and repeat if there are more boxes than photos.':'Add your photos and they fill the frame automatically. Until then you see coloured boxes.'}</p>`
+ +`<canvas id="frcv" style="width:100%;max-width:340px;display:block;margin:6px auto;border-radius:12px;background:#fff"></canvas>`
+ +`<b class="sec">Format</b><div class="chips">${FRFMT.map(([k,l])=>`<button data-frf="${k}" class="${FR.fmt==k?'on':''}">${l}</button>`).join('')}</div>`
+ +(isM?`<b class="sec">Box shape</b><div class="chips">${FRCELL.map(([k,l])=>`<button data-frc="${k}" class="${FR.cell==k?'on':''}">${l}</button>`).join('')}</div>`+FRSL('n','Number of boxes',6,80,FR.n):'')
+ +FRSL('gap','Space between photos',0,30,FR.gap)+FRSL('lw','Separator line',0,10,FR.lw)+(isM&&(FR.cell=='rect'||FR.cell=='square')?FRSL('round','Rounded corners',0,50,FR.round,'%'):'')
+ +`<div class="rw"><span>Line colour</span><input type="color" data-frcol="lcol" value="${FR.lcol}"></div><div class="rw"><span>Background</span><input type="color" data-frcol="bg" value="${FR.bg}"></div>`+FRSL('len','Length',2,20,FR.len,'s')
+ +`<div class="chips"><button class="ac" data-fradd="start">Add to start</button><button data-fradd="here">Add here</button><button data-fradd="end">Add to end</button></div><p class="mu">${esc(FR.msg||'The finished design is added as one picture clip that you can still move, crop, animate or colour.')}</p>`;return h}
+{const _c=COLP;COLP=function(){return `<div class="chips seg"><button data-frm="0" class="${FR.on?'':'on'}">Layouts</button><button data-frm="1" class="${FR.on?'on':''}">Shapes &amp; frames ✨</button></div>`+(FR.on?FRP():_c())}}
+let frT=0;const frDraw=()=>{const cn=$('#frcv');if(!cn)return;const[W,H]=R[ratio],pw=Math.min(340,Math.round(($('#pn').clientWidth||340)-24)),s=pw/W;cn.width=Math.max(120,Math.round(W*s));cn.height=Math.max(120,Math.round(H*s));try{const c=frRender(cn.width,cn.height,FR,FR.imgs.length?FR.imgs:null,cn.width/540);cn.getContext('2d').drawImage(c,0,0)}catch(e){console.error(e)}};
+const frSoon=()=>{clearTimeout(frT);frT=setTimeout(frDraw,60)};
+{const _h=panelHook;panelHook=function(){_h.apply(this,arguments);if($('#frcv'))frDraw()}}
+{const i=document.createElement('input');i.type='file';i.accept='image/*';i.multiple=true;i.hidden=true;i.id='ffr';document.body.appendChild(i);
+ i.onchange=async e=>{const fs=[...e.target.files];e.target.value='';if(!fs.length)return;FR.busy=1;panel();for(const f of fs.slice(0,60)){try{const s=await shrinkImg(f);FR.imgs.push(await createImageBitmap(s));FR.names.push(f.name)}catch(_){}}FR.busy=0;panel()}}
+$('#pn').addEventListener('click',e=>{const b=e.target.closest('button');if(!b||tab!='col')return;const d=b.dataset;
+ if(d.frm!==undefined){e.stopImmediatePropagation();FR.on=+d.frm;panel();return}
+ if(!FR.on)return;
+ if(d.frk){e.stopImmediatePropagation();FR.frame=d.frk;if(FRC[d.frk]&&!FR.lw)FR.lw=0;panel();return}
+ if(d.frf){e.stopImmediatePropagation();FR.fmt=d.frf;panel();return}
+ if(d.frc){e.stopImmediatePropagation();FR.cell=d.frc;panel();return}
+ if(b.id=='frph'){e.stopImmediatePropagation();$('#ffr').click();return}
+ if(b.id=='frclr'){e.stopImmediatePropagation();FR.imgs=[];FR.names=[];panel();return}
+ if(b.id=='frsh'){e.stopImmediatePropagation();FR.seed=FR.seed%999+1;if(FR.imgs.length>1)FR.imgs.push(FR.imgs.shift());frDraw();return}
+ if(d.fradd){e.stopImmediatePropagation();frAdd(d.fradd);return}},true);
+$('#pn').addEventListener('input',e=>{const el=e.target;if(tab!='col'||!FR.on)return;if(el.dataset.frs){FR[el.dataset.frs]=+el.value;const o=el.parentNode.querySelector('output');if(o)o.textContent=el.value+(el.dataset.frs=='round'?'%':el.dataset.frs=='len'?'s':'');if(el.dataset.frs!='len')frSoon()}else if(el.dataset.frcol){FR[el.dataset.frcol]=el.value;frSoon()}},true);
+async function frAdd(where){if(FR.busy)return;const[W0,H0]=R[ratio],k=Math.min(1,1600/Math.max(W0,H0)),W=Math.round(W0*k),H=Math.round(H0*k);FR.msg='Creating your design…';panel();await new Promise(r=>setTimeout(r,30));
+ try{const c=frRender(W,H,FR,FR.imgs.length?FR.imgs:null,W/540),b=await new Promise(r=>c.toBlob(r,'image/jpeg',.92)),nm=(FRM[FR.frame]||FRC[FR.frame]).n+' photo art',f=new File([b],nm+'.jpg',{type:'image/jpeg'});
+  snap();const clip=D({url:URL.createObjectURL(f),mid:keep(f),name:nm,dur:60,in:0,out:FR.len,img:true,sp:1,vol:0,f:{b:100,c:100,s:100,x:''},tr:{type:'none',d:.5}});
+  if(!clips.length){clips.push(clip);sel=0;tmode='main';kfT=false;t=0;chg()}else insertMainAt([clip],where);
+  FR.msg='Added “'+nm+'” '+(where=='here'?'at the yellow line':where=='start'?'at the start':'at the end')+'.';toast(FR.msg)}catch(e){FR.msg='Could not create the design: '+(e&&e.message||e)}panel()}
 
 ui();panel();tick();boot();if('serviceWorker' in navigator&&location.protocol.startsWith('http'))navigator.serviceWorker.register('sw.js').catch(()=>{});
 </script></body></html>

@@ -3,7 +3,7 @@ const http = require('http'), crypto = require('crypto');
 
 // Render env values often arrive with stray spaces or quotes; clean them all.
 const cleanEnv = e => { const o = {}; for (const k of Object.keys(e)) { let v = e[k]; if (typeof v === 'string') { v = v.trim(); if (/^(["']).*\1$/.test(v)) v = v.slice(1, -1).trim(); } o[k] = v; } return o; };
-const VERSION = 'v1.3';
+const VERSION = 'v1.4';
 // Latest app version: APP_LATEST env, else read `const VER='vNN'` from index.html in your GitHub repo (cached 10 min).
 const ghLatest = env => async () => {
   const repo = env.GITHUB_REPO || 'vdadi4-cpu/Editor1.0', hd = env.GITHUB_TOKEN ? { Authorization: 'token ' + env.GITHUB_TOKEN } : {};
@@ -121,14 +121,18 @@ const mask = (kind, key) => kind === 'email' ? key.replace(/^(.).*(@.*)$/, '$1**
 function makeHandler(users, opt = {}) {
   const env = cleanEnv(opt.env || process.env), now = opt.now || (() => Date.now());
   const price = +env.PRICE_PAISE || 4900;               // Rs 49 in paise
-  const proEmails = String(env.PRO_EMAILS || '').toLowerCase().split(',').map(x => x.trim()).filter(Boolean);
+  // Plans: Pro length is data, not code. Default is one 30-day plan. Add more (3 months, 6 months, yearly) from Render with PLANS_JSON, e.g.
+  // [{"id":"p30","days":30,"paise":4900,"label":"30 days"},{"id":"p90","days":90,"paise":12900,"label":"3 months"},{"id":"p365","days":365,"paise":39900,"label":"1 year"}]
+  let PLANS = [{ id: 'p30', days: 30, paise: price, label: '30 days' }];
+  try { const j = JSON.parse(env.PLANS_JSON || 'null'); if (Array.isArray(j) && j.length) PLANS = j.map(p => ({ id: String(p.id), days: Math.max(1, Math.min(3660, +p.days || 30)), paise: Math.max(100, +p.paise || price), label: String(p.label || (p.days + ' days')) })); } catch (e) { }
+  const planOf = id => PLANS.find(p => p.id === id) || PLANS[0];
   const createOrder = opt.createOrder || razorpayOrder(env), createLink = opt.createLink || razorpayLink(env), getLink = opt.getLink || razorpayGetLink(env);
   const deliver = opt.sendOtp || otpSender(env);
   // test account: skips the OTP step (only with the matching password hash). Set OTP_TEST_USER=off to disable.
   const testUser = String(env.OTP_TEST_USER || 'vdadi4@gmail.com').toLowerCase(), testH = env.OTP_TEST_H || '07578b1591c4ef755fc9410219f502b8dfe8e16997662bcc7c84682965dfab1a';
   const bypass = (key, h) => testUser !== 'off' && key === testUser && h === testH;
-  // PRO_EMAILS = complimentary Pro for those accounts (no countdown). Everyone else: Pro lasts 30 days from the purchase date, then locks.
-  const info = (d, key) => { const real = +d.premiumUntil || 0, free = proEmails.includes(key) && real <= now(); const until = free ? now() + 3650 * DAY : real; return { pro: until > now(), until, at: +d.premiumAt || 0, free: free ? 1 : 0 }; };
+  // Pro lasts exactly the plan length counted from the purchase date (extra purchases add to what is left). No account gets free Pro from the server.
+  const info = (d, key) => { const until = +d.premiumUntil || 0; return { pro: until > now(), until, at: +d.premiumAt || 0, free: 0, left: Math.max(0, Math.ceil((until - now()) / DAY)), now: now(), plans: PLANS.map(p => ({ id: p.id, days: p.days, paise: p.paise, label: p.label })) }; };
   let latest = { at: 0, v: '' };
   const getLatest = async () => { if (env.APP_LATEST) return env.APP_LATEST; const t = Date.now(); if (latest.v && t - latest.at < 600e3) return latest.v; try { const v = await (opt.fetchLatest || ghLatest(env))(); if (v) latest = { at: t, v }; else latest.at = t - 540e3; } catch (e) { latest.at = t - 540e3; } return latest.v; };
   const aiModel = env.AI_VIDEO_MODEL || 'fal-ai/kling-video/v2.5-turbo/pro/text-to-video', aiClip = +env.AI_CLIP_SECONDS === 10 ? 10 : 5, aiMonthCap = +env.AI_MONTH_CLIPS || 6, aiTestCap = +env.AI_TESTER_CLIPS || 60;
@@ -159,14 +163,14 @@ function makeHandler(users, opt = {}) {
     if (!same(sha(o.salt + String(code).trim()), o.h)) return [401, { error: 'Wrong code', code: 1 }];
     otps.delete(id); return null;
   }
-  async function grant(key, d, ref) {                    // add 30 days; ref makes it idempotent
-    const until = Math.max(now(), +d.premiumUntil || 0) + PASS_DAYS * DAY;
+  async function grant(key, d, ref, days) {              // add the plan's days (default 30); ref makes it idempotent
+    const until = Math.max(now(), +d.premiumUntil || 0) + (days || PASS_DAYS) * DAY;
     await users.updateOne({ _id: key }, { $set: { premiumUntil: until, premiumAt: now() }, $addToSet: ref });
     d.premiumUntil = until; d.premiumAt = now(); return until;
   }
   async function settleLinks(d, key) {                   // pick up payments made on the hosted payment page
     const pend = (d.links || []).filter(id => !(d.paidLinks || []).includes(id)).slice(-5);
-    for (const id of pend) { let L; try { L = await getLink(id); } catch (e) { continue; } if (L && L.status === 'paid') { await grant(key, d, { paidLinks: id }); d.paidLinks = (d.paidLinks || []).concat(id); } }
+    for (const id of pend) { let L; try { L = await getLink(id); } catch (e) { continue; } if (L && L.status === 'paid') { await grant(key, d, { paidLinks: id }, planOf(d['plan_' + id]).days); d.paidLinks = (d.paidLinks || []).concat(id); } }
   }
   return async (req, res) => {
     try {
@@ -208,6 +212,7 @@ function makeHandler(users, opt = {}) {
           }
           if (req.url.startsWith('/ai/video/start')) {
             if (!aiOn.video) return send(res, 503, { error: 'video_off' });
+            if (!bypass(key, h) && env.AI_VIDEO_PUBLIC !== '1') return send(res, 403, { error: 'AI video is coming soon.', soon: 1 });   // open it to everyone later with AI_VIDEO_PUBLIC=1
             if (used >= cap) return send(res, 429, { error: 'You have used all ' + cap + ' AI video clips for this month.', left: 0 });
             const prompt = String(b.prompt || '').trim().slice(0, 1500); if (!prompt) return send(res, 400, { error: 'Describe the scene.' });
             const ratio = ['9:16', '16:9', '1:1'].includes(b.ratio) ? b.ratio : '9:16';
@@ -243,15 +248,15 @@ function makeHandler(users, opt = {}) {
         }
         if (req.url.startsWith('/pay/order')) {
           if (!env.RAZORPAY_KEY_ID && !opt.createOrder) return send(res, 503, { error: 'Payments are not set up on the server yet (add the Razorpay keys in Render).' });
-          let o; try { o = await createOrder(price, 'ed_' + sha(key).slice(0, 12) + '_' + now()); } catch (e) { console.error(e.message); return send(res, 502, { error: 'Razorpay refused the order: ' + e.message }); }
-          await users.updateOne({ _id: key }, { $addToSet: { orders: o.id } });
-          return send(res, 200, { ok: 1, orderId: o.id, amount: price, currency: 'INR', keyId: env.RAZORPAY_KEY_ID || '' });
+          let o; try { const pl = planOf(b.plan); o = await createOrder(pl.paise, 'ed_' + sha(key).slice(0, 12) + '_' + now()); o.__plan = pl.id; } catch (e) { console.error(e.message); return send(res, 502, { error: 'Razorpay refused the order: ' + e.message }); }
+          await users.updateOne({ _id: key }, { $addToSet: { orders: o.id }, $set: { ['plan_' + o.id]: o.__plan } });
+          return send(res, 200, { ok: 1, orderId: o.id, amount: planOf(b.plan).paise, currency: 'INR', keyId: env.RAZORPAY_KEY_ID || '' });
         }
         if (req.url.startsWith('/pay/link')) {
           if (!env.RAZORPAY_KEY_ID && !opt.createLink) return send(res, 503, { error: 'Payments are not set up on the server yet (add the Razorpay keys in Render).' });
           const cust = d.kind === 'phone' ? { contact: '+' + key.replace(/\D/g, '') } : { email: key };
-          let L; try { L = await createLink(price, 'ed' + sha(key).slice(0, 10) + now().toString(36), cust, { user: key }); } catch (e) { console.error(e.message); return send(res, 502, { error: 'Razorpay refused the payment page: ' + e.message }); }
-          await users.updateOne({ _id: key }, { $addToSet: { links: L.id } });
+          let L; try { const pl = planOf(b.plan); L = await createLink(pl.paise, 'ed' + sha(key).slice(0, 10) + now().toString(36), cust, { user: key, plan: pl.id }); L.__plan = pl.id; } catch (e) { console.error(e.message); return send(res, 502, { error: 'Razorpay refused the payment page: ' + e.message }); }
+          await users.updateOne({ _id: key }, { $addToSet: { links: L.id }, $set: { ['plan_' + L.id]: L.__plan } });
           return send(res, 200, { ok: 1, url: L.short_url, id: L.id });
         }
         if (req.url.startsWith('/pay/verify')) {
@@ -260,8 +265,8 @@ function makeHandler(users, opt = {}) {
           if (!oid || !pid || !same(want, sig)) return send(res, 400, { error: 'Payment could not be verified' });
           if (!(d.orders || []).includes(oid)) return send(res, 400, { error: 'Unknown order' });
           if ((d.paid || []).includes(pid)) return send(res, 200, { ok: 1, ...info(d, key) });
-          const until = await grant(key, d, { paid: pid });
-          return send(res, 200, { ok: 1, pro: true, until });
+          const until = await grant(key, d, { paid: pid }, planOf(d['plan_' + oid]).days);
+          return send(res, 200, { ok: 1, pro: true, until, ...info(d, key) });
         }
         return send(res, 404, { error: 'Not found' });
       }
