@@ -16,3 +16,7 @@
 
 ## Tested / not tested
 Tested in a desktop browser engine with mocked services: wheel zoom (selected layer only, limits, undo, keyframes, text, native off), plan picker and the plan sent to the server, server plan grants and expiry at 180 days, OTP-free account rules, plus the full earlier regression. Not tested: a real touchpad, a real phone, and a real Razorpay payment.
+
+## Update (same v1.5): menu scroll + Vasukgp856 Pro off
+- The side menu now scrolls, so **Log out** is always reachable on short web windows. (It was just below the visible area.)
+- Pro on `Vasukgp856@gmail.com` is cleared once, on the server, the next time that account opens the app. Later real payments for it work normally. Redeploy Render for this.

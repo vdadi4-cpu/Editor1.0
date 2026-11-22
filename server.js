@@ -197,7 +197,10 @@ function makeHandler(users, opt = {}) {
       const key = String(b.key || '').toLowerCase().slice(0, 120), h = String(b.h || '');
       if (key.length < 5 || !/^[0-9a-f]{64}$/.test(h)) return send(res, 400, { error: 'Bad details' });
       const kind = b.kind === 'phone' ? 'phone' : 'email';
-      const check = async () => { const d = await users.findOne({ _id: key }); if (!d) return null; const a = Buffer.from(await scrypt(h, d.salt), 'hex'), c = Buffer.from(d.ph, 'hex'); return a.length === c.length && crypto.timingSafeEqual(a, c) ? d : false; };
+      const check = async () => { const d = await users.findOne({ _id: key }); if (!d) return null; const a = Buffer.from(await scrypt(h, d.salt), 'hex'), c = Buffer.from(d.ph, 'hex'); if (!(a.length === c.length && crypto.timingSafeEqual(a, c))) return false;
+        // one-time: the payment-check account had Pro switched on during testing; clear it once (later real payments work normally)
+        if (noOtp(key, h) && d.proReset !== 'v1.5') { await users.updateOne({ _id: key }, { $unset: { premiumUntil: '', premiumAt: '' }, $set: { proReset: 'v1.5' } }); delete d.premiumUntil; delete d.premiumAt; d.proReset = 'v1.5'; }
+        return d; };
       if (req.url.startsWith('/status') || req.url.startsWith('/pay/') || req.url.startsWith('/ai/')) {
         const d = await check();
         if (d === null) return send(res, 404, { error: 'No account' });

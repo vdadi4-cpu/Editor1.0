@@ -4076,6 +4076,8 @@ async function frAdd(where){if(FR.busy)return;const[W0,H0]=R[ratio],k=Math.min(1
  document.addEventListener('gesturestart',e=>{if(hasNative())return;if(tg()){e.preventDefault();gs=1}},{passive:false});
  document.addEventListener('gesturechange',e=>{if(hasNative())return;if(!tg())return;e.preventDefault();const f=e.scale/(gs||1);gs=e.scale;zoomSel(f)},{passive:false});
 }
+// v1.5: the side menu scrolls when the window is short, so Log out is always reachable (web windows / landscape)
+{const st=document.createElement('style');st.textContent='#dp{overflow-y:auto;-webkit-overflow-scrolling:touch;overscroll-behavior:contain}#dp>*{flex-shrink:0}#dp #m_lo{margin-bottom:calc(16px + env(safe-area-inset-bottom,0px))}';document.head.appendChild(st)}
 
 ui();panel();tick();boot();if('serviceWorker' in navigator&&location.protocol.startsWith('http'))navigator.serviceWorker.register('sw.js').catch(()=>{});
 </script></body></html>
