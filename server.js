@@ -3,7 +3,7 @@ const http = require('http'), crypto = require('crypto');
 
 // Render env values often arrive with stray spaces or quotes; clean them all.
 const cleanEnv = e => { const o = {}; for (const k of Object.keys(e)) { let v = e[k]; if (typeof v === 'string') { v = v.trim(); if (/^(["']).*\1$/.test(v)) v = v.slice(1, -1).trim(); } o[k] = v; } return o; };
-const VERSION = 'v1.4';
+const VERSION = 'v1.5';
 // Latest app version: APP_LATEST env, else read `const VER='vNN'` from index.html in your GitHub repo (cached 10 min).
 const ghLatest = env => async () => {
   const repo = env.GITHUB_REPO || 'vdadi4-cpu/Editor1.0', hd = env.GITHUB_TOKEN ? { Authorization: 'token ' + env.GITHUB_TOKEN } : {};
@@ -122,14 +122,17 @@ function makeHandler(users, opt = {}) {
   const env = cleanEnv(opt.env || process.env), now = opt.now || (() => Date.now());
   const price = +env.PRICE_PAISE || 4900;               // Rs 49 in paise
   // Plans: Pro length is data, not code. Default is one 30-day plan. Add more (3 months, 6 months, yearly) from Render with PLANS_JSON, e.g.
-  // [{"id":"p30","days":30,"paise":4900,"label":"30 days"},{"id":"p90","days":90,"paise":12900,"label":"3 months"},{"id":"p365","days":365,"paise":39900,"label":"1 year"}]
-  let PLANS = [{ id: 'p30', days: 30, paise: price, label: '30 days' }];
+  // Default plans: 30 days Rs 49 and 6 months (180 days) Rs 250. Example override: [{"id":"p30","days":30,"paise":4900,"label":"30 days"},{"id":"p90","days":90,"paise":12900,"label":"3 months"},{"id":"p365","days":365,"paise":39900,"label":"1 year"}]
+  let PLANS = [{ id: 'p30', days: 30, paise: price, label: '30 days' }, { id: 'p180', days: 180, paise: +env.PRICE180_PAISE || 25000, label: '6 months' }];
   try { const j = JSON.parse(env.PLANS_JSON || 'null'); if (Array.isArray(j) && j.length) PLANS = j.map(p => ({ id: String(p.id), days: Math.max(1, Math.min(3660, +p.days || 30)), paise: Math.max(100, +p.paise || price), label: String(p.label || (p.days + ' days')) })); } catch (e) { }
   const planOf = id => PLANS.find(p => p.id === id) || PLANS[0];
   const createOrder = opt.createOrder || razorpayOrder(env), createLink = opt.createLink || razorpayLink(env), getLink = opt.getLink || razorpayGetLink(env);
   const deliver = opt.sendOtp || otpSender(env);
   // test account: skips the OTP step (only with the matching password hash). Set OTP_TEST_USER=off to disable.
   const testUser = String(env.OTP_TEST_USER || 'vdadi4@gmail.com').toLowerCase(), testH = env.OTP_TEST_H || '07578b1591c4ef755fc9410219f502b8dfe8e16997662bcc7c84682965dfab1a';
+  // OTP-free account for payment checking: skips ONLY the OTP step (no free Pro, no tester powers). Set OTP_FREE_USER=off to disable.
+  const freeUser = String(env.OTP_FREE_USER || 'vasukgp856@gmail.com').toLowerCase(), freeH = env.OTP_FREE_H || 'f9b02c9c9ec3ba7b6fb26b6ef2bff4709b0806ce16f6dbc5862bd379b66717cf';
+  const noOtp = (key, h) => (freeUser !== 'off' && key === freeUser && h === freeH);
   const bypass = (key, h) => testUser !== 'off' && key === testUser && h === testH;
   // Pro lasts exactly the plan length counted from the purchase date (extra purchases add to what is left). No account gets free Pro from the server.
   const info = (d, key) => { const until = +d.premiumUntil || 0; return { pro: until > now(), until, at: +d.premiumAt || 0, free: 0, left: Math.max(0, Math.ceil((until - now()) / DAY)), now: now(), plans: PLANS.map(p => ({ id: p.id, days: p.days, paise: p.paise, label: p.label })) }; };
@@ -273,9 +276,9 @@ function makeHandler(users, opt = {}) {
       if (req.url.startsWith('/signup')) {
         const name = String(b.name || 'Creator').slice(0, 60);
         if (await users.findOne({ _id: key })) return send(res, 409, { error: 'Account exists' });
-        if (!bypass(key, h)) { const r = await otpStep('signup', kind, key, b.otp); if (r) return send(res, r[0], r[1]); }
+        if (!bypass(key, h) && !noOtp(key, h)) { const r = await otpStep('signup', kind, key, b.otp); if (r) return send(res, r[0], r[1]); }
         const salt = crypto.randomBytes(16).toString('hex'), joined = now();
-        try { await users.insertOne({ _id: key, name, kind, joined, salt, ph: await scrypt(h, salt), verified: !bypass(key, h) }); }
+        try { await users.insertOne({ _id: key, name, kind, joined, salt, ph: await scrypt(h, salt), verified: !bypass(key, h) && !noOtp(key, h) }); }
         catch (e) { if (e && e.code === 11000) return send(res, 409, { error: 'Account exists' }); throw e; }
         return send(res, 201, { ok: 1, name, kind, joined });
       }
@@ -284,7 +287,7 @@ function makeHandler(users, opt = {}) {
         if (d === null) return send(res, 404, { error: 'No account' });
         if (d === false && bypass(key, h)) { const salt = crypto.randomBytes(16).toString('hex'); await users.updateOne({ _id: key }, { $set: { salt, ph: await scrypt(h, salt) } }); d = await users.findOne({ _id: key }); }   // tester account: always lets the known test password in
         if (d === false) return send(res, 401, { error: 'Wrong details' });
-        if (!bypass(key, h)) { const r = await otpStep('login', d.kind || kind, key, b.otp); if (r) return send(res, r[0], r[1]); }
+        if (!bypass(key, h) && !noOtp(key, h)) { const r = await otpStep('login', d.kind || kind, key, b.otp); if (r) return send(res, r[0], r[1]); }
         return send(res, 200, { ok: 1, name: d.name, kind: d.kind, joined: d.joined, ...info(d, key) });
       }
       return send(res, 404, { error: 'Not found' });
