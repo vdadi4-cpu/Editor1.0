@@ -20,3 +20,7 @@ Tested in a desktop browser engine with mocked services: wheel zoom (selected la
 ## Update (same v1.5): menu scroll + Vasukgp856 Pro off
 - The side menu now scrolls, so **Log out** is always reachable on short web windows. (It was just below the visible area.)
 - Pro on `Vasukgp856@gmail.com` is cleared once, on the server, the next time that account opens the app. Later real payments for it work normally. Redeploy Render for this.
+
+## Update 3 (same v1.5): music search hidden for Razorpay review
+- The Music tab no longer shows **Search music on the web** or the language chips (Telugu, Hindi, …). Import music, Extract audio, Own sound, Create music and Saved music are unchanged.
+- Nothing was deleted. In `index.html` find `const MUSIC_SEARCH_ON=false;` and change it to `true` to bring the search and languages back.
