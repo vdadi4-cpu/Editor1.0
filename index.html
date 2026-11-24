@@ -252,7 +252,7 @@ body.pnbig #tl{height:84px!important}
 .stkg{max-height:34vh;overflow-y:auto}
 body.pnbig.tall #tw{height:190px}body.pnbig.tall #tl{height:190px!important}body.pnbig.tall #pn{height:24vh}
 </style></head><body>
-<header><div style="display:flex;align-items:center;gap:8px"><button id="mn" aria-label="Menu">☰</button><h1>Editor</h1><span class="mu" style="margin:0;font-size:11px">v1.5</span></div><div style="display:flex;gap:6px"><button id="un">Undo</button><button class="ac" id="ex">Export</button></div></header>
+<header><div style="display:flex;align-items:center;gap:8px"><button id="mn" aria-label="Menu">☰</button><h1>Editor</h1><span class="mu" style="margin:0;font-size:11px">v1.6</span></div><div style="display:flex;gap:6px"><button id="un">Undo</button><button class="ac" id="ex">Export</button></div></header>
 <div id="stage"><canvas id="cv"></canvas><div id="fsc"><button id="fsp" class="ac">Play</button><span id="fst"></span><button id="fsx">Exit</button></div>
 <div id="empty"><div style="font-size:18px;font-weight:700">Start a new project</div><div class="mu">Pick one or more videos from your device.</div><button class="ac" id="ad0">Add videos</button></div></div>
 <div class="row"><button id="pl" class="ac" style="min-width:74px">Play</button><button id="pv">Preview</button><div id="tm">00:00.0 / 00:00.0</div><button id="zo">−</button><button id="zi">+</button></div>
@@ -310,7 +310,7 @@ function mask(m,W,H,s){const r=Math.min(W,H)*s/2,X=W/2,Y=H/2,P=cx;P.beginPath();
 if(m=='circle')P.arc(X,Y,r,0,7);else if(m=='ellipse')P.ellipse(X,Y,W*s/2,H*s/2,0,0,7);else if(m=='box')P.rect(X-r,Y-r*.7,r*2,r*1.4);else if(m=='line')P.rect(-W,Y-4*H,3*W,4*H);else if(m=='mirror')P.rect(-W,Y-r*.5,3*W,r);
 else if(m=='heart'){P.moveTo(X,Y+r*.9);P.bezierCurveTo(X-r*1.6,Y-r*.2,X-r*.7,Y-r*1.2,X,Y-r*.4);P.bezierCurveTo(X+r*.7,Y-r*1.2,X+r*1.6,Y-r*.2,X,Y+r*.9)}
 else if(m=='star'){for(let i=0;i<10;i++){const a=-Math.PI/2+i*Math.PI/5,q=i%2?r*.45:r;P[i?'lineTo':'moveTo'](X+q*Math.cos(a),Y+q*Math.sin(a))}P.closePath()}}
-const VER='v1.5',LS=makeLS(),uid=()=>Math.random().toString(36).slice(2,9)+Date.now().toString(36);
+const VER='v1.6',LS=makeLS(),uid=()=>Math.random().toString(36).slice(2,9)+Date.now().toString(36);
 let me=null,pid=null,pname='Untitled',pst='pending',saveT,mus=null,progUntil=0,ESon=false,ES=720,EF=30,EFm='mp4',scrN='',pfI,lm='in',lk='email',an,mg,duck=1;
 const RES=[['480p',480],['720p HD',720],['1080p FHD',1080],['2K',1440],['4K',2160]],OWN=()=>me||'guest';
 const SW=['#ffffff','#0b0f19','#ff5c7a','#ff8a5c','#ffc857','#ffe66d','#b8f55b','#3ddc97','#2ee6a6','#22d3ee','#4da3ff','#6c7bff','#8b5cf6','#c084fc','#f472b6','#fb7185','#f97316','#eab308','#84cc16','#14b8a6','#0ea5e9','#6366f1','#a3a3a3','#525252'];
@@ -4012,38 +4012,48 @@ function frCells(shape,w,h,N,seed,gap,round){const r=rng(seed),C=[],A=w*h;
  else if(shape=='hex'){const rd=Math.sqrt(A/(N*2.598)),dx=rd*1.732,k=Math.max(.3,1-gap/rd);for(let j=0,y=0;y<h+rd;y+=rd*1.5,j++)for(let x=(j%2?dx/2:0);x<w+dx;x+=dx){const Q=[0,1,2,3,4,5].map(i=>[x+Math.cos(i*Math.PI/3+Math.PI/6)*rd*k,y+Math.sin(i*Math.PI/3+Math.PI/6)*rd*k]);add(g=>poly(g,Q),[x-dx/2,y-rd,dx,rd*2])}}
  else if(shape=='diamond'){const d=Math.sqrt(A/(N*2)),k=Math.max(.3,1-gap/d);for(let j=0,y=0;y<h+d;y+=d,j++)for(let x=(j%2?d:0);x<w+d;x+=d*2){const Q=[[x,y-d*k],[x+d*k,y],[x,y+d*k],[x-d*k,y]];add(g=>poly(g,Q),[x-d,y-d,d*2,d*2])}}
  return C}
-function frCover(g,im,bb){const iw=im.width||im.naturalWidth,ih=im.height||im.naturalHeight;if(!iw)return;const s=Math.max(bb[2]/iw,bb[3]/ih),w=iw*s,h=ih*s;g.drawImage(im,bb[0]+(bb[2]-w)/2,bb[1]+(bb[3]-h)/2,w,h)}
+function frCover(g,im,bb,a){const iw=im.width||im.naturalWidth,ih=im.height||im.naturalHeight;if(!iw)return;a=a||{};const z=Math.max(.2,Math.min(5,a.z||1)),s0=Math.max(bb[2]/iw,bb[3]/ih),s=s0*z,w=iw*s,h=ih*s,mx=Math.abs(w-bb[2])/2,my=Math.abs(h-bb[3])/2,ox=Math.max(-mx,Math.min(mx,(a.x||0)*bb[2])),oy=Math.max(-my,Math.min(my,(a.y||0)*bb[3]));
+ if(w<bb[2]-.5||h<bb[3]-.5){const w0=iw*s0*1.15,h0=ih*s0*1.15;try{g.save();if('filter' in g)g.filter='blur('+Math.max(2,Math.min(bb[2],bb[3])/22)+'px) brightness(.7)';else g.globalAlpha=.55;g.drawImage(im,bb[0]+(bb[2]-w0)/2,bb[1]+(bb[3]-h0)/2,w0,h0);g.restore()}catch(_){}}
+ g.drawImage(im,bb[0]+(bb[2]-w)/2+ox,bb[1]+(bb[3]-h)/2+oy,w,h)}
+// v1.6: per-box photo, zoom and position. FR.cs[i]={p:photo index,z:zoom,x,y (fractions of the box)}
+Object.assign(FR,{cs:{},sel:-1,swap:0});
+const frCs=i=>{const k=FR.cs[i]||{};return{p:k.p!=null?k.p:i%Math.max(1,FR.imgs.length),z:k.z||1,x:k.x||0,y:k.y||0}};
+function frPath(gg,c,gap){let bb;gg.beginPath();if(c.sq){const[x,y,w,h,r]=c.sq;rr(gg,x,y,w,h,r||0);bb=[x,y,w,h]}else if(c.ci){gg.arc(c.ci[0],c.ci[1],c.ci[2],0,7);bb=[c.ci[0]-c.ci[2],c.ci[1]-c.ci[2],c.ci[2]*2,c.ci[2]*2]}else if(c.tri){poly(gg,c.tri);const xs=c.tri.map(p=>p[0]),ys=c.tri.map(p=>p[1]);bb=[Math.min(...xs),Math.min(...ys),Math.max(...xs)-Math.min(...xs),Math.max(...ys)-Math.min(...ys)]}else if(c.hex){const[x,y,r]=c.hex,P=[0,1,2,3,4,5].map(j=>[x+Math.cos(j*Math.PI/3+Math.PI/6)*(r-gap/2),y+Math.sin(j*Math.PI/3+Math.PI/6)*(r-gap/2)]);poly(gg,P);bb=[x-r,y-r,r*2,r*2]}return bb}
+function frHit(cv0,x,y){if(!cv0||!cv0.meta)return -1;const M=cv0.meta,t=document.createElement('canvas').getContext('2d');for(let k=M.length-1;k>=0;k--){const m=M[k];t.setTransform(1,0,0,1,m.ox,m.oy);m.P(t);t.setTransform(1,0,0,1,0,0);if(!t.isPointInPath(x,y))continue;if(M.md){const px=Math.round(x-m.ox),py=Math.round(y-m.oy);if(px<0||py<0||px>=M.ow||py>=M.oh||M.md[(py*M.ow+px)*4+3]<=100)continue}return m.i}return -1}
 const FRFIT=(a,aw,ah)=>aw/ah>a?{w:ah*a,h:ah}:{w:aw,h:aw/a};
 // draws the whole artwork onto a W x H canvas; imgs=null draws coloured placeholders
 function frRender(W,H,F,imgs,k){const cv0=document.createElement('canvas');cv0.width=W;cv0.height=H;const g=cv0.getContext('2d');g.fillStyle=F.bg;g.fillRect(0,0,W,H);
  const mg=Math.min(W,H)*.04,pa=F.fmt=='proj'?W/H:FRASP[F.fmt]||1,box=FRFIT(pa,W-mg*2,H-mg*2),bx=(W-box.w)/2,by=(H-box.h)/2;
  if(F.fmt!='proj'){g.fillStyle='rgba(0,0,0,.04)';g.fillRect(bx,by,box.w,box.h)}
  const def=FRM[F.frame]||FRC[F.frame],kk=k||W/540,o={lc:F.lcol&&F.lcol!='#ffffff'?F.lcol:(F.bg=='#ffffff'||/^#f/i.test(F.bg)?'#374151':'#e5e7eb'),lw:Math.max(1.5,(F.lw||2.5)*kk),seed:F.seed},ob=FRFIT(def.a,box.w*.96,box.h*.96),ox=bx+(box.w-ob.w)/2,oy=by+(box.h-ob.h)/2,ow=Math.round(ob.w),oh=Math.round(ob.h);
- const layer=document.createElement('canvas');layer.width=ow;layer.height=oh;const L=layer.getContext('2d'),gap=(F.gap||0)*kk,pick=i=>imgs&&imgs.length?imgs[i%imgs.length]:null;
- const fillCell=(i,bb)=>{const im=pick(i);if(im)frCover(L,im,bb);else{const q=L.createLinearGradient(bb[0],bb[1],bb[0]+bb[2],bb[1]+bb[3]);q.addColorStop(0,FRPAL[i%12]);q.addColorStop(1,FRPAL[(i+5)%12]);L.fillStyle=q;L.fillRect(bb[0],bb[1],bb[2],bb[3])}};
+ const meta=[];const layer=document.createElement('canvas');layer.width=ow;layer.height=oh;const L=layer.getContext('2d'),gap=(F.gap||0)*kk,pick=i=>{const k=F.cs&&F.cs[i];return imgs&&imgs.length?imgs[(k&&k.p!=null?k.p:i)%imgs.length]:null};
+ const fillCell=(i,bb)=>{const im=pick(i);if(im)frCover(L,im,bb,F.cs&&F.cs[i]);else{const q=L.createLinearGradient(bb[0],bb[1],bb[0]+bb[2],bb[1]+bb[3]);q.addColorStop(0,FRPAL[i%12]);q.addColorStop(1,FRPAL[(i+5)%12]);L.fillStyle=q;L.fillRect(bb[0],bb[1],bb[2],bb[3])}};
  const strokeIf=()=>{if(F.lw>0){L.strokeStyle=F.lcol;L.lineWidth=F.lw*kk;L.lineJoin='round';L.stroke()}};
- if(FRM[F.frame]){const mc=document.createElement('canvas');mc.width=ow;mc.height=oh;const m=mc.getContext('2d');m.fillStyle='#000';m.strokeStyle='#000';FRM[F.frame].mask(m,ow,oh);const md=m.getImageData(0,0,ow,oh).data,cov=bb=>{let n=0,t=0;for(let a=0;a<5;a++)for(let b=0;b<5;b++){const x=Math.min(ow-1,Math.max(0,Math.round(bb[0]+bb[2]*(a+.5)/5))),y=Math.min(oh-1,Math.max(0,Math.round(bb[1]+bb[3]*(b+.5)/5)));t++;if(md[(y*ow+x)*4+3]>100)n++}return n/t};
-  const cells=frCells(F.cell,ow,oh,Math.max(6,F.n),F.seed,gap,F.round/100);let i=0;cells.forEach(c=>{if(cov(c.bb)<.18)return;L.save();c.P(L);L.clip();fillCell(i++,c.bb);L.restore();if(F.lw>0){L.save();c.P(L);strokeIf();L.restore()}});
+ if(FRM[F.frame]){const mc=document.createElement('canvas');mc.width=ow;mc.height=oh;const m=mc.getContext('2d');m.fillStyle='#000';m.strokeStyle='#000';FRM[F.frame].mask(m,ow,oh);const md=m.getImageData(0,0,ow,oh).data;meta.md=md;meta.ow=ow;meta.oh=oh;const cov0=0,cov=bb=>{let n=0,t=0;for(let a=0;a<5;a++)for(let b=0;b<5;b++){const x=Math.min(ow-1,Math.max(0,Math.round(bb[0]+bb[2]*(a+.5)/5))),y=Math.min(oh-1,Math.max(0,Math.round(bb[1]+bb[3]*(b+.5)/5)));t++;if(md[(y*ow+x)*4+3]>100)n++}return n/t};
+  const cells=frCells(F.cell,ow,oh,Math.max(6,F.n),F.seed,gap,F.round/100);let i=0;cells.forEach(c=>{if(cov(c.bb)<.18)return;L.save();c.P(L);L.clip();meta.push({i,P:c.P,bb:c.bb,ox,oy});fillCell(i++,c.bb);L.restore();if(F.lw>0){L.save();c.P(L);strokeIf();L.restore()}});
   L.globalCompositeOperation='destination-in';L.drawImage(mc,0,0);L.globalCompositeOperation='source-over';if(F.frame=='camera'){L.strokeStyle=o.lc;L.lineWidth=o.lw*1.6;L.beginPath();L.arc(ow*.5,oh*.58,oh*.26,0,7);L.stroke()}g.drawImage(layer,ox,oy)}
  else{const D=FRC[F.frame],C=D.cells(ow,oh,o);const t2=document.createElement('canvas');t2.width=ow;t2.height=oh;const gg=t2.getContext('2d');if(D.under)D.under(gg,ow,oh,o);
-  C.forEach((c,i)=>{if(c.back)c.back(gg);gg.save();let bb;gg.beginPath();if(c.sq){const[x,y,w,h,r]=c.sq;rr(gg,x,y,w,h,r||0);bb=[x,y,w,h]}else if(c.ci){gg.arc(c.ci[0],c.ci[1],c.ci[2],0,7);bb=[c.ci[0]-c.ci[2],c.ci[1]-c.ci[2],c.ci[2]*2,c.ci[2]*2]}else if(c.tri){poly(gg,c.tri);const xs=c.tri.map(p=>p[0]),ys=c.tri.map(p=>p[1]);bb=[Math.min(...xs),Math.min(...ys),Math.max(...xs)-Math.min(...xs),Math.max(...ys)-Math.min(...ys)]}else if(c.hex){const[x,y,r]=c.hex,P=[0,1,2,3,4,5].map(j=>[x+Math.cos(j*Math.PI/3+Math.PI/6)*(r-gap/2),y+Math.sin(j*Math.PI/3+Math.PI/6)*(r-gap/2)]);poly(gg,P);bb=[x-r,y-r,r*2,r*2]}gg.clip();
+  C.forEach((c,i)=>{if(c.back)c.back(gg);gg.save();let bb=frPath(gg,c,gap);meta.push({i,P:G=>frPath(G,c,gap),bb,ox,oy});gg.clip();
    const sv=L;fillCellOn(gg,i,bb);gg.restore();if(F.lw>0){gg.save();gg.beginPath();if(c.sq)rr(gg,...c.sq);else if(c.ci)gg.arc(c.ci[0],c.ci[1],c.ci[2],0,7);else if(c.tri)poly(gg,c.tri);else if(c.hex){const[x,y,r]=c.hex;poly(gg,[0,1,2,3,4,5].map(j=>[x+Math.cos(j*Math.PI/3+Math.PI/6)*(r-gap/2),y+Math.sin(j*Math.PI/3+Math.PI/6)*(r-gap/2)]))}gg.strokeStyle=F.lcol;gg.lineWidth=F.lw*kk;gg.stroke();gg.restore()}});
-  if(D.over)D.over(gg,ow,oh,o);g.drawImage(t2,ox,oy);function fillCellOn(G,i,bb){const im=pick(i);if(im)frCover(G,im,bb);else{const q=G.createLinearGradient(bb[0],bb[1],bb[0]+bb[2],bb[1]+bb[3]);q.addColorStop(0,FRPAL[i%12]);q.addColorStop(1,FRPAL[(i+5)%12]);G.fillStyle=q;G.fillRect(bb[0],bb[1],bb[2],bb[3])}}}
- return cv0}
+  if(D.over)D.over(gg,ow,oh,o);g.drawImage(t2,ox,oy);function fillCellOn(G,i,bb){const im=pick(i);if(im)frCover(G,im,bb,F.cs&&F.cs[i]);else{const q=G.createLinearGradient(bb[0],bb[1],bb[0]+bb[2],bb[1]+bb[3]);q.addColorStop(0,FRPAL[i%12]);q.addColorStop(1,FRPAL[(i+5)%12]);G.fillStyle=q;G.fillRect(bb[0],bb[1],bb[2],bb[3])}}}
+ cv0.meta=meta;return cv0}
 const FRTC={};
 TD.frm=(g,w,h,a)=>{g.fillStyle='#232b3a';g.fillRect(0,0,w,h);let c=FRTC[a];if(!c){try{c=frRender(160,160,{...FR,frame:a,bg:'#232b3a',lcol:'#e5e7eb',lw:1,gap:3,n:18,fmt:'sq',round:0,cell:'rect'},null,.3)}catch(e){c=null}FRTC[a]=c}if(c)g.drawImage(c,6,6,w-12,h-12)};
 // --- panel ---
 const FRSL=(id,l,min,max,v,suf)=>`<label class="rw"><span>${l}</span><input type="range" data-frs="${id}" min="${min}" max="${max}" step="1" value="${v}"><output>${v}${suf||''}</output></label>`;
 function FRP(){const isM=!!FRM[FR.frame];let h=`<b class="sec">Frame</b>`+TG(FRALL().map(([k,n])=>TILE(`data-frk="${k}"`,'frm|'+k,n,FR.frame==k)).join(''))
  +`<b class="sec">Photos</b><div class="chips"><button class="ac" id="frph">${FR.imgs.length?'Add more photos':'Add photos'}</button>${FR.imgs.length?'<button id="frclr">Clear ('+FR.imgs.length+')</button>':''}<button id="frsh">🔀 Shuffle</button></div><p class="mu">${FR.busy?'Loading photos…':FR.imgs.length?FR.imgs.length+' photo(s). They fill every box of the frame, and repeat if there are more boxes than photos.':'Add your photos and they fill the frame automatically. Until then you see coloured boxes.'}</p>`
- +`<canvas id="frcv" style="width:100%;max-width:340px;display:block;margin:6px auto;border-radius:12px;background:#fff"></canvas>`
+ +`<canvas id="frcv" style="width:100%;max-width:340px;display:block;margin:6px auto;border-radius:12px;background:#fff"></canvas>${FR.imgs.length?'<div class="chips"><button class="ac" id="fred">✋ Adjust &amp; swap photos (full screen)</button></div><p class="mu">Open the big editor to move, zoom or swap the photo in each box.</p>':''}`
  +`<b class="sec">Format</b><div class="chips">${FRFMT.map(([k,l])=>`<button data-frf="${k}" class="${FR.fmt==k?'on':''}">${l}</button>`).join('')}</div>`
  +(isM?`<b class="sec">Box shape</b><div class="chips">${FRCELL.map(([k,l])=>`<button data-frc="${k}" class="${FR.cell==k?'on':''}">${l}</button>`).join('')}</div>`+FRSL('n','Number of boxes',6,80,FR.n):'')
  +FRSL('gap','Space between photos',0,30,FR.gap)+FRSL('lw','Separator line',0,10,FR.lw)+(isM&&(FR.cell=='rect'||FR.cell=='square')?FRSL('round','Rounded corners',0,50,FR.round,'%'):'')
  +`<div class="rw"><span>Line colour</span><input type="color" data-frcol="lcol" value="${FR.lcol}"></div><div class="rw"><span>Background</span><input type="color" data-frcol="bg" value="${FR.bg}"></div>`+FRSL('len','Length',2,20,FR.len,'s')
  +`<div class="chips"><button class="ac" data-fradd="start">Add to start</button><button data-fradd="here">Add here</button><button data-fradd="end">Add to end</button></div><p class="mu">${esc(FR.msg||'The finished design is added as one picture clip that you can still move, crop, animate or colour.')}</p>`;return h}
 {const _c=COLP;COLP=function(){return `<div class="chips seg"><button data-frm="0" class="${FR.on?'':'on'}">Layouts</button><button data-frm="1" class="${FR.on?'on':''}">Shapes &amp; frames ✨</button></div>`+(FR.on?FRP():_c())}}
-let frT=0;const frDraw=()=>{const cn=$('#frcv');if(!cn)return;const[W,H]=R[ratio],pw=Math.min(340,Math.round(($('#pn').clientWidth||340)-24)),s=pw/W;cn.width=Math.max(120,Math.round(W*s));cn.height=Math.max(120,Math.round(H*s));try{const c=frRender(cn.width,cn.height,FR,FR.imgs.length?FR.imgs:null,cn.width/540);cn.getContext('2d').drawImage(c,0,0)}catch(e){console.error(e)}};
+let frT=0;const frDraw=()=>{frDraw1($('#frcv'),0);frDraw1($('#fredcv'),1)};
+function frDraw1(cn,big){if(!cn)return;const[W,H]=R[ratio];let pw,s;if(big){pw=Math.min(560,innerWidth-24);s=pw/W;const mh=Math.max(260,Math.round(innerHeight*.5));if(H*s>mh)s=mh/H;cn.width=Math.max(120,Math.round(W*s));cn.height=Math.max(120,Math.round(H*s));cn.style.width=cn.width+'px';cn.style.height=cn.height+'px'}
+ else{pw=Math.min(340,Math.round(($('#pn').clientWidth||340)-24));s=pw/W;cn.width=Math.max(120,Math.round(W*s));cn.height=Math.max(120,Math.round(H*s))}
+ try{const c=frRender(cn.width,cn.height,FR,FR.imgs.length?FR.imgs:null,cn.width/540),x=cn.getContext('2d');x.drawImage(c,0,0);if(!big)return;FR.last=c;const m=FR.sel>=0&&c.meta.find(q=>q.i==FR.sel);if(m&&FR.imgs.length){x.save();x.setTransform(1,0,0,1,m.ox,m.oy);m.P(x);x.setTransform(1,0,0,1,0,0);x.lineWidth=Math.max(3,cn.width/120);x.strokeStyle=FR.swap?'#ff9f1c':'#5b6cff';x.stroke();x.lineWidth=1.2;x.strokeStyle='#fff';x.setLineDash([6,5]);x.stroke();x.restore()}}catch(e){console.error(e)}}
 const frSoon=()=>{clearTimeout(frT);frT=setTimeout(frDraw,60)};
 {const _h=panelHook;panelHook=function(){_h.apply(this,arguments);if($('#frcv'))frDraw()}}
 {const i=document.createElement('input');i.type='file';i.accept='image/*';i.multiple=true;i.hidden=true;i.id='ffr';document.body.appendChild(i);
@@ -4051,19 +4061,61 @@ const frSoon=()=>{clearTimeout(frT);frT=setTimeout(frDraw,60)};
 $('#pn').addEventListener('click',e=>{const b=e.target.closest('button');if(!b||tab!='col')return;const d=b.dataset;
  if(d.frm!==undefined){e.stopImmediatePropagation();FR.on=+d.frm;panel();return}
  if(!FR.on)return;
- if(d.frk){e.stopImmediatePropagation();FR.frame=d.frk;if(FRC[d.frk]&&!FR.lw)FR.lw=0;panel();return}
- if(d.frf){e.stopImmediatePropagation();FR.fmt=d.frf;panel();return}
- if(d.frc){e.stopImmediatePropagation();FR.cell=d.frc;panel();return}
+ if(d.frk){e.stopImmediatePropagation();FR.cs={};FR.sel=-1;FR.swap=0;FR.frame=d.frk;if(FRC[d.frk]&&!FR.lw)FR.lw=0;panel();return}
+ if(d.frf){e.stopImmediatePropagation();FR.cs={};FR.sel=-1;FR.swap=0;FR.fmt=d.frf;panel();return}
+ if(d.frc){e.stopImmediatePropagation();FR.cs={};FR.sel=-1;FR.swap=0;FR.cell=d.frc;panel();return}
  if(b.id=='frph'){e.stopImmediatePropagation();$('#ffr').click();return}
- if(b.id=='frclr'){e.stopImmediatePropagation();FR.imgs=[];FR.names=[];panel();return}
- if(b.id=='frsh'){e.stopImmediatePropagation();FR.seed=FR.seed%999+1;if(FR.imgs.length>1)FR.imgs.push(FR.imgs.shift());frDraw();return}
+ if(b.id=='frclr'){e.stopImmediatePropagation();FR.imgs=[];FR.names=[];FR.cs={};FR.sel=-1;FR.swap=0;panel();return}
+ if(b.id=='frsh'){e.stopImmediatePropagation();FR.seed=FR.seed%999+1;FR.cs={};FR.sel=-1;FR.swap=0;if(FR.imgs.length>1)FR.imgs.push(FR.imgs.shift());frDraw();return}
  if(d.fradd){e.stopImmediatePropagation();frAdd(d.fradd);return}},true);
-$('#pn').addEventListener('input',e=>{const el=e.target;if(tab!='col'||!FR.on)return;if(el.dataset.frs){FR[el.dataset.frs]=+el.value;const o=el.parentNode.querySelector('output');if(o)o.textContent=el.value+(el.dataset.frs=='round'?'%':el.dataset.frs=='len'?'s':'');if(el.dataset.frs!='len')frSoon()}else if(el.dataset.frcol){FR[el.dataset.frcol]=el.value;frSoon()}},true);
+$('#pn').addEventListener('input',e=>{const el=e.target;if(tab!='col'||!FR.on)return;if(el.dataset.frs){if(el.dataset.frs=='n'){FR.cs={};FR.sel=-1;FR.swap=0}FR[el.dataset.frs]=+el.value;const o=el.parentNode.querySelector('output');if(o)o.textContent=el.value+(el.dataset.frs=='round'?'%':el.dataset.frs=='len'?'s':'');if(el.dataset.frs!='len')frSoon()}else if(el.dataset.frcol){FR[el.dataset.frcol]=el.value;frSoon()}},true);
 async function frAdd(where){if(FR.busy)return;const[W0,H0]=R[ratio],k=Math.min(1,1600/Math.max(W0,H0)),W=Math.round(W0*k),H=Math.round(H0*k);FR.msg='Creating your design…';panel();await new Promise(r=>setTimeout(r,30));
  try{const c=frRender(W,H,FR,FR.imgs.length?FR.imgs:null,W/540),b=await new Promise(r=>c.toBlob(r,'image/jpeg',.92)),nm=(FRM[FR.frame]||FRC[FR.frame]).n+' photo art',f=new File([b],nm+'.jpg',{type:'image/jpeg'});
   snap();const clip=D({url:URL.createObjectURL(f),mid:keep(f),name:nm,dur:60,in:0,out:FR.len,img:true,sp:1,vol:0,f:{b:100,c:100,s:100,x:''},tr:{type:'none',d:.5}});
   if(!clips.length){clips.push(clip);sel=0;tmode='main';kfT=false;t=0;chg()}else insertMainAt([clip],where);
   FR.msg='Added “'+nm+'” '+(where=='here'?'at the yellow line':where=='start'?'at the start':'at the end')+'.';toast(FR.msg)}catch(e){FR.msg='Could not create the design: '+(e&&e.message||e)}panel()}
+
+// ===================== v1.6: adjust every photo inside the collage =====================
+// tap a box -> select it; drag = move the photo inside the box; pinch / slider / Ctrl+scroll = zoom that photo only; swap boxes; pick which photo goes in a box.
+function frSelUI(){if(!FR.imgs.length)return'';let h='<b class="sec">Adjust photos</b>';const i=FR.sel;
+ if(i==null||i<0)return h+'<p class="mu">Tap a box in the picture. Then drag to move the photo inside it, pinch or use the slider to zoom, or swap it with another box.</p>';
+ const a=frCs(i);
+ h+=`<p class="mu">Box ${i+1} selected${FR.swap?' · now tap the box to swap with':' · drag the photo, pinch to zoom'}</p><div class="rw"><span>Zoom</span><input type="range" data-frz="1" min="30" max="400" step="1" value="${Math.round(a.z*100)}"><output>${Math.round(a.z*100)}%</output></div>`
+  +`<div class="chips"><button id="frsw" class="${FR.swap?'on':''}">🔁 ${FR.swap?'Cancel swap':'Swap with another box'}</button><button id="frfit">Fit whole photo</button><button id="frfill">Fill box</button><button id="frrs">Reset box</button></div>`
+  +`<b class="sec">Photo in this box</b><div class="chips" style="flex-wrap:nowrap;overflow-x:auto">${FR.imgs.map((im,k)=>`<button data-frp="${k}" class="${a.p%FR.imgs.length==k?'on':''}" style="padding:3px;flex:0 0 auto"><canvas class="frth" data-k="${k}" width="56" height="56" style="width:56px;height:56px;border-radius:8px;display:block"></canvas></button>`).join('')}</div>`;return h}
+function frThumbs(){document.querySelectorAll('#fredsel .frth').forEach(c=>{const im=FR.imgs[+c.dataset.k];if(!im)return;const g=c.getContext('2d');g.clearRect(0,0,56,56);try{frCover(g,im,[0,0,56,56])}catch(_){}})}
+const frRefresh=()=>{const e=$('#fredsel');if(e){e.innerHTML=frSelUI();frThumbs()}frDraw()};
+function frEd(){if(!FR.imgs.length)return;scrN='fred';scr(`<div class="pg"><div class="row" style="padding:0"><button id="fredx">Done</button><b style="flex:1;text-align:center;font-size:18px">Adjust photos</b></div><canvas id="fredcv" style="display:block;margin:8px auto;border-radius:12px;background:#fff;touch-action:none"></canvas><div id="fredsel">${frSelUI()}</div><div style="height:calc(30px + env(safe-area-inset-bottom,0px))"></div></div>`);setTimeout(frRefresh,0)}
+$('#pn').addEventListener('click',e=>{const b=e.target.closest('button');if(b&&b.id=='fred'&&tab=='col'){e.stopImmediatePropagation();frEd()}},true);
+const frCell=i=>FR.last&&FR.last.meta.find(q=>q.i==i);
+const frSet=(i,o)=>{FR.cs[i]={...frCs(i),...o}};
+function frClamp(i){const m=frCell(i),a=frCs(i),im=FR.imgs[a.p%FR.imgs.length];if(!m||!im)return;const iw=im.width,ih=im.height,s=Math.max(m.bb[2]/iw,m.bb[3]/ih)*a.z,mx=Math.abs(iw*s-m.bb[2])/2/m.bb[2],my=Math.abs(ih*s-m.bb[3])/2/m.bb[3];frSet(i,{x:Math.max(-mx,Math.min(mx,a.x)),y:Math.max(-my,Math.min(my,a.y))})}
+function frZoom(i,z){frSet(i,{z:Math.max(.3,Math.min(4,z))});frClamp(i)}
+function frSwap(a,b){const A=frCs(a),B=frCs(b);FR.cs[a]=B;FR.cs[b]=A}
+let frRaf=0;const frLive=()=>{if(frRaf)return;frRaf=requestAnimationFrame(()=>{frRaf=0;frDraw()})};
+const FRI={ps:new Map(),drag:null,pinch:null};
+const frXY=(e,cn)=>{const r=cn.getBoundingClientRect();return[(e.clientX-r.left)*cn.width/r.width,(e.clientY-r.top)*cn.height/r.height]};
+$('#sc').addEventListener('pointerdown',e=>{if(scrN!='fred'||e.target.id!='fredcv'||!FR.imgs.length)return;const cn=e.target;FRI.ps.set(e.pointerId,[e.clientX,e.clientY]);try{cn.setPointerCapture(e.pointerId)}catch(_){}
+ if(FRI.ps.size==2&&FR.sel>=0){const[p,q]=[...FRI.ps.values()];FRI.pinch={d:Math.hypot(p[0]-q[0],p[1]-q[1])||1,z:frCs(FR.sel).z};FRI.drag=null;FRI.pinched=1;return}
+ const[x,y]=frXY(e,cn),i=frHit(FR.last,x,y);
+ if(FR.swap&&FR.sel>=0){if(i>=0&&i!=FR.sel){frSwap(FR.sel,i);FR.sel=i}FR.swap=0;frRefresh();return}
+ if(i<0){FRI.drag=null;FRI.tapOut=1;return}   // empty area: deselect only on release, so a pinch that starts there still zooms the selected box
+ const was=FR.sel==i;FR.sel=i;const a=frCs(i);FRI.drag={i,sx:e.clientX,sy:e.clientY,x0:a.x,y0:a.y,moved:0,was};if(!was)frRefresh();else frDraw()},true);
+$('#sc').addEventListener('pointermove',e=>{if(!FRI.ps.has(e.pointerId))return;FRI.ps.set(e.pointerId,[e.clientX,e.clientY]);const cn=$('#fredcv');if(!cn)return;
+ if(FRI.pinch&&FRI.ps.size>=2&&FR.sel>=0){const[p,q]=[...FRI.ps.values()],d=Math.hypot(p[0]-q[0],p[1]-q[1]);frZoom(FR.sel,FRI.pinch.z*d/FRI.pinch.d);frLive();const r=$('#fredsel [data-frz]');if(r){r.value=Math.round(frCs(FR.sel).z*100);const o=r.parentNode.querySelector('output');if(o)o.textContent=r.value+'%'}return}
+ const D=FRI.drag;if(!D)return;const m=frCell(D.i);if(!m)return;const r=cn.getBoundingClientRect(),k=cn.width/r.width,dx=(e.clientX-D.sx)*k,dy=(e.clientY-D.sy)*k;if(Math.hypot(dx,dy)>3)D.moved=1;
+ frSet(D.i,{x:D.x0+dx/m.bb[2],y:D.y0+dy/m.bb[3]});frClamp(D.i);frLive()},true);
+const frUp=e=>{if(!FRI.ps.has(e.pointerId))return;FRI.ps.delete(e.pointerId);if(FRI.ps.size<2)FRI.pinch=null;if(!FRI.ps.size){FRI.drag=null;if(FRI.tapOut&&!FRI.pinched)FR.sel=-1;FRI.tapOut=0;FRI.pinched=0;frRefresh()}};
+$('#sc').addEventListener('pointerup',frUp,true);$('#sc').addEventListener('pointercancel',frUp,true);
+$('#sc').addEventListener('wheel',e=>{if(scrN!='fred'||e.target.id!='fredcv'||FR.sel<0||!e.ctrlKey)return;e.preventDefault();frZoom(FR.sel,frCs(FR.sel).z*Math.exp(-e.deltaY*.01));frLive();clearTimeout(frRefresh.t);frRefresh.t=setTimeout(frRefresh,250)},{passive:false,capture:true});
+$('#sc').addEventListener('input',e=>{const el=e.target;if(scrN!='fred'||!el.dataset.frz||FR.sel<0)return;e.stopImmediatePropagation();frZoom(FR.sel,+el.value/100);const o=el.parentNode.querySelector('output');if(o)o.textContent=el.value+'%';frLive()},true);
+$('#sc').addEventListener('click',e=>{const b=e.target.closest('button');if(!b||scrN!='fred')return;const d=b.dataset,i=FR.sel;
+ if(b.id=='fredx'){e.stopImmediatePropagation();closeS();scrN='';panel();return}
+ if(b.id=='frsw'){e.stopImmediatePropagation();if(i>=0){FR.swap=FR.swap?0:1;frRefresh()}return}
+ if(b.id=='frrs'){e.stopImmediatePropagation();if(i>=0){FR.cs[i]={...frCs(i),z:1,x:0,y:0};frRefresh()}return}
+ if(b.id=='frfill'){e.stopImmediatePropagation();if(i>=0){frSet(i,{z:1});frClamp(i);frRefresh()}return}
+ if(b.id=='frfit'){e.stopImmediatePropagation();const m=frCell(i),im=m&&FR.imgs[frCs(i).p%FR.imgs.length];if(m&&im){const sc=Math.max(m.bb[2]/im.width,m.bb[3]/im.height),sf=Math.min(m.bb[2]/im.width,m.bb[3]/im.height);frSet(i,{z:sf/sc,x:0,y:0});frRefresh()}return}
+ if(d.frp!==undefined){e.stopImmediatePropagation();if(i<0)return;const p=+d.frp,cells=(FR.last&&FR.last.meta||[]).map(q=>q.i),j=cells.find(c=>c!=i&&frCs(c).p%FR.imgs.length==p);if(j!==undefined)frSwap(i,j);else FR.cs[i]={p,z:1,x:0,y:0};frRefresh();return}},true);
 // ===== v1.5: web only. Touchpad pinch (Ctrl+wheel) / Safari gesture zooms ONLY the selected layer, not the whole page. Mobile app untouched. =====
 {let gTimer=0,gOpen=0;
  const zoomSel=f=>{const T=tg();if(!T||T.hid)return false;
@@ -4074,7 +4126,7 @@ async function frAdd(where){if(FR.busy)return;const[W0,H0]=R[ratio],k=Math.min(1
   else T.sc=Math.max(.1,Math.min(5,(T.sc==null?1:T.sc)*f));
   try{draw()}catch(_){}return true};
  window.__zoomSel=zoomSel;
- document.addEventListener('wheel',e=>{if(hasNative()||!e.ctrlKey)return;const T=tg();if(!T||T.hid)return;e.preventDefault();zoomSel(Math.exp(-e.deltaY*0.01))},{passive:false,capture:true});
+ document.addEventListener('wheel',e=>{if(hasNative()||!e.ctrlKey)return;if(e.target&&(e.target.id=='frcv'||e.target.id=='fredcv'))return;const T=tg();if(!T||T.hid)return;e.preventDefault();zoomSel(Math.exp(-e.deltaY*0.01))},{passive:false,capture:true});
  let gs=1;
  document.addEventListener('gesturestart',e=>{if(hasNative())return;if(tg()){e.preventDefault();gs=1}},{passive:false});
  document.addEventListener('gesturechange',e=>{if(hasNative())return;if(!tg())return;e.preventDefault();const f=e.scale/(gs||1);gs=e.scale;zoomSel(f)},{passive:false});
