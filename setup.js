@@ -4,7 +4,7 @@ const KS='/u3+7QAAAAIAAAABAAAAAQAPYW5kcm9pZGRlYnVna2V5AAABoW5TsYMAAAT/MIIE+zAMBg
 const d=path.join(os.homedir(),'.android');fs.mkdirSync(d,{recursive:true});
 fs.writeFileSync(path.join(d,'debug.keystore'),Buffer.from(KS,'base64'));
 const g='android/app/build.gradle';
-if(fs.existsSync(g)){let s=fs.readFileSync(g,'utf8');s=s.replace(/versionCode\s+\d+/,'versionCode '+Math.floor(Date.now()/60000));fs.writeFileSync(g,s);console.log('versionCode updated')}
+if(fs.existsSync(g)){let s=fs.readFileSync(g,'utf8');s=s.replace(/versionCode\s+\d+/,'versionCode '+Math.floor(Date.now()/60000));s=s.replace(/versionName\s+"[^"]*"/,'versionName "1.6"');fs.writeFileSync(g,s);console.log('versionCode updated, versionName 1.6')}
 const appId=JSON.parse(fs.readFileSync('capacitor.config.json','utf8')).appId;
 const dir=path.join('android/app/src/main/java',...appId.split('.'));
 if(fs.existsSync(dir)&&!fs.existsSync('no-native.txt')){

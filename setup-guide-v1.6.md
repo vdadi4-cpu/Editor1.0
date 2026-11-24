@@ -24,3 +24,10 @@ Tested in a desktop browser engine: select, zoom, drag, swap, photo choice, fit,
   - **Send behind main video / Bring in front of main video** puts the overlay behind or in front of the main layer (the collage). Behind the main video it only shows through transparent parts of the main layer.
 - In **Collage → Shapes & frames** there is a new **Transparent** button next to Background. The collage is then added as a transparent PNG, so an overlay sent behind it shows through the empty parts (a photo or video behind the heart, for example).
 - Preview and Export use the same order. Undo works for each change. Mobile and web behave the same.
+
+## Update (final v1.6): payments, plan colour, checks
+- **Plan picker:** the selected plan now has a light tint with a blue border, so the text is clearly readable.
+- **Android app:** tapping Subscribe goes straight to the Razorpay payment page (no method list, no pop-up checkout). The web version still offers UPI app, card, net banking, wallets and the payment page. Pro unlocks automatically when you return to the app, or tap "I already paid".
+- Fixed the run-together text "payments: liveEach payment adds…" at the bottom of the Pro screen.
+- **Version:** v1.6 everywhere. The app's Android version name is set to 1.6 in `setup.js` and the version code rises on each build.
+- **AAB:** see `aab-guide-v1.6.md`.
