@@ -32,6 +32,10 @@ jobs:
           mkdir -p www
           cp index.html manifest.webmanifest sw.js icon-192.png icon-512.png www/
           sed -i 's/env(safe-area-inset-top,0px)/var(--safe-area-inset-top,env(safe-area-inset-top,0px))/g; s/env(safe-area-inset-bottom,0px)/var(--safe-area-inset-bottom,env(safe-area-inset-bottom,0px))/g' www/index.html
+      - name: Use the Google Play package name for this build only
+        run: |
+          sed -i 's/"appId": *"[^"]*"/"appId": "com.editor_v.myapp"/' capacitor.config.json
+          grep appId capacitor.config.json
       - name: Use Capacitor 8 for this build only
         run: |
           node -e "const fs=require('fs');const p=JSON.parse(fs.readFileSync('package.json','utf8'));for(const k of ['dependencies','devDependencies'])for(const n in p[k]||{})if(n.startsWith('@capacitor/'))p[k][n]='^8.0.0';fs.writeFileSync('package.json',JSON.stringify(p,null,2))"
