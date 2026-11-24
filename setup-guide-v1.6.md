@@ -17,3 +17,10 @@ Open **Collage → Shapes & frames ✨**, add your photos, then tap **✋ Adjust
 
 ## Tested / not tested
 Tested in a desktop browser engine: select, zoom, drag, swap, photo choice, fit, reset, Ctrl+scroll and two-finger pinch (simulated pointer events) on mask frames (Heart, Star) and cell frames (Honeycomb), the exported picture using the adjustments, plus the full earlier regression. Not tested: real fingers on a phone. If dragging feels too sensitive or slow on your phone, tell me and I will tune it.
+
+## Update (same v1.6): Layer order for overlays
+- Select an overlay, open **Transform** (or **Layers**) and use the new **Layer order** card:
+  - **⬆ Bring forward / ⬇ Send backward** change the order between overlays that are on screen at the same time.
+  - **Send behind main video / Bring in front of main video** puts the overlay behind or in front of the main layer (the collage). Behind the main video it only shows through transparent parts of the main layer.
+- In **Collage → Shapes & frames** there is a new **Transparent** button next to Background. The collage is then added as a transparent PNG, so an overlay sent behind it shows through the empty parts (a photo or video behind the heart, for example).
+- Preview and Export use the same order. Undo works for each change. Mobile and web behave the same.

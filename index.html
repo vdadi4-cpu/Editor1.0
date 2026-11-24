@@ -3012,7 +3012,7 @@ cv.style.touchAction='none';
   if(e.pointerType=='mouse'){try{PT2.clear()}catch(_){}pz2=null;dg2=null}      // a mouse is a single pointer: never inherit a stale touch/pinch state
   if(e.button===0&&!window.EYE&&!window.EYEK&&tab!='tmk'&&!kfT&&!(tmode=='ov'&&ovs[selO])&&!playing){    // nothing selected: click an overlay to select it, then drag it
     const[px,py]=cpos(e),asp=cv.width/cv.height;let hit=null;
-    activeOvs().map((o,i)=>[o,i]).sort((a,b)=>(b[0].lane||0)-(a[0].lane||0)||b[1]-a[1]).some(([o])=>{const k=kv(o,lt(o)),hw=(k.s||o.sc||.5)*.5,hh=hw*asp*(o.img?1:.56);if(Math.abs(px-.5-(k.x||0))<=hw&&Math.abs(py-.5-(k.y||0))<=Math.max(hh,.12)){hit=o;return true}return false});
+    activeOvs().map((o,i)=>[o,i]).sort((a,b)=>((a[0].back?1:0)-(b[0].back?1:0))||ovZ(b[0])-ovZ(a[0])||b[1]-a[1]).some(([o])=>{const k=kv(o,lt(o)),hw=(k.s||o.sc||.5)*.5,hh=hw*asp*(o.img?1:.56);if(Math.abs(px-.5-(k.x||0))<=hw&&Math.abs(py-.5-(k.y||0))<=Math.max(hh,.12)){hit=o;return true}return false});
     if(hit){selO=ovs.indexOf(hit);tmode='ov';kfT=false;ui();panel()}}
   return prev.call(this,e)}}
 
@@ -4022,9 +4022,9 @@ function frPath(gg,c,gap){let bb;gg.beginPath();if(c.sq){const[x,y,w,h,r]=c.sq;r
 function frHit(cv0,x,y){if(!cv0||!cv0.meta)return -1;const M=cv0.meta,t=document.createElement('canvas').getContext('2d');for(let k=M.length-1;k>=0;k--){const m=M[k];t.setTransform(1,0,0,1,m.ox,m.oy);m.P(t);t.setTransform(1,0,0,1,0,0);if(!t.isPointInPath(x,y))continue;if(M.md){const px=Math.round(x-m.ox),py=Math.round(y-m.oy);if(px<0||py<0||px>=M.ow||py>=M.oh||M.md[(py*M.ow+px)*4+3]<=100)continue}return m.i}return -1}
 const FRFIT=(a,aw,ah)=>aw/ah>a?{w:ah*a,h:ah}:{w:aw,h:aw/a};
 // draws the whole artwork onto a W x H canvas; imgs=null draws coloured placeholders
-function frRender(W,H,F,imgs,k){const cv0=document.createElement('canvas');cv0.width=W;cv0.height=H;const g=cv0.getContext('2d');g.fillStyle=F.bg;g.fillRect(0,0,W,H);
+function frRender(W,H,F,imgs,k){const cv0=document.createElement('canvas');cv0.width=W;cv0.height=H;const g=cv0.getContext('2d');if(!F.tbg){g.fillStyle=F.bg;g.fillRect(0,0,W,H)}
  const mg=Math.min(W,H)*.04,pa=F.fmt=='proj'?W/H:FRASP[F.fmt]||1,box=FRFIT(pa,W-mg*2,H-mg*2),bx=(W-box.w)/2,by=(H-box.h)/2;
- if(F.fmt!='proj'){g.fillStyle='rgba(0,0,0,.04)';g.fillRect(bx,by,box.w,box.h)}
+ if(F.fmt!='proj'&&!F.tbg){g.fillStyle='rgba(0,0,0,.04)';g.fillRect(bx,by,box.w,box.h)}
  const def=FRM[F.frame]||FRC[F.frame],kk=k||W/540,o={lc:F.lcol&&F.lcol!='#ffffff'?F.lcol:(F.bg=='#ffffff'||/^#f/i.test(F.bg)?'#374151':'#e5e7eb'),lw:Math.max(1.5,(F.lw||2.5)*kk),seed:F.seed},ob=FRFIT(def.a,box.w*.96,box.h*.96),ox=bx+(box.w-ob.w)/2,oy=by+(box.h-ob.h)/2,ow=Math.round(ob.w),oh=Math.round(ob.h);
  const meta=[];const layer=document.createElement('canvas');layer.width=ow;layer.height=oh;const L=layer.getContext('2d'),gap=(F.gap||0)*kk,pick=i=>{const k=F.cs&&F.cs[i];return imgs&&imgs.length?imgs[(k&&k.p!=null?k.p:i)%imgs.length]:null};
  const fillCell=(i,bb)=>{const im=pick(i);if(im)frCover(L,im,bb,F.cs&&F.cs[i]);else{const q=L.createLinearGradient(bb[0],bb[1],bb[0]+bb[2],bb[1]+bb[3]);q.addColorStop(0,FRPAL[i%12]);q.addColorStop(1,FRPAL[(i+5)%12]);L.fillStyle=q;L.fillRect(bb[0],bb[1],bb[2],bb[3])}};
@@ -4040,14 +4040,15 @@ function frRender(W,H,F,imgs,k){const cv0=document.createElement('canvas');cv0.w
 const FRTC={};
 TD.frm=(g,w,h,a)=>{g.fillStyle='#232b3a';g.fillRect(0,0,w,h);let c=FRTC[a];if(!c){try{c=frRender(160,160,{...FR,frame:a,bg:'#232b3a',lcol:'#e5e7eb',lw:1,gap:3,n:18,fmt:'sq',round:0,cell:'rect'},null,.3)}catch(e){c=null}FRTC[a]=c}if(c)g.drawImage(c,6,6,w-12,h-12)};
 // --- panel ---
+const FRBG=()=>FR.tbg?'background:#fff linear-gradient(45deg,#ddd 25%,transparent 25%,transparent 75%,#ddd 75%),linear-gradient(45deg,#ddd 25%,transparent 25%,transparent 75%,#ddd 75%);background-size:16px 16px;background-position:0 0,8px 8px':'background:#fff';
 const FRSL=(id,l,min,max,v,suf)=>`<label class="rw"><span>${l}</span><input type="range" data-frs="${id}" min="${min}" max="${max}" step="1" value="${v}"><output>${v}${suf||''}</output></label>`;
 function FRP(){const isM=!!FRM[FR.frame];let h=`<b class="sec">Frame</b>`+TG(FRALL().map(([k,n])=>TILE(`data-frk="${k}"`,'frm|'+k,n,FR.frame==k)).join(''))
  +`<b class="sec">Photos</b><div class="chips"><button class="ac" id="frph">${FR.imgs.length?'Add more photos':'Add photos'}</button>${FR.imgs.length?'<button id="frclr">Clear ('+FR.imgs.length+')</button>':''}<button id="frsh">🔀 Shuffle</button></div><p class="mu">${FR.busy?'Loading photos…':FR.imgs.length?FR.imgs.length+' photo(s). They fill every box of the frame, and repeat if there are more boxes than photos.':'Add your photos and they fill the frame automatically. Until then you see coloured boxes.'}</p>`
- +`<canvas id="frcv" style="width:100%;max-width:340px;display:block;margin:6px auto;border-radius:12px;background:#fff"></canvas>${FR.imgs.length?'<div class="chips"><button class="ac" id="fred">✋ Adjust &amp; swap photos (full screen)</button></div><p class="mu">Open the big editor to move, zoom or swap the photo in each box.</p>':''}`
+ +`<canvas id="frcv" style="width:100%;max-width:340px;display:block;margin:6px auto;border-radius:12px;${FRBG()}"></canvas>${FR.imgs.length?'<div class="chips"><button class="ac" id="fred">✋ Adjust &amp; swap photos (full screen)</button></div><p class="mu">Open the big editor to move, zoom or swap the photo in each box.</p>':''}`
  +`<b class="sec">Format</b><div class="chips">${FRFMT.map(([k,l])=>`<button data-frf="${k}" class="${FR.fmt==k?'on':''}">${l}</button>`).join('')}</div>`
  +(isM?`<b class="sec">Box shape</b><div class="chips">${FRCELL.map(([k,l])=>`<button data-frc="${k}" class="${FR.cell==k?'on':''}">${l}</button>`).join('')}</div>`+FRSL('n','Number of boxes',6,80,FR.n):'')
  +FRSL('gap','Space between photos',0,30,FR.gap)+FRSL('lw','Separator line',0,10,FR.lw)+(isM&&(FR.cell=='rect'||FR.cell=='square')?FRSL('round','Rounded corners',0,50,FR.round,'%'):'')
- +`<div class="rw"><span>Line colour</span><input type="color" data-frcol="lcol" value="${FR.lcol}"></div><div class="rw"><span>Background</span><input type="color" data-frcol="bg" value="${FR.bg}"></div>`+FRSL('len','Length',2,20,FR.len,'s')
+ +`<div class="rw"><span>Line colour</span><input type="color" data-frcol="lcol" value="${FR.lcol}"></div><div class="rw"><span>Background</span><input type="color" data-frcol="bg" value="${FR.bg}"><button data-frt="1" class="${FR.tbg?'on':''}">Transparent</button></div>${FR.tbg?'<p class="mu">Transparent: layers placed <b>behind the main video</b> show through the empty parts (select an overlay, then Layer order → Behind main video).</p>':''}`+FRSL('len','Length',2,20,FR.len,'s')
  +`<div class="chips"><button class="ac" data-fradd="start">Add to start</button><button data-fradd="here">Add here</button><button data-fradd="end">Add to end</button></div><p class="mu">${esc(FR.msg||'The finished design is added as one picture clip that you can still move, crop, animate or colour.')}</p>`;return h}
 {const _c=COLP;COLP=function(){return `<div class="chips seg"><button data-frm="0" class="${FR.on?'':'on'}">Layouts</button><button data-frm="1" class="${FR.on?'on':''}">Shapes &amp; frames ✨</button></div>`+(FR.on?FRP():_c())}}
 let frT=0;const frDraw=()=>{frDraw1($('#frcv'),0);frDraw1($('#fredcv'),1)};
@@ -4061,6 +4062,7 @@ const frSoon=()=>{clearTimeout(frT);frT=setTimeout(frDraw,60)};
 $('#pn').addEventListener('click',e=>{const b=e.target.closest('button');if(!b||tab!='col')return;const d=b.dataset;
  if(d.frm!==undefined){e.stopImmediatePropagation();FR.on=+d.frm;panel();return}
  if(!FR.on)return;
+ if(d.frt){e.stopImmediatePropagation();FR.tbg=FR.tbg?0:1;panel();return}
  if(d.frk){e.stopImmediatePropagation();FR.cs={};FR.sel=-1;FR.swap=0;FR.frame=d.frk;if(FRC[d.frk]&&!FR.lw)FR.lw=0;panel();return}
  if(d.frf){e.stopImmediatePropagation();FR.cs={};FR.sel=-1;FR.swap=0;FR.fmt=d.frf;panel();return}
  if(d.frc){e.stopImmediatePropagation();FR.cs={};FR.sel=-1;FR.swap=0;FR.cell=d.frc;panel();return}
@@ -4070,7 +4072,7 @@ $('#pn').addEventListener('click',e=>{const b=e.target.closest('button');if(!b||
  if(d.fradd){e.stopImmediatePropagation();frAdd(d.fradd);return}},true);
 $('#pn').addEventListener('input',e=>{const el=e.target;if(tab!='col'||!FR.on)return;if(el.dataset.frs){if(el.dataset.frs=='n'){FR.cs={};FR.sel=-1;FR.swap=0}FR[el.dataset.frs]=+el.value;const o=el.parentNode.querySelector('output');if(o)o.textContent=el.value+(el.dataset.frs=='round'?'%':el.dataset.frs=='len'?'s':'');if(el.dataset.frs!='len')frSoon()}else if(el.dataset.frcol){FR[el.dataset.frcol]=el.value;frSoon()}},true);
 async function frAdd(where){if(FR.busy)return;const[W0,H0]=R[ratio],k=Math.min(1,1600/Math.max(W0,H0)),W=Math.round(W0*k),H=Math.round(H0*k);FR.msg='Creating your design…';panel();await new Promise(r=>setTimeout(r,30));
- try{const c=frRender(W,H,FR,FR.imgs.length?FR.imgs:null,W/540),b=await new Promise(r=>c.toBlob(r,'image/jpeg',.92)),nm=(FRM[FR.frame]||FRC[FR.frame]).n+' photo art',f=new File([b],nm+'.jpg',{type:'image/jpeg'});
+ try{const c=frRender(W,H,FR,FR.imgs.length?FR.imgs:null,W/540),b=await new Promise(r=>c.toBlob(r,FR.tbg?'image/png':'image/jpeg',.92)),nm=(FRM[FR.frame]||FRC[FR.frame]).n+' photo art',f=new File([b],nm+(FR.tbg?'.png':'.jpg'),{type:FR.tbg?'image/png':'image/jpeg'});
   snap();const clip=D({url:URL.createObjectURL(f),mid:keep(f),name:nm,dur:60,in:0,out:FR.len,img:true,sp:1,vol:0,f:{b:100,c:100,s:100,x:''},tr:{type:'none',d:.5}});
   if(!clips.length){clips.push(clip);sel=0;tmode='main';kfT=false;t=0;chg()}else insertMainAt([clip],where);
   FR.msg='Added “'+nm+'” '+(where=='here'?'at the yellow line':where=='start'?'at the start':'at the end')+'.';toast(FR.msg)}catch(e){FR.msg='Could not create the design: '+(e&&e.message||e)}panel()}
@@ -4085,7 +4087,7 @@ function frSelUI(){if(!FR.imgs.length)return'';let h='<b class="sec">Adjust phot
   +`<b class="sec">Photo in this box</b><div class="chips" style="flex-wrap:nowrap;overflow-x:auto">${FR.imgs.map((im,k)=>`<button data-frp="${k}" class="${a.p%FR.imgs.length==k?'on':''}" style="padding:3px;flex:0 0 auto"><canvas class="frth" data-k="${k}" width="56" height="56" style="width:56px;height:56px;border-radius:8px;display:block"></canvas></button>`).join('')}</div>`;return h}
 function frThumbs(){document.querySelectorAll('#fredsel .frth').forEach(c=>{const im=FR.imgs[+c.dataset.k];if(!im)return;const g=c.getContext('2d');g.clearRect(0,0,56,56);try{frCover(g,im,[0,0,56,56])}catch(_){}})}
 const frRefresh=()=>{const e=$('#fredsel');if(e){e.innerHTML=frSelUI();frThumbs()}frDraw()};
-function frEd(){if(!FR.imgs.length)return;scrN='fred';scr(`<div class="pg"><div class="row" style="padding:0"><button id="fredx">Done</button><b style="flex:1;text-align:center;font-size:18px">Adjust photos</b></div><canvas id="fredcv" style="display:block;margin:8px auto;border-radius:12px;background:#fff;touch-action:none"></canvas><div id="fredsel">${frSelUI()}</div><div style="height:calc(30px + env(safe-area-inset-bottom,0px))"></div></div>`);setTimeout(frRefresh,0)}
+function frEd(){if(!FR.imgs.length)return;scrN='fred';scr(`<div class="pg"><div class="row" style="padding:0"><button id="fredx">Done</button><b style="flex:1;text-align:center;font-size:18px">Adjust photos</b></div><canvas id="fredcv" style="display:block;margin:8px auto;border-radius:12px;${FRBG()};touch-action:none"></canvas><div id="fredsel">${frSelUI()}</div><div style="height:calc(30px + env(safe-area-inset-bottom,0px))"></div></div>`);setTimeout(frRefresh,0)}
 $('#pn').addEventListener('click',e=>{const b=e.target.closest('button');if(b&&b.id=='fred'&&tab=='col'){e.stopImmediatePropagation();frEd()}},true);
 const frCell=i=>FR.last&&FR.last.meta.find(q=>q.i==i);
 const frSet=(i,o)=>{FR.cs[i]={...frCs(i),...o}};
@@ -4133,6 +4135,22 @@ $('#sc').addEventListener('click',e=>{const b=e.target.closest('button');if(!b||
 }
 // v1.5: the side menu scrolls when the window is short, so Log out is always reachable (web windows / landscape)
 {const st=document.createElement('style');st.textContent='#dp{overflow-y:auto;-webkit-overflow-scrolling:touch;overscroll-behavior:contain}#dp>*{flex-shrink:0}#dp #m_lo{margin-bottom:calc(16px + env(safe-area-inset-bottom,0px))}';document.head.appendChild(st)}
+// ===================== v1.6: layer order. Bring overlays forward / backward, or put one BEHIND the main video =====================
+const ovZ=o=>o.zo!=null?o.zo:(o.lane||0);
+const ovKey=(o,i)=>[ovZ(o),i];
+function ovl(W,H){const A=activeOvs().map((o,i)=>[o,i]).filter(([o])=>!o.back).sort((a,b)=>ovZ(a[0])-ovZ(b[0])||a[1]-b[1]);for(const[o]of A)drawClip(o,isV(o)?(ovEl(o)||v2):v2,t-o.st,W,H,null)}
+function ovlBack(W,H){const A=activeOvs().map((o,i)=>[o,i]).filter(([o])=>o.back).sort((a,b)=>ovZ(a[0])-ovZ(b[0])||a[1]-b[1]);for(const[o]of A)drawClip(o,isV(o)?(ovEl(o)||v2):v2,t-o.st,W,H,null)}
+{const _dm=drawMain;drawMain=function(W,H){try{ovlBack(W,H)}catch(e){console.error(e)}return _dm.apply(this,arguments)}}
+// moving up/down among the overlays that are on screen at the same time as this one
+function ovStep(o,dir){const i0=ovs.indexOf(o);if(i0<0)return false;const E=q=>q.st+len(q),near=ovs.map((q,i)=>[q,i]).filter(([q])=>q===o||(!q.hid&&!!q.back===!!o.back&&q.st<E(o)-1e-6&&E(q)>o.st+1e-6)).sort((a,b)=>ovZ(a[0])-ovZ(b[0])||a[1]-b[1]);
+ const p=near.findIndex(([q])=>q===o),n=near[p+dir];if(!n)return false;const[q]=n;snap();
+ if(ovZ(q)!==ovZ(o)){const a=ovZ(o),b=ovZ(q);o.zo=b;q.zo=a}else o.zo=ovZ(o)+dir*.01;
+ chg();return true}
+const ZORD=o=>`<div id="zord"><b class="sec">Layer order</b><div class="chips"><button data-zo="fw">⬆ Bring forward</button><button data-zo="bk">⬇ Send backward</button><button data-zo="bm" class="${o.back?'on':''}">${o.back?'Bring in front of main video':'Send behind main video'}</button></div><p class="mu">Now: ${o.back?'<b>behind</b> the main video. It shows through transparent parts of the main layer (for a collage turn on “Transparent” background).':'<b>in front of</b> the main video.'} Forward / backward change the order between overlays that are on screen together.</p></div>`;
+{const _h=panelHook;panelHook=function(){_h.apply(this,arguments);try{if((tab=='tf'||tab=='lay')&&tmode=='ov'&&!kfT&&ovs[selO]&&!$('#zord'))$('#pn').insertAdjacentHTML('beforeend',ZORD(ovs[selO]))}catch(_){}}}
+$('#pn').addEventListener('click',e=>{const b=e.target.closest('button');if(!b||!b.dataset.zo)return;e.stopImmediatePropagation();const o=ovs[selO];if(!o||tmode!='ov')return;const a=b.dataset.zo;
+ if(a=='bm'){snap();o.back=o.back?0:1;chg();toast(o.back?'Now behind the main video':'Now in front of the main video')}
+ else if(!ovStep(o,a=='fw'?1:-1))toast(a=='fw'?'Already in front of the other overlays':'Already behind the other overlays')},true);
 
 ui();panel();tick();boot();if('serviceWorker' in navigator&&location.protocol.startsWith('http'))navigator.serviceWorker.register('sw.js').catch(()=>{});
 </script></body></html>
