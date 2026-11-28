@@ -15,7 +15,7 @@ jobs:
       url: ${{ steps.d.outputs.page_url }}
     steps:
       - uses: actions/checkout@v4
-      - run: mkdir -p www && cp index.html manifest.webmanifest sw.js icon-192.png icon-512.png www/
+      - run: mkdir -p www && cp index.html manifest.webmanifest sw.js icon-192.png icon-512.png privacy.html www/
       - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v3
         with:
